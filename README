@@ -1,4 +1,7 @@
-THIS IS FIRST SAMPLE COMMIT.
-This is second commit - but it only happened here, on local machine!:D
+== DataMining on CUDA
 
-A lot of work needs to be done here! ;-)
+This is master thesis project - Parallel association rules on cuda architecture.
+
+== AUTHORS
+
+* Tomasz Kujawa - tomasz.kujawa@gmail.com
