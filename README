@@ -1,6 +1,6 @@
 == PARALLEL DATA MINIG ALGORITHMS ON CUDA ARCHITECTURE
 
-This is master thesis project - the parallel association rules on cuda architecture.
+This is master thesis project - implementation of the parallel association rules on cuda architecture. This project also includes invention of the new parallel algorithm.
 
 == AUTHORS
 
