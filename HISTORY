@@ -1,3 +1,5 @@
-== 1.0.0
+== 0.0.1 ==
 
  * The work has started.
+ * Added two most important articles about apriori-like association rules algorithms.
+ * Now the development of the master thesis (previous about frequent sets) will start - to improve skills upon CUDA architecture.
