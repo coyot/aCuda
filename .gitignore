@@ -1,2 +1,12 @@
 log/*.log
 tmp/**/*
+obj
+bin
+_ReSharper
+*.resharper.user
+*.resharper
+*.csproj.user
+*.suo
+*.cache
+*~
+*.swp
