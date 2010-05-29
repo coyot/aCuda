@@ -5,7 +5,12 @@ using System.Text;
 
 namespace aCudaResearch
 {
-    class ACudaMain
+    /// <summary>
+    /// Main class of the aCuda project.
+    /// 
+    /// EXECUTION: [TODO]
+    /// </summary>
+    public class ACudaMain
     {
         public static void Main(string[] args)
         {
