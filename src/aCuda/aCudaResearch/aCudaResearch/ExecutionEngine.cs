@@ -12,5 +12,13 @@ namespace aCudaResearch
     /// </summary>
     public class ExecutionEngine
     {
+        /// <summary>
+        /// Engine main method to execute computation process.
+        /// </summary>
+        /// <param name="args">Parameters to the execution</param>
+        public void ExecuteComputation(string[] args)
+        {
+            Console.WriteLine("Computation will be executed.");
+        }
     }
 }
