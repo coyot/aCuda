@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
+using System.Xml;
 
 namespace aCudaResearch
 {
@@ -15,10 +17,13 @@ namespace aCudaResearch
         public static void Main(string[] args)
         {
             Console.WriteLine("This is my master thesis research app.");
-            ExecutionEngine Engine = new ExecutionEngine();
-            AlgorithmType type = Enum.Parse(typeof(AlgorithmType), args[0]);
+            XElement xmlSettings = XElement.Load(@"D:\MGR\aCuda\src\aCuda\aCudaResearch\aCudaResearch\Data\Settings.xml");
+            
+            ExecutionSettings settings = new ExecutionSettings(xmlSettings);
+            ExecutionEngine Engine = new ExecutionEngine(settings);
+            //AlgorithmType type = Enum.Parse(typeof(AlgorithmType), args[0]);
 
-            Engine.ExecuteComputation(args);
+            Engine.ExecuteComputation();
 
             Console.ReadKey();
         }

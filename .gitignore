@@ -3,6 +3,7 @@ tmp/**/*
 obj
 bin
 _ReSharper
+*.g.cs
 *.resharper.user
 *.resharper
 *.csproj.user
