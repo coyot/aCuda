@@ -128,6 +128,14 @@
             <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.#ctor(T:System.Xml.Linq.XElement)"/>
             </summary>
         </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.DataPathGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataPath"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.DataPathSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataPath"/>
+            </summary>
+        </member>
         <member name="P:aCudaResearch.Moles.MExecutionSettings.EndNumberGet">
             <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.EndNumber"/>
             </summary>
@@ -160,12 +168,16 @@
             <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.StartNumber"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.Moles.MExecutionSettings._ctorb__0XElement">
-            <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.&lt;.ctor&gt;b__0(T:System.Xml.Linq.XElement)"/>
-            </summary>
-        </member>
         <member name="T:aCudaResearch.Moles.MExecutionSettings.AllInstances">
             <summary>Define moles for all instances members</summary>
+        </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.DataPathGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataPath"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.DataPathSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataPath"/>
+            </summary>
         </member>
         <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.EndNumberGet">
             <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.EndNumber"/>
