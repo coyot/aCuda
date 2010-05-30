@@ -19,11 +19,11 @@ namespace aCudaResearch
             Console.WriteLine("This is my master thesis research app.");
             XElement xmlSettings = XElement.Load(@"D:\MGR\aCuda\src\aCuda\aCudaResearch\aCudaResearch\Data\Settings.xml");
             
-            ExecutionSettings settings = new ExecutionSettings(xmlSettings);
-            ExecutionEngine Engine = new ExecutionEngine(settings);
+            //ExecutionSettings settings = new ExecutionSettings(xmlSettings);
+            //ExecutionEngine Engine = new ExecutionEngine(settings);
             //AlgorithmType type = Enum.Parse(typeof(AlgorithmType), args[0]);
 
-            Engine.ExecuteComputation();
+            //Engine.ExecuteComputation();
 
             Console.ReadKey();
         }

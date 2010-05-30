@@ -124,8 +124,12 @@
         <member name="P:aCudaResearch.Moles.MExecutionSettings.Behavior">
             <summary>Assigns the behavior for all methods of the moled type</summary>
         </member>
-        <member name="P:aCudaResearch.Moles.MExecutionSettings.ConstructorXElement">
-            <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.#ctor(T:System.Xml.Linq.XElement)"/>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.Constructor">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.#ctor"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.CountDummyInt32Int32">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.CountDummy(T:System.Int32,T:System.Int32)"/>
             </summary>
         </member>
         <member name="P:aCudaResearch.Moles.MExecutionSettings.DataPathGet">
@@ -170,6 +174,10 @@
         </member>
         <member name="T:aCudaResearch.Moles.MExecutionSettings.AllInstances">
             <summary>Define moles for all instances members</summary>
+        </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.CountDummyInt32Int32">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.CountDummy(T:System.Int32,T:System.Int32)"/>
+            </summary>
         </member>
         <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.DataPathGet">
             <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataPath"/>
@@ -287,7 +295,7 @@
             <summary>Stub type of <see cref="T:aCudaResearch.ExecutionSettings"/>
             .</summary>
         </member>
-        <member name="M:aCudaResearch.Moles.SExecutionSettings.#ctor(System.Xml.Linq.XElement)">
+        <member name="M:aCudaResearch.Moles.SExecutionSettings.#ctor">
             <summary>Initializes a new instance</summary>
         </member>
         <member name="M:aCudaResearch.Moles.SExecutionSettings.InitializeStub">

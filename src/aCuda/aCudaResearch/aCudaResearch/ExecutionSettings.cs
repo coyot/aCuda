@@ -85,7 +85,7 @@ namespace aCudaResearch
         {
             get
             {
-                Contract.Ensures(Contract.Result<string>() !=null);
+                Contract.Ensures(Contract.Result<string>() != null);
 
                 return dataPath;
             }
@@ -97,14 +97,28 @@ namespace aCudaResearch
             }
         }
 
-        public ExecutionSettings(XElement source)
+        public ExecutionSettings()
         {
-            Contract.Requires(source != null);
+            //Contract.Requires(source != null);
 
             MinSup = -0.2;
             MinConf = 0;
             StartNumber = 10;
             EndNumber = 100;
+        }
+
+        public int CountDummy(int i, int j)
+        {
+            StartNumber = 1;
+            if (i < 9 && j > 0)
+                return j;
+            if (j < 12)
+                return i;
+
+            if (i == 0)
+                return -1;
+
+            return i * j - StartNumber;
         }
     }
 }
