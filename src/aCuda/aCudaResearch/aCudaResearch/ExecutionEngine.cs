@@ -12,6 +12,9 @@ namespace aCudaResearch
     /// </summary>
     public class ExecutionEngine
     {
+        public ExecutionEngine()
+        {
+        }
         /// <summary>
         /// Engine main method to execute computation process.
         /// </summary>

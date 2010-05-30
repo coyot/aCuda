@@ -8,13 +8,13 @@ namespace aCudaResearch
     /// <summary>
     /// Representation of the algorithm implementations
     /// </summary>
-    public abstract class AbstractAlgorithm
+    public abstract class AbstractAlgorithm<T>
     {
         IDataBuilder<T> builder;
 
         /// <summary>
         /// Main algorithm method to execute the computation.
         /// </summary>
-        public void Run();
+        public abstract void Run();
     }
 }

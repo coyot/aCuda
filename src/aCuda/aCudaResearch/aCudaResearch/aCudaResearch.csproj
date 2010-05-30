@@ -45,7 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractAlgorithm.cs" />
     <Compile Include="ACudaMain.cs" />
+    <Compile Include="DataProvider.cs" />
+    <Compile Include="ExecutionEngine.cs" />
+    <Compile Include="IDataBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

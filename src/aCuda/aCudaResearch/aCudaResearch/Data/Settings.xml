@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<acuda>
+  <generalSettings>
+    <minsup>0,2</minsup>
+    <minconf>0,2</minconf>
+    <startNumber>10</startNumber>
+    <endNumber>100000</endNumber>
+    <dataSourcePath>D:\MGR\aCuda\src\aCuda\aCudaResearch\aCudaResearch\Data\Settings.xml</dataSourcePath>
+  </generalSettings>
+  <algorithms>
+    <algorithm name="FpGrowth"/>
+  </algorithms>
+</acuda>
