@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml;
+using aCudaResearch.Settings;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace aCudaResearch
 {
@@ -17,13 +20,20 @@ namespace aCudaResearch
         public static void Main(string[] args)
         {
             Console.WriteLine("This is my master thesis research app.");
-            XElement xmlSettings = XElement.Load(@"D:\MGR\aCuda\src\aCuda\aCudaResearch\aCudaResearch\Data\Settings.xml");
-            
-            //ExecutionSettings settings = new ExecutionSettings(xmlSettings);
-            //ExecutionEngine Engine = new ExecutionEngine(settings);
-            //AlgorithmType type = Enum.Parse(typeof(AlgorithmType), args[0]);
+            ISettingsBuilder builder = new XmlSettingsBuilder(@"D:\MGR\aCuda\src\aCuda\aCudaResearch\aCudaResearch\Data\Settings.xml");
 
-            //Engine.ExecuteComputation();
+            try
+            {
+                ExecutionSettings settings = builder.Build();
+                ExecutionEngine Engine = new ExecutionEngine(settings);
+
+                Engine.ExecuteComputation();
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine("There was an error during XML settings parsing.");
+                Console.WriteLine(e.ToString());
+            }
 
             Console.ReadKey();
         }

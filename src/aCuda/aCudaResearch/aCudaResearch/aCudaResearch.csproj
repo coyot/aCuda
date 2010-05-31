@@ -82,6 +82,8 @@
     <Compile Include="ExecutionSettings.cs" />
     <Compile Include="IDataBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\ISettingsBuilder.cs" />
+    <Compile Include="Settings\XmlSettingsBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Settings.xml" />

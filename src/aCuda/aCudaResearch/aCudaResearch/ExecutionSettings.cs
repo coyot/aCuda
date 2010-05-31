@@ -5,16 +5,22 @@ using System.Text;
 using System.Xml.Linq;
 using System.IO;
 using System.Diagnostics.Contracts;
+using System.Xml.Serialization;
 
 namespace aCudaResearch
 {
+    [Serializable]
     public class ExecutionSettings
     {
         private double minSup;
         private double minConf;
         private int startNumber;
         private int endNumber;
-        private string dataPath;
+
+        public ExecutionSettings()
+        {
+            Algorithms = new List<AlgorithmType>();
+        }
 
         public double MinSup
         {
@@ -25,7 +31,7 @@ namespace aCudaResearch
                 return minSup;
             }
 
-            private set
+            set
             {
                 Contract.Requires(value >= 0);
                 minSup = value;
@@ -41,13 +47,16 @@ namespace aCudaResearch
                 return minConf;
             }
 
-            private set
+            set
             {
                 Contract.Requires(value >= 0);
                 minConf = value;
             }
         }
 
+        /// <summary>
+        /// Initial number of transactions which will be taken into execution.
+        /// </summary>
         public int StartNumber
         {
             get
@@ -57,13 +66,16 @@ namespace aCudaResearch
                 return startNumber;
             }
 
-            private set
+            set
             {
                 Contract.Requires(value >= 0);
                 startNumber = value;
             }
         }
 
+        /// <summary>
+        /// Max number of transactions which will be taken into execution.
+        /// </summary>
         public int EndNumber
         {
             get
@@ -73,52 +85,43 @@ namespace aCudaResearch
                 return endNumber;
             }
 
-            private set
+            set
             {
                 Contract.Requires(value >= 0);
                 endNumber = value;
             }
         }
 
+        /// <summary>
+        /// Path to the file with transactions.
+        /// </summary>
+        public string DataSourcePath { get; set; }
 
-        public string DataPath
+        [XmlArray(ElementName="Algorithms")]
+        [XmlArrayItem(ElementName="Algorithm")]
+        public List<AlgorithmType> Algorithms { get; set; }
+
+        /// <summary>
+        /// Override base ToString() method with one which is more useful.
+        /// </summary>
+        /// <returns>Settings description</returns>
+        public override string ToString()
         {
-            get
-            {
-                Contract.Ensures(Contract.Result<string>() != null);
+            StringBuilder builder = new StringBuilder();
 
-                return dataPath;
+            builder.Append("Data Source: ").Append(DataSourcePath);
+            builder.Append("\nMinSup: ").Append(MinSup);
+            builder.Append("\nMinConf: ").Append(MinConf);
+            builder.Append("\n\tStart Number: ").Append(StartNumber);
+            builder.Append("\n\tEnd Number: ").Append(EndNumber);
+            builder.Append("\nAlgorithms: ");
+
+            foreach (AlgorithmType algorithm in Algorithms)
+            {
+                builder.Append("\n\t - ").Append(algorithm);
             }
 
-            private set
-            {
-                Contract.Requires(value != null);
-                dataPath = value;
-            }
-        }
-
-        public ExecutionSettings()
-        {
-            //Contract.Requires(source != null);
-
-            MinSup = -0.2;
-            MinConf = 0;
-            StartNumber = 10;
-            EndNumber = 100;
-        }
-
-        public int CountDummy(int i, int j)
-        {
-            StartNumber = 1;
-            if (i < 9 && j > 0)
-                return j;
-            if (j < 12)
-                return i;
-
-            if (i == 0)
-                return -1;
-
-            return i * j - StartNumber;
+            return builder.ToString();
         }
     }
 }

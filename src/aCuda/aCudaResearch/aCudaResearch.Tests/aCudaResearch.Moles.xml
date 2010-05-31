@@ -121,6 +121,14 @@
         <member name="M:aCudaResearch.Moles.MExecutionSettings.BehaveAsNotImplemented">
             <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the moled type</summary>
         </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AlgorithmsGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.Algorithms"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AlgorithmsSetListOfAlgorithmType">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.Algorithms"/>
+            </summary>
+        </member>
         <member name="P:aCudaResearch.Moles.MExecutionSettings.Behavior">
             <summary>Assigns the behavior for all methods of the moled type</summary>
         </member>
@@ -128,16 +136,12 @@
             <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.#ctor"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.Moles.MExecutionSettings.CountDummyInt32Int32">
-            <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.CountDummy(T:System.Int32,T:System.Int32)"/>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.DataSourcePathGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataSourcePath"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.Moles.MExecutionSettings.DataPathGet">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataPath"/>
-            </summary>
-        </member>
-        <member name="P:aCudaResearch.Moles.MExecutionSettings.DataPathSetString">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataPath"/>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.DataSourcePathSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataSourcePath"/>
             </summary>
         </member>
         <member name="P:aCudaResearch.Moles.MExecutionSettings.EndNumberGet">
@@ -172,19 +176,27 @@
             <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.StartNumber"/>
             </summary>
         </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.ToString">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.ToString"/>
+            </summary>
+        </member>
         <member name="T:aCudaResearch.Moles.MExecutionSettings.AllInstances">
             <summary>Define moles for all instances members</summary>
         </member>
-        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.CountDummyInt32Int32">
-            <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.CountDummy(T:System.Int32,T:System.Int32)"/>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.AlgorithmsGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.Algorithms"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.DataPathGet">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataPath"/>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.AlgorithmsSetListOfAlgorithmType">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.Algorithms"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.DataPathSetString">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataPath"/>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.DataSourcePathGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataSourcePath"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.DataSourcePathSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.DataSourcePath"/>
             </summary>
         </member>
         <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.EndNumberGet">
@@ -217,6 +229,57 @@
         </member>
         <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.StartNumberSetInt32">
             <summary>Sets the mole of <see cref="P:aCudaResearch.ExecutionSettings.StartNumber"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Moles.MExecutionSettings.AllInstances.ToString01">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.ToString"/>
+            </summary>
+        </member>
+        <member name="T:aCudaResearch.Settings.Moles.MXmlSettingsBuilder">
+            <summary>Mole type of <see cref="T:aCudaResearch.Settings.XmlSettingsBuilder"/>
+            .</summary>
+        </member>
+        <member name="M:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.#ctor">
+            <summary>Initializes a new mole</summary>
+        </member>
+        <member name="M:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.#ctor(aCudaResearch.Settings.XmlSettingsBuilder)">
+            <summary>Initializes a new mole for the given instance</summary>
+        </member>
+        <member name="M:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the moled type</summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.Behavior">
+            <summary>Assigns the behavior for all methods of the moled type</summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.Build">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.Settings.XmlSettingsBuilder.Build"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.ConstructorString">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.Settings.XmlSettingsBuilder.#ctor(T:System.String)"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.PathGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.Settings.XmlSettingsBuilder.Path"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.PathSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.Settings.XmlSettingsBuilder.Path"/>
+            </summary>
+        </member>
+        <member name="T:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.AllInstances">
+            <summary>Define moles for all instances members</summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.AllInstances.Build">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.Settings.XmlSettingsBuilder.Build"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.AllInstances.PathGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.Settings.XmlSettingsBuilder.Path"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.MXmlSettingsBuilder.AllInstances.PathSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.Settings.XmlSettingsBuilder.Path"/>
             </summary>
         </member>
         <member name="T:aCudaResearch.Moles.SACudaMain">
@@ -301,6 +364,14 @@
         <member name="M:aCudaResearch.Moles.SExecutionSettings.InitializeStub">
             <summary>Initializes a new instance of type SExecutionSettings</summary>
         </member>
+        <member name="M:aCudaResearch.Moles.SExecutionSettings.ToString">
+            <summary>Sets the stub of <see cref="M:aCudaResearch.ExecutionSettings.ToString"/>
+            </summary>
+        </member>
+        <member name="F:aCudaResearch.Moles.SExecutionSettings.ToString01">
+            <summary>Sets the stub of <see cref="M:aCudaResearch.ExecutionSettings.ToString"/>
+            </summary>
+        </member>
         <member name="P:aCudaResearch.Moles.SExecutionSettings.CallBase">
             <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
         </member>
@@ -313,6 +384,22 @@
         </member>
         <member name="M:aCudaResearch.Moles.SIDataBuilder`1.#ctor">
             <summary>Initializes a new instance of type SIDataBuilder</summary>
+        </member>
+        <member name="T:aCudaResearch.Settings.Moles.SXmlSettingsBuilder">
+            <summary>Stub type of <see cref="T:aCudaResearch.Settings.XmlSettingsBuilder"/>
+            .</summary>
+        </member>
+        <member name="M:aCudaResearch.Settings.Moles.SXmlSettingsBuilder.#ctor(System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:aCudaResearch.Settings.Moles.SXmlSettingsBuilder.InitializeStub">
+            <summary>Initializes a new instance of type SXmlSettingsBuilder</summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.SXmlSettingsBuilder.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:aCudaResearch.Settings.Moles.SXmlSettingsBuilder.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
         </member>
     </members>
 </doc>

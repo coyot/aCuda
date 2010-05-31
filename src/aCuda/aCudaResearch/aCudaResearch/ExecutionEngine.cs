@@ -12,8 +12,11 @@ namespace aCudaResearch
     /// </summary>
     public class ExecutionEngine
     {
+        private ExecutionSettings settings;
+
         public ExecutionEngine(ExecutionSettings settings)
         {
+            this.settings = settings;
         }
         /// <summary>
         /// Engine main method to execute computation process.
@@ -22,6 +25,7 @@ namespace aCudaResearch
         public void ExecuteComputation()
         {
             Console.WriteLine("Computation will be executed.");
+            Console.WriteLine(this.settings.ToString());
         }
     }
 }
