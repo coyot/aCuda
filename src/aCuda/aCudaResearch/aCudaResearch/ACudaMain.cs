@@ -25,9 +25,9 @@ namespace aCudaResearch
             try
             {
                 ExecutionSettings settings = builder.Build();
-                ExecutionEngine Engine = new ExecutionEngine(settings);
+                ExecutionEngine engine = new ExecutionEngine(settings);
 
-                Engine.ExecuteComputation();
+                engine.ExecuteComputation();
             }
             catch (InvalidOperationException e)
             {

@@ -12,10 +12,10 @@ namespace aCudaResearch
     [Serializable]
     public class ExecutionSettings
     {
-        private double minSup;
-        private double minConf;
-        private int startNumber;
-        private int endNumber;
+        private double _minSup;
+        private double _minConf;
+        private int _startNumber;
+        private int _endNumber;
 
         public ExecutionSettings()
         {
@@ -28,13 +28,13 @@ namespace aCudaResearch
             {
                 Contract.Ensures(Contract.Result<double>() >= 0);
 
-                return minSup;
+                return _minSup;
             }
 
             set
             {
                 Contract.Requires(value >= 0);
-                minSup = value;
+                _minSup = value;
             }
         }
 
@@ -44,13 +44,13 @@ namespace aCudaResearch
             {
                 Contract.Ensures(Contract.Result<double>() >= 0);
 
-                return minConf;
+                return _minConf;
             }
 
             set
             {
                 Contract.Requires(value >= 0);
-                minConf = value;
+                _minConf = value;
             }
         }
 
@@ -63,13 +63,13 @@ namespace aCudaResearch
             {
                 Contract.Ensures(Contract.Result<int>() >= 0);
 
-                return startNumber;
+                return _startNumber;
             }
 
             set
             {
                 Contract.Requires(value >= 0);
-                startNumber = value;
+                _startNumber = value;
             }
         }
 
@@ -82,13 +82,13 @@ namespace aCudaResearch
             {
                 Contract.Ensures(Contract.Result<int>() >= 0);
 
-                return endNumber;
+                return _endNumber;
             }
 
             set
             {
                 Contract.Requires(value >= 0);
-                endNumber = value;
+                _endNumber = value;
             }
         }
 
