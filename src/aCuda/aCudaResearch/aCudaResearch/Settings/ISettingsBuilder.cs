@@ -15,7 +15,7 @@ namespace aCudaResearch.Settings
         /// <summary>
         /// Build settings.
         /// </summary>
-        /// <returns><see link="ExecutionSettings"/></returns>
+        /// <returns><see link="ExecutionSettings"/> object</returns>
         ExecutionSettings Build();
     }
 
@@ -24,7 +24,7 @@ namespace aCudaResearch.Settings
     {
         #region ISettingsBuilder Members
 
-        public ExecutionSettings Build()
+        ExecutionSettings ISettingsBuilder.Build()
         {
             Contract.Ensures(Contract.Result<ExecutionSettings>() != null);
 

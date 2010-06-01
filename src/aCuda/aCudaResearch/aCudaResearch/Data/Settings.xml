@@ -6,7 +6,7 @@
   <EndNumber>100</EndNumber>
   <DataSourcePath>source</DataSourcePath>
   <Algorithms>
-    <Algorithm>FpGrowth</Algorith>
+    <Algorithm>FpGrowth</Algorithm>
     <Algorithm>FpGrowth</Algorithm>
   </Algorithms>
 </ExecutionSettings>
