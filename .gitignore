@@ -4,6 +4,7 @@ obj
 bin
 _ReSharper
 *.g.cs
+*.dll
 *.resharper.user
 *.resharper
 *.csproj.user
