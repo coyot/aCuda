@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace aCudaResearch
 {
@@ -12,20 +9,20 @@ namespace aCudaResearch
     /// </summary>
     public class ExecutionEngine
     {
-        private ExecutionSettings _settings;
+        private readonly ExecutionSettings _settings;
 
         public ExecutionEngine(ExecutionSettings settings)
         {
-            this._settings = settings;
+            _settings = settings;
         }
+
         /// <summary>
         /// Engine main method to execute computation process.
         /// </summary>
-        /// <param name="args">Parameters to the execution</param>
         public void ExecuteComputation()
         {
             Console.WriteLine("Computation will be executed.");
-            Console.WriteLine(this._settings.ToString());
+            Console.WriteLine(_settings.ToString());
         }
     }
 }

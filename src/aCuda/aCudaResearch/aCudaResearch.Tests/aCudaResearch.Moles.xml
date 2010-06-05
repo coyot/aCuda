@@ -235,6 +235,166 @@
             <summary>Sets the mole of <see cref="M:aCudaResearch.ExecutionSettings.ToString"/>
             </summary>
         </member>
+        <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsDataBuilder">
+            <summary>Mole type of <see cref="T:aCudaResearch.FpGrowth.Data.MsWeb.MsDataBuilder"/>
+            .</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsDataBuilder.#ctor">
+            <summary>Initializes a new mole</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsDataBuilder.#ctor(aCudaResearch.FpGrowth.Data.MsWeb.MsDataBuilder)">
+            <summary>Initializes a new mole for the given instance</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsDataBuilder.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the moled type</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsDataBuilder.Bind(aCudaResearch.IDataBuilder{aCudaResearch.FpGrowth.Data.MsWeb.MsInstance{System.Int32}})">
+            <summary>Binds the members of the interface to the mole.</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsDataBuilder.Behavior">
+            <summary>Assigns the behavior for all methods of the moled type</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsDataBuilder.Constructor">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsDataBuilder.#ctor"/>
+            </summary>
+        </member>
+        <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsDataBuilder.AllInstances">
+            <summary>Define moles for all instances members</summary>
+        </member>
+        <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement">
+            <summary>Mole type of <see cref="T:aCudaResearch.FpGrowth.Data.MsWeb.MsElement"/>
+            .</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.#ctor">
+            <summary>Initializes a new mole</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.#ctor(aCudaResearch.FpGrowth.Data.MsWeb.MsElement)">
+            <summary>Initializes a new mole for the given instance</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the moled type</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.Behavior">
+            <summary>Assigns the behavior for all methods of the moled type</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.ConstructorStringString">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.#ctor(T:System.String,T:System.String)"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.TitleGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.Title"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.TitleSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.Title"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.ToString">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.ToString"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.UrlGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.Url"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.UrlSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.Url"/>
+            </summary>
+        </member>
+        <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.AllInstances">
+            <summary>Define moles for all instances members</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.AllInstances.TitleGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.Title"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.AllInstances.TitleSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.Title"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.AllInstances.ToString01">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.ToString"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.AllInstances.UrlGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.Url"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsElement.AllInstances.UrlSetString">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.Url"/>
+            </summary>
+        </member>
+        <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1">
+            <summary>Mole type of <see cref="T:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1"/>
+            .</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.#ctor">
+            <summary>Initializes a new mole</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.#ctor(aCudaResearch.FpGrowth.Data.MsWeb.MsInstance{`0})">
+            <summary>Initializes a new mole for the given instance</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the moled type</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AddAttributeString">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddAttribute(T:System.String)"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AddEntryTInt32Array">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddEntry(`1,T:System.Int32[])"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AttributesGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Attributes"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AttributesSetDictionaryOfTMsElement">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Attributes"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.Behavior">
+            <summary>Assigns the behavior for all methods of the moled type</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.Constructor">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.#ctor"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.DatabaseGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Database"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.DatabaseSetDictionaryOfTInt32Array">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Database"/>
+            </summary>
+        </member>
+        <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances">
+            <summary>Define moles for all instances members</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.AddAttributeString">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddAttribute(T:System.String)"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.AddEntryTInt32Array">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddEntry(`1,T:System.Int32[])"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.AttributesGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Attributes"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.AttributesSetDictionaryOfTMsElement">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Attributes"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.DatabaseGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Database"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.DatabaseSetDictionaryOfTInt32Array">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Database"/>
+            </summary>
+        </member>
         <member name="T:aCudaResearch.Settings.Moles.MXmlSettingsBuilder">
             <summary>Mole type of <see cref="T:aCudaResearch.Settings.XmlSettingsBuilder"/>
             .</summary>
@@ -384,6 +544,62 @@
         </member>
         <member name="M:aCudaResearch.Moles.SIDataBuilder`1.#ctor">
             <summary>Initializes a new instance of type SIDataBuilder</summary>
+        </member>
+        <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsDataBuilder">
+            <summary>Stub type of <see cref="T:aCudaResearch.FpGrowth.Data.MsWeb.MsDataBuilder"/>
+            .</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsDataBuilder.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsDataBuilder.InitializeStub">
+            <summary>Initializes a new instance of type SMsDataBuilder</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsDataBuilder.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsDataBuilder.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsElement">
+            <summary>Stub type of <see cref="T:aCudaResearch.FpGrowth.Data.MsWeb.MsElement"/>
+            .</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsElement.#ctor(System.String,System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsElement.InitializeStub">
+            <summary>Initializes a new instance of type SMsElement</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsElement.ToString">
+            <summary>Sets the stub of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.ToString"/>
+            </summary>
+        </member>
+        <member name="F:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsElement.ToString01">
+            <summary>Sets the stub of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsElement.ToString"/>
+            </summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsElement.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsElement.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsInstance`1">
+            <summary>Stub type of <see cref="T:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1"/>
+            .</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsInstance`1.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsInstance`1.InitializeStub">
+            <summary>Initializes a new instance of type SMsInstance</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsInstance`1.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.SMsInstance`1.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
         </member>
         <member name="T:aCudaResearch.Settings.Moles.SXmlSettingsBuilder">
             <summary>Stub type of <see cref="T:aCudaResearch.Settings.XmlSettingsBuilder"/>

@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using System.Xml;
 using aCudaResearch.Settings;
-using System.IO;
-using System.Xml.Serialization;
 
 namespace aCudaResearch
 {
@@ -24,10 +17,13 @@ namespace aCudaResearch
 
             try
             {
-                ExecutionSettings settings = builder.Build();
-                ExecutionEngine engine = new ExecutionEngine(settings);
+                var settings = builder.Build();
+                if (settings != null)
+                {
+                    var engine = new ExecutionEngine(settings);
 
-                engine.ExecuteComputation();
+                    engine.ExecuteComputation();
+                }
             }
             catch (InvalidOperationException e)
             {

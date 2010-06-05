@@ -78,8 +78,10 @@
     <Compile Include="ACudaMain.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="DataProvider.cs" />
-    <Compile Include="Data\IDataBuilder.cs" />
-    <Compile Include="Data\MsDataBuilder.cs" />
+    <Compile Include="IDataBuilder.cs" />
+    <Compile Include="FpGrowth\Data\MsWeb\MsDataBuilder.cs" />
+    <Compile Include="FpGrowth\Data\MsWeb\MsInstance.cs" />
+    <Compile Include="FpGrowth\Data\MsWeb\MsElement.cs" />
     <Compile Include="ExecutionEngine.cs" />
     <Compile Include="ExecutionSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

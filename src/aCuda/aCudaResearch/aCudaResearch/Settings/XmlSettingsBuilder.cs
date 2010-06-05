@@ -20,11 +20,9 @@ namespace aCudaResearch.Settings
 
         public ExecutionSettings Build()
         {
-            ExecutionSettings set = new ExecutionSettings();
-
-            XmlSerializer serializer = new XmlSerializer(typeof(ExecutionSettings));
-            FileStream stream = new FileStream(Path, FileMode.Open);
-            set = (ExecutionSettings)serializer.Deserialize(stream);
+            var serializer = new XmlSerializer(typeof(ExecutionSettings));
+            var stream = new FileStream(Path, FileMode.Open);
+            var set = (ExecutionSettings)serializer.Deserialize(stream);
 
             stream.Close();
 
