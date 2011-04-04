@@ -97,6 +97,14 @@ namespace aCudaResearch
         /// </summary>
         public string DataSourcePath { get; set; }
 
+        /// <summary>
+        /// The type of the source which will be used for computation.
+        /// </summary>
+        public DataSourceType TypeOfDataSource { get; set; }
+
+        /// <summary>
+        /// List of algorithms which will be used for computation.
+        /// </summary>
         [XmlArray(ElementName="Algorithms")]
         [XmlArrayItem(ElementName="Algorithm")]
         public List<AlgorithmType> Algorithms { get; set; }
@@ -107,16 +115,17 @@ namespace aCudaResearch
         /// <returns>Settings description</returns>
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
 
             builder.Append("Data Source: ").Append(DataSourcePath);
             builder.Append("\nMinSup: ").Append(MinSup);
             builder.Append("\nMinConf: ").Append(MinConf);
             builder.Append("\n\tStart Number: ").Append(StartNumber);
             builder.Append("\n\tEnd Number: ").Append(EndNumber);
+            builder.Append("\n\tData Source Type: ").Append(TypeOfDataSource);
             builder.Append("\nAlgorithms: ");
 
-            foreach (AlgorithmType algorithm in Algorithms)
+            foreach (var algorithm in Algorithms)
             {
                 builder.Append("\n\t - ").Append(algorithm);
             }

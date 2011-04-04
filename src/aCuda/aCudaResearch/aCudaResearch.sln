@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aCudaResearch", "aCudaResearch\aCudaResearch.csproj", "{BDD5DBA3-4C36-4A66-B63E-2E2D182FA508}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aCudaResearch.Tests", "aCudaResearch.Tests\aCudaResearch.Tests.csproj", "{45DCD77E-3361-4939-ACFD-CEAE7EED840C}"

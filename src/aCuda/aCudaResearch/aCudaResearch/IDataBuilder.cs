@@ -11,5 +11,6 @@ namespace aCudaResearch
     /// </summary>
     public interface IDataBuilder<T>
     {
+        T BuildInstance(ExecutionSettings executionSettings);
     }
 }

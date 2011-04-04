@@ -337,20 +337,20 @@
         <member name="M:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.BehaveAsNotImplemented">
             <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the moled type</summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AddAttributeString">
-            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddAttribute(T:System.String)"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AddElementString">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddElement(T:System.String)"/>
             </summary>
         </member>
         <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AddEntryTInt32Array">
             <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddEntry(`1,T:System.Int32[])"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AttributesGet">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Attributes"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.ElementsGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Elements"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AttributesSetDictionaryOfTMsElement">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Attributes"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.ElementsSetDictionaryOfTMsElement">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Elements"/>
             </summary>
         </member>
         <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.Behavior">
@@ -371,20 +371,20 @@
         <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances">
             <summary>Define moles for all instances members</summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.AddAttributeString">
-            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddAttribute(T:System.String)"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.AddElementString">
+            <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddElement(T:System.String)"/>
             </summary>
         </member>
         <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.AddEntryTInt32Array">
             <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.AddEntry(`1,T:System.Int32[])"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.AttributesGet">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Attributes"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.ElementsGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Elements"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.AttributesSetDictionaryOfTMsElement">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Attributes"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.ElementsSetDictionaryOfTMsElement">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Elements"/>
             </summary>
         </member>
         <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.DatabaseGet">

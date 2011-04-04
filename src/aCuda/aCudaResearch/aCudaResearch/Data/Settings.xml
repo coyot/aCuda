@@ -4,7 +4,8 @@
   <MinConf>0.2</MinConf>
   <StartNumber>10</StartNumber>
   <EndNumber>100</EndNumber>
-  <DataSourcePath>source</DataSourcePath>
+  <DataSourcePath>D:\MGR\Data\MsWeb\msweb.data</DataSourcePath>
+  <DataSourceType>MsData</DataSourceType>
   <Algorithms>
     <Algorithm>FpGrowth</Algorithm>
     <Algorithm>FpGrowth</Algorithm>
