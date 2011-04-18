@@ -1,26 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace aCudaResearch.Algorithms.FpGrowth
 {
     /// <summary>
-    /// Warunkowa baza wzorca.
+    /// Conditional pattern base generator.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Type of the element.</typeparam>
     public class CondPatternBaseGenerator<T>
     {
         /// <summary>
-        /// Generuje warunkową bazę wzorca na podstawie bazy wejściowej i minimalnego wsparcia.
+        /// Generates the conditional pattern base, based on the input data and the minimal support.
         /// </summary>
-        /// <param name="database">baza w postaci słownika zawierającego listy elementów wraz z ich wsparciem</param>
-        /// <param name="minSup">minimalne wsparcie, jakie muszą posiadac elementy, aby znalazły się w warunkowej bazie wzorca</param>
-        /// <returns>warunkowa baza wzorca w postaci słownika, którego kluczem są listy elementów, a wartościami ich wsparcia</returns>
+        /// <param name="database">Data with elements and its support</param>
+        /// <param name="minSup">Minimal support for elements if they should be included in the pattern base.</param>
+        /// <returns>
+        /// Conditional pattern base as the dictionary with keys as list of nodes, and values their supports.
+        /// </returns>
         public Dictionary<T[], int> Generate(Dictionary<List<TreeNode<T>>, int> database, int minSup)
         {
-            Dictionary<T, int> frequentSets = new Dictionary<T, int>();
-            Dictionary<T[], int> result = new Dictionary<T[], int>();
+            var frequentSets = new Dictionary<T, int>();
+            var result = new Dictionary<T[], int>();
 
             foreach (var key in database.Keys)
             {
@@ -35,14 +35,8 @@ namespace aCudaResearch.Algorithms.FpGrowth
 
             foreach (var key in database.Keys)
             {
-                List<T> elements = new List<T>();
-                foreach (var node in key)
-                {
-                    if (frequentSets[node.Value] >= minSup)
-                    {
-                        elements.Add(node.Value);
-                    }
-                }
+                var elements = (from node in key where frequentSets[node.Value] >= minSup select node.Value).ToList();
+
                 if (elements.Count > 0)
                 {
                     result[elements.ToArray()] = database[key];
