@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace aCudaResearch
+namespace aCudaResearch.Algorithms
 {
     /// <summary>
     /// Representation of the algorithm implementations
     /// </summary>
-    public abstract class AbstractAlgorithm<T>
+    public interface IAlgorithm
     {
-        IDataBuilder<T> builder;
-
         /// <summary>
         /// Main algorithm method to execute the computation.
+        /// 
+        /// This method should also contain the measurement process!
         /// </summary>
-        public abstract void Run();
+        void Run(ExecutionSettings executionSettings);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace aCudaResearch.FpGrowth.Data.MsWeb
+﻿namespace aCudaResearch.Data.MsWeb
 {
     /// <summary>
     /// Describes entry from the MsWeb data.

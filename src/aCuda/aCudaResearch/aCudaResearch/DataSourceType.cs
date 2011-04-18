@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace aCudaResearch.FpGrowth.Data
+namespace aCudaResearch
 {
-    public class MsInstance<T>
+    public enum DataSourceType
     {
+        MsData
     }
 }

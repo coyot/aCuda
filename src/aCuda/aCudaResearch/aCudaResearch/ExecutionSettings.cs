@@ -100,7 +100,7 @@ namespace aCudaResearch
         /// <summary>
         /// The type of the source which will be used for computation.
         /// </summary>
-        public DataSourceType TypeOfDataSource { get; set; }
+        public DataSourceType DataSourceType { get; set; }
 
         /// <summary>
         /// List of algorithms which will be used for computation.
@@ -122,7 +122,7 @@ namespace aCudaResearch
             builder.Append("\nMinConf: ").Append(MinConf);
             builder.Append("\n\tStart Number: ").Append(StartNumber);
             builder.Append("\n\tEnd Number: ").Append(EndNumber);
-            builder.Append("\n\tData Source Type: ").Append(TypeOfDataSource);
+            builder.Append("\n\tData Source Type: ").Append(DataSourceType);
             builder.Append("\nAlgorithms: ");
 
             foreach (var algorithm in Algorithms)

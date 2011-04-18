@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace aCudaResearch.FpGrowth.Data.MsWeb
+namespace aCudaResearch.Data.MsWeb
 {
     public class MsInstance<T>
     {
@@ -21,6 +21,12 @@ namespace aCudaResearch.FpGrowth.Data.MsWeb
         /// Read data from the archive file.
         /// </summary>
         public Dictionary<T, int[]> Database { get; set; }
+
+        public MsInstance()
+        {
+            Elements = new Dictionary<T, MsElement>();
+            Database = new Dictionary<T, int[]>();
+        }
 
         /// <summary>
         /// Adding new Element to the definition dictionary.

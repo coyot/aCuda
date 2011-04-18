@@ -95,16 +95,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractAlgorithm.cs" />
+    <Compile Include="Algorithms\FpGrowth\CondPatternBaseGenerator.cs" />
+    <Compile Include="Algorithms\FpGrowth\FpTree.cs" />
+    <Compile Include="Algorithms\FpGrowth\TreeExplorer.cs" />
+    <Compile Include="Algorithms\FpGrowth\TreeNode.cs" />
+    <Compile Include="Algorithms\FrequentSetGenerator.cs" />
+    <Compile Include="Algorithms\IAlgorithm.cs" />
     <Compile Include="ACudaMain.cs" />
+    <Compile Include="AlgorithmBuilder.cs" />
+    <Compile Include="Algorithms\KosarakAbstractAlgorithm.cs" />
+    <Compile Include="Algorithms\MsWebFpGrowthAlgorithm.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="DataProvider.cs" />
     <Compile Include="DataSourceType.cs" />
-    <Compile Include="FpGrowth\FpGrowthAlgorithm.cs" />
+    <Compile Include="Algorithms\MsWebAbstractAlgorithm.cs" />
+    <Compile Include="Data\DecisionRule.cs" />
+    <Compile Include="Data\FrequentItemSet.cs" />
     <Compile Include="IDataBuilder.cs" />
-    <Compile Include="FpGrowth\Data\MsWeb\MsDataBuilder.cs" />
-    <Compile Include="FpGrowth\Data\MsWeb\MsInstance.cs" />
-    <Compile Include="FpGrowth\Data\MsWeb\MsElement.cs" />
+    <Compile Include="Data\MsWeb\MsDataBuilder.cs" />
+    <Compile Include="Data\MsWeb\MsInstance.cs" />
+    <Compile Include="Data\MsWeb\MsElement.cs" />
     <Compile Include="ExecutionEngine.cs" />
     <Compile Include="ExecutionSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -130,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\Settings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

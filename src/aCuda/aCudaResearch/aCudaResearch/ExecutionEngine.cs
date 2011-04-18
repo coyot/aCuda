@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using aCudaResearch.FpGrowth;
-using aCudaResearch.FpGrowth.Data.MsWeb;
+using System.Linq;
+using aCudaResearch.Algorithms;
 
 namespace aCudaResearch
 {
@@ -13,8 +13,11 @@ namespace aCudaResearch
     public class ExecutionEngine
     {
         private readonly ExecutionSettings _settings;
-        private Dictionary<AlgorithmType, AbstractAlgorithm<MsInstance<int>>> _msInstanceAlgorithms;
-
+        private Dictionary<AlgorithmType, IAlgorithm> Algorithms;
+        
+        /// <summary>
+        /// Programm execution settings.
+        /// </summary>
         public ExecutionSettings Settings
         {
             get
@@ -26,7 +29,10 @@ namespace aCudaResearch
         public ExecutionEngine(ExecutionSettings settings)
         {
             _settings = settings;
-            _msInstanceAlgorithms = new Dictionary<AlgorithmType, AbstractAlgorithm<MsInstance<int>>>();
+
+            // prepare the pool of algorithms
+            Algorithms = new Dictionary<AlgorithmType, IAlgorithm>();
+            PrepareAlgorithms();
         }
 
         /// <summary>
@@ -34,19 +40,25 @@ namespace aCudaResearch
         /// </summary>
         public void ExecuteComputation()
         {
-            //!+ here the computation time measuring should be placed!!!
+            //! here the computation time measuring should be placed!!!
 
-            foreach (var algorithm in _settings.Algorithms)
+            foreach (var algorithm in Settings.Algorithms)
             {
-                if (!_msInstanceAlgorithms.ContainsKey(algorithm))
-                {
-                    // here the builder should be introduced!
-                    _msInstanceAlgorithms.Add(algorithm, new FpGrowthAlgorithm());
-                }
+                Algorithms[algorithm].Run(Settings);
             }
 
             Console.WriteLine("Computation will be executed.");
             Console.WriteLine(_settings.ToString());
+        }
+
+        private void PrepareAlgorithms()
+        {
+            AlgorithmBuilder.DataSourceType = Settings.DataSourceType;
+
+            foreach (var algorithm in Settings.Algorithms.Where(algorithm => !Algorithms.ContainsKey(algorithm)))
+            {
+                Algorithms.Add(algorithm, AlgorithmBuilder.BuildAlgorithm(algorithm));
+            }
         }
     }
 }
