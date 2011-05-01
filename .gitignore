@@ -2,6 +2,7 @@ log/*.log
 tmp/**/*
 obj
 bin
+doc/thesis-master.pdf
 _ReSharper
 *.g.cs
 *.dll
