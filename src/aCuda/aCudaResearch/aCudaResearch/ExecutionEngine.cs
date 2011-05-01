@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using aCudaResearch.Algorithms;
 
@@ -38,17 +39,26 @@ namespace aCudaResearch
         /// <summary>
         /// Engine main method to execute computation process.
         /// </summary>
-        public void ExecuteComputation()
+        public Dictionary<AlgorithmType, long> ExecuteComputation()
         {
             //! here the computation time measuring should be placed!!!
-
-            foreach (var algorithm in Settings.Algorithms)
-            {
-                Algorithms[algorithm].Run(Settings);
-            }
+            var result = new Dictionary<AlgorithmType, long>();
 
             Console.WriteLine("Computation will be executed.");
             Console.WriteLine(_settings.ToString());
+
+            foreach (var algorithm in Settings.Algorithms)
+            {
+                var stopWatch = new Stopwatch();
+                
+                stopWatch.Start();
+                Algorithms[algorithm].Run(Settings);
+                stopWatch.Stop();
+
+                result.Add(algorithm, stopWatch.ElapsedMilliseconds);
+            }
+
+            return result;
         }
 
         private void PrepareAlgorithms()

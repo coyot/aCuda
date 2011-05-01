@@ -8,6 +8,9 @@ using aCudaResearch.Data.MsWeb;
 
 namespace aCudaResearch.Algorithms
 {
+    /// <summary>
+    /// FPGrowth Algorithm where the data is from the MsWeb dataset.
+    /// </summary>
     public class MsWebFpGrowthAlgorithm : MsWebAbstractAlgorithm
     {
         public override void Run(ExecutionSettings executionSettings)

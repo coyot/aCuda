@@ -111,6 +111,7 @@
     <Compile Include="Algorithms\MsWebAbstractAlgorithm.cs" />
     <Compile Include="Data\DecisionRule.cs" />
     <Compile Include="Data\FrequentItemSet.cs" />
+    <Compile Include="Helpers\DictionaryHelper.cs" />
     <Compile Include="IDataBuilder.cs" />
     <Compile Include="Data\MsWeb\MsDataBuilder.cs" />
     <Compile Include="Data\MsWeb\MsInstance.cs" />

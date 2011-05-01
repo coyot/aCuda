@@ -1,4 +1,5 @@
 ﻿using System;
+using aCudaResearch.Helpers;
 using aCudaResearch.Settings;
 
 namespace aCudaResearch
@@ -22,7 +23,8 @@ namespace aCudaResearch
                 {
                     var engine = new ExecutionEngine(settings);
 
-                    engine.ExecuteComputation();
+                    var result = engine.ExecuteComputation();
+                    result.Print();
                 }
             }
             catch (InvalidOperationException e)
