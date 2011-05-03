@@ -8,5 +8,6 @@
   <DataSourceType>MsData</DataSourceType>
   <Algorithms>
     <Algorithm>FpGrowth</Algorithm>
+    <Algorithm>Apriori</Algorithm>
   </Algorithms>
 </ExecutionSettings>

@@ -12,12 +12,15 @@ namespace aCudaResearch
 
         public static IAlgorithm BuildAlgorithm(AlgorithmType algorithmType)
         {
+            // Algorithms for MsData
             if (DataSourceType == DataSourceType.MsData)
             {
                 switch (algorithmType)
                 {
                     case AlgorithmType.FpGrowth:
                         return new MsWebFpGrowthAlgorithm();
+                    case AlgorithmType.Apriori:
+                        return new MsWebAprioriAlgorithm();
                 }
             }
 

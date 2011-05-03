@@ -2,6 +2,7 @@
 {
     public enum AlgorithmType
     {
+        Apriori,
         FpGrowth
     }
 }

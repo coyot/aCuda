@@ -104,6 +104,7 @@
     <Compile Include="ACudaMain.cs" />
     <Compile Include="AlgorithmBuilder.cs" />
     <Compile Include="Algorithms\KosarakAbstractAlgorithm.cs" />
+    <Compile Include="Algorithms\MsWebAprioriAlgorithm.cs" />
     <Compile Include="Algorithms\MsWebFpGrowthAlgorithm.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="DataProvider.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Data\DecisionRule.cs" />
     <Compile Include="Data\FrequentItemSet.cs" />
     <Compile Include="Helpers\DictionaryHelper.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="IDataBuilder.cs" />
     <Compile Include="Data\MsWeb\MsDataBuilder.cs" />
     <Compile Include="Data\MsWeb\MsInstance.cs" />

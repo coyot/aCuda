@@ -18,15 +18,15 @@ namespace aCudaResearch.Algorithms
             builder = new MsDataBuilder();
             var data = builder.BuildInstance(executionSettings);
 
-            var compressedDatabase = FrequentSetGenerator.Generate(data.Database, executionSettings.MinSup);
+            var compressedDatabase = FrequentSetGenerator.Generate(data.Transactions, executionSettings.MinSup);
 
             var tree = new FpTree<int>();
             tree.BuildFpTreeFromData(compressedDatabase);
 
-            var treeExplorer = new TreeExplorer<int>((int)(data.Database.Keys.Count * executionSettings.MinSup));
+            var treeExplorer = new TreeExplorer<int>((int)(data.Transactions.Keys.Count * executionSettings.MinSup));
             var rules = treeExplorer.GenerateRuleSet(tree, executionSettings.MinConf);
 
-            var result = PrintRules(rules, executionSettings.DataSourcePath, executionSettings.MinSup, executionSettings.MinConf, data.Database.Keys.Count, data.Elements);
+            var result = PrintRules(rules, executionSettings.DataSourcePath, executionSettings.MinSup, executionSettings.MinConf, data.Transactions.Keys.Count, data.Elements);
             Console.WriteLine(result);
         }
 

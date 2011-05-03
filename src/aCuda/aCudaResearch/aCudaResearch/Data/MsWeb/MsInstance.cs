@@ -20,12 +20,12 @@ namespace aCudaResearch.Data.MsWeb
         /// <summary>
         /// Read data from the archive file.
         /// </summary>
-        public Dictionary<T, int[]> Database { get; set; }
+        public Dictionary<T, T[]> Transactions { get; set; }
 
         public MsInstance()
         {
             Elements = new Dictionary<T, MsElement>();
-            Database = new Dictionary<T, int[]>();
+            Transactions = new Dictionary<T, T[]>();
         }
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace aCudaResearch.Data.MsWeb
         /// </summary>
         /// <param name="id">Element id number.</param>
         /// <param name="values">Data associated with this element.</param>
-        public void AddEntry(T id, int[] values)
+        public void AddEntry(T id, T[] values)
         {
-            Database.Add(id, values);
+            Transactions.Add(id, values);
         }
     }
 }
