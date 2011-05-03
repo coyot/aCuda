@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using aCudaResearch.Data;
+using aCudaResearch.Helpers;
 
 namespace aCudaResearch.Algorithms.FpGrowth
 {
@@ -27,32 +28,7 @@ namespace aCudaResearch.Algorithms.FpGrowth
             _minSupport = minSupport;
         }
 
-        /// <summary>
-        /// Returns the list of all subsets for defined set of elements.
-        /// </summary>
-        /// <param name="originalList">List of elements/</param>
-        /// <returns>
-        /// List of lists with the cardinality from 1 to n, where n is the cardinality of the input set.
-        /// </returns>
-        private static List<List<T>> GetSubsets(IEnumerable<T> originalList)
-        {
-            var elements = originalList.ToArray();
-            var subsets = new List<List<T>>();
-            for (var i = 1; i < Math.Pow(2, originalList.Count()); i++)
-            {
-                var binary = Convert.ToString(i, 2);
-                var subset = new List<T>();
-                for (var j = 0; j < binary.Length; j++)
-                {
-                    if (binary[j] == '1')
-                    {
-                        subset.Add(elements[binary.Length - j - 1]);
-                    }
-                }
-                subsets.Add(subset);
-            }
-            return subsets;
-        }
+        
 
         /// <summary>
         /// Fp-growth procedure for specified tree and the conditional base pattern.
@@ -67,7 +43,7 @@ namespace aCudaResearch.Algorithms.FpGrowth
 
                 var elements = path.Select(node => node.Value).ToList();
 
-                var values = GetSubsets(elements);
+                var values = EnumerableHelper.GetSubsets(elements);
                 foreach (var list in values)
                 {
                     if (list.Count <= 0) continue;
@@ -131,7 +107,7 @@ namespace aCudaResearch.Algorithms.FpGrowth
                     continue;
                 }
 
-                var subSets = GetSubsets(frequentItemSet.ItemSet);
+                var subSets = EnumerableHelper.GetSubsets(frequentItemSet.ItemSet);
 
                 foreach (var t in subSets)
                 {
@@ -139,7 +115,7 @@ namespace aCudaResearch.Algorithms.FpGrowth
                     for (var j = 0; j < subSets.Count; j++)
                     {
                         var rightSide = new FrequentItemSet<T>(subSets[j]);
-                        if (rightSide.ItemSet.Count != 1 || !SetsSeparated(rightSide, leftSide))
+                        if (rightSide.ItemSet.Count != 1 || !FrequentItemSet<T>.SetsSeparated(rightSide, leftSide))
                         {
                             continue;
                         }
@@ -159,15 +135,5 @@ namespace aCudaResearch.Algorithms.FpGrowth
             return decisionRules;
         }
 
-        /// <summary>
-        /// Checks if two sets are disjunctive.
-        /// </summary>
-        /// <param name="rightSide">First set</param>
-        /// <param name="leftSide">Second set</param>
-        /// <returns>True if two sets are disjunctive, false otherwise.</returns>
-        private static bool SetsSeparated(FrequentItemSet<T> rightSide, FrequentItemSet<T> leftSide)
-        {
-            return leftSide.ItemSet.All(item => !rightSide.ItemSet.Contains(item));
-        }
     }
 }

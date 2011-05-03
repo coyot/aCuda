@@ -11,23 +11,35 @@ namespace aCudaResearch.Helpers
         /// Checks if the list of elements is frequent for supported
         /// transactions and specified support.
         /// </summary>
-        /// <typeparam name="T">Type of the elements ID's</typeparam>
-        /// <param name="toCheck">List of values which should be checked</param>
+        /// <typeparam name="T">Type of the elements</typeparam>
+        /// <param name="list">List of values which should be checked</param>
         /// <param name="transactions">List of transactions</param>
         /// <param name="support">The minimal support for the frequency</param>
         /// <returns>True if the set is frequent, false otherwise</returns>
-        public static bool IsFrequent<T>(this IList<T> toCheck, Dictionary<T, T[]> transactions, double support)
+        public static bool IsFrequent<T>(this IList<T> list, Dictionary<T, T[]> transactions, double support)
+        {
+            return list.GetSupport(transactions) >= (support*transactions.Count);
+        }
+
+        /// <summary>
+        /// Gets the support for the list
+        /// </summary>
+        /// <typeparam name="T">Type of the elements</typeparam>
+        /// <param name="list">List to be checked</param>
+        /// <param name="transactions">List of transactions</param>
+        /// <returns>Support for the set of elements</returns>
+        public static int GetSupport<T>(this IList<T> list, Dictionary<T, T[]> transactions)
         {
             var transactionsList = transactions.Values.ToList();
 
-            foreach (var element in toCheck)
+            foreach (var element in list)
             {
                 var tmpTransactionsList =
                     transactionsList.Where(transaction => transaction.Contains(element)).ToList();
 
                 transactionsList = tmpTransactionsList;
             }
-            return transactionsList.Count >= (support*transactions.Count);
+            return transactionsList.Count;
         }
 
         /// <summary>
@@ -47,6 +59,25 @@ namespace aCudaResearch.Helpers
             return first.Count() == second.Count() && first.Where(element => second.Contains(element) == true).Any();
         }
 
+        /// <summary>
+        /// Returns the complement of the list 
+        /// </summary>
+        /// <typeparam name="T">Type of elements</typeparam>
+        /// <param name="baseList">Base list</param>
+        /// <param name="firstPart">The rest of the list</param>
+        /// <returns>The complement</returns>
+        public static IList<T> GetComplement<T>(this IList<T> baseList, IList<T> firstPart)
+        {
+            return baseList.Where(element => !firstPart.Contains(element)).ToList();
+        }
+
+        /// <summary>
+        /// Creates new list which is the merge of two inputs
+        /// </summary>
+        /// <typeparam name="T">Type of data stored in the list</typeparam>
+        /// <param name="first">First list</param>
+        /// <param name="second">Second list</param>
+        /// <returns>A list which contains elements both from first, and the second input list</returns>
         public static IList<T> Merge<T>(this IList<T> first, IList<T> second)
         {
             var result = first.ToList();

@@ -6,20 +6,15 @@ using System.Text;
 namespace aCudaResearch.Data
 {
     /// <summary>
-    /// Klasa reprezentująca ziób częsty.
+    /// Frequent Set representation
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Type of data stored in the set</typeparam>
     public class FrequentItemSet<T>
     {
-        private HashSet<T> itemSet = new HashSet<T>();
-
         /// <summary>
         /// Elementy zbioru częstego.
         /// </summary>
-        public HashSet<T> ItemSet
-        {
-            get { return itemSet; }
-        }
+        public HashSet<T> ItemSet { get; private set; }
 
         /// <summary>
         /// Konstruktor klasy.
@@ -27,9 +22,10 @@ namespace aCudaResearch.Data
         /// <param name="itemSet">lista elementów składających sie na zbiór częsty</param>
         public FrequentItemSet(IEnumerable<T> itemSet)
         {
+            ItemSet = new HashSet<T>();
             foreach (var element in itemSet)
             {
-                this.itemSet.Add(element);
+                this.ItemSet.Add(element);
             }
         }
 
@@ -39,37 +35,38 @@ namespace aCudaResearch.Data
         }
 
         /// <summary>
-        /// Sprawdza, czy dany zbiór częsty pokrywa się z innym zbiorem częstym.
+        /// Checks if the set is equal to the another set
         /// </summary>
-        /// <param name="other"></param>
-        /// <returns>true, jeżeli oba zbiory zawierają identyczny zestaw elementów, w przeciwnym razie false</returns>
+        /// <param name="other">The other set to be compared to</param>
+        /// <returns>true, if two sets contains the same elements, false otherwise</returns>
         public bool Equals(FrequentItemSet<T> other)
         {
-            if (other.itemSet.Count != itemSet.Count)
-            {
-                return false;
-            }
-            foreach (var item in itemSet)
-            {
-                if (!other.itemSet.Contains(item))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return other.ItemSet.Count == ItemSet.Count && ItemSet.All(item => other.ItemSet.Contains(item));
         }
 
         public override int GetHashCode()
         {
             int hashCode = 0;
-            if (itemSet != null)
+            if (ItemSet != null)
             {
-                foreach (var item in itemSet)
+                foreach (var item in ItemSet)
                 {
                     hashCode += item.GetHashCode();
                 }
             }
             return hashCode * 397;
+        }
+
+
+        /// <summary>
+        /// Checks if two sets are disjunctive.
+        /// </summary>
+        /// <param name="rightSide">First set</param>
+        /// <param name="leftSide">Second set</param>
+        /// <returns>True if two sets are disjunctive, false otherwise.</returns>
+        public static bool SetsSeparated(FrequentItemSet<T> rightSide, FrequentItemSet<T> leftSide)
+        {
+            return leftSide.ItemSet.All(item => !rightSide.ItemSet.Contains(item));
         }
     }
 }

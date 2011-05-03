@@ -113,6 +113,7 @@
     <Compile Include="Data\DecisionRule.cs" />
     <Compile Include="Data\FrequentItemSet.cs" />
     <Compile Include="Helpers\DictionaryHelper.cs" />
+    <Compile Include="Helpers\EnumerableHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="IDataBuilder.cs" />
     <Compile Include="Data\MsWeb\MsDataBuilder.cs" />
