@@ -7,37 +7,124 @@ W rozdziale tym przedstawiony zostanie przegląd literatury, który stanowi pods
 
 \subsection{Model teoretyczny}
 
-Niech $\mathbf{I} = \mathbf{I}_1, \mathbf{I}_2, \ldots, \mathbf{I}_m$ będzie zbiorem binarnych atrybutów, zwanych elementami lub towarami. Niech $\mathbf{T}$ będzie zbiorem transakcji. Każda z transakcji $t$ jest reprezentowana, jako wektor wartości binarnych, gdzie $t[k]=1$ oznacza, że w transakcji $t$ zakupiony został element $\mathbf{I}_k$, w przeciwny wypadku $t[k]=0$. W bazie danych znajduje się jedna krotka odpowiadająca jednej transakcji. Niech $\mathbf{X} \subseteq \mathbf{I}$, wówczas transakcja $t$ spełnia $\mathbf{X}$, jeżeli dla wszystkich elementów $\mathbf{I}_k \in \mathbf{X}$, $t[k]=1$.
+Niech $I = \lbrace i_1,i_2,...,i_m \rbrace$ będzie \emph{zbiorem elementów} o liczności $|I| = m$. \emph{Transakcją} nazwano dowolny, niepusty podzbiór $X \subseteq I$ zbioru elementów. Bazą danych $DB$ nazwano dowolny zbiór par $(id, X)$, gdzie $X$ jest transakcją, a $id$ jest dowolną wartością unikalną w ramach bazy danych nazywaną \emph{identyfikatorem transakcji}. Bez utraty ogólności założono iż $id\in \mathbb{N}$. 
+
+\emph{Wsparciem} (\english{support}) $sup(X)$ transakcji $X$, w bazie danych nazwano częstość wystąpień transakcji w bazie danych. Formalnie przedstawia to wzór~\ref{support:def}.
+
+\begin{equation}
+\label{support:def}
+sup(X)=\frac{| \lbrace id: (id,Y)\in DB \wedge X\subseteq Y \rbrace |}{|DB|}
+\end{equation} 
 
 \begin{df}\label{regula:def}
-Reguła asocjacyjna ma postać $\mathbf{X} \Rightarrow \mathbf{Y}$, gdzie $\mathbf{X}, \mathbf{Y} \subseteq \mathbf{I}$ oraz $\mathbf{X} \cap \mathbf{Y} = \oslash$.
+Niech będą dane dwie transakcje $X$ i $Y$ takie, że $X\cap Y=\emptyset$. Implikację postaci $X\Rightarrow  Y$ nazwano \emph{regułą asocjacyjną}.
 \end{df}
 
-Reguła asocjacyjna zdefiniowana w Definicji~\ref{regula:def} określa, że jeśli dany klient kupił towary ze zbioru $\mathbf{X}$, najprawdopodobniej kupi też towary ze zbioru $\mathbf{Y}$. Aby reguła asocjacyjna stanowiła interesujące źródło informacji dla analityka stosującego techniki eksploracji danych, musi ona spełniać określone warunki wyrażone za pomocą odpowiednich miar. Dwie najbardziej popularne miary jakości reguł asocjacyjnych to poziom pokrycia (\\english{support}) oraz poziom ufności (\english{confidence}).
+Łatwo zauważyć, że jeśli poziom ten jest niski, to oznacza to, że nie ma jednoznacznych dowodów na łączne występowanie elementów zbioru $Z = X \cup Y$, ponieważ zbiór $Z$ występuje w niewielkiej liczbie transakcji. 
 
-\begin{df}\label{support:def}
-Poziom pokrycia dla reguły asocjacyjnej postaci $\mathbf{X} \Rightarrow \mathbf{Y}$ jest miarą definiowaną dla zbioru $\mathbf{Z} = \mathbf{X} \cup \mathbf{Y}$ - określa ona częstotliwość wystąpień zbioru $\mathbf{Z}$ w zbiorze transakcji $\mathbf{T}$.
-\end{df}
-
-Oznacza to, że poziom pokrycia ($sup$) jest stosunkiem liczby transakcji zawierających elementy sumy zbiorów (czyli $|\mathbf{Z}|$, gdzie $\mathbf{Z} = \mathbf{X} \cup \mathbf{Y}$) do liczby wszystkich transakcji w systemie ($|\mathbf{T}|$). Wzór \ref{support2:def} przedstawia sposó obliczania wartości $sup$.
-
-\begin{equation}\label{support2:def}
-	sup = \frac{|\mathbf{Z}|}{|\mathbf{T}|}
-\end{equation}
-
-Łatwo zauważyć, że jeśli poziom ten jest niski, to oznacza to, że nie ma jednoznacznych dowodów na łączne występowanie elementów zbioru $\mathbf{Z} = \mathbf{X} \cup \mathbf{Y}$, ponieważ zbiór $\mathbf{Z}$ występuje w niewielkiej liczbie transakcji. 
-
-Poziom ufności jest miarą zdefiniowaną dla implikacji reprezentowanej przez regułę asocjacyjną~\cite{Elmasri:db}. 
+\emph{Poziom ufności} (\english{confidence}) jest miarą zdefiniowaną dla implikacji reprezentowanej przez regułę asocjacyjną~\cite{Elmasri:db}. 
 
 \begin{df}\label{confidence:def}
-Pioziom ufności reguły asocjacyjnej $\mathbf{X} \Rightarrow \mathbf{Y}$ jest równy 
+Pioziom ufności ($conf$) reguły asocjacyjnej $X \Rightarrow Y$ jest równy 
 \begin{equation}
-	conf = \frac{sup(\mathbf{Z})}{sup(\mathbf{X})}
+	conf(X \Rightarrow Y) = \frac{sup(X \cup Y)}{sup(X)}
 \end{equation}
-
-gdzie $\mathbf{Z} = \mathbf{X} \cup \mathbf{Y}$.
 \end{df}
 
-Ze wzoru wynika, że poziom ufności jest prawdopodobieństwem tego, że elementy tworzące zbiór $\mathbf{Y}$ zostaną kupione przez danego klienta pod warunkiem, że klient kupi elementy należące do zbioru $\mathbf{X}$.
+Po analizie definicji~\ref{confidence:def} łatwo zauważyć, że poziom ufności może być interpretowany, jako estymacja prawdopodobieństwa $P(Y | X)$.
 
-Ważnym jest by nie mylić poziomu ufności z poziomem pokrycia. Podczas gdy ufność określa ''siłę'' reguły, pokrycie podkreśla jej statystyczną ważność. Inną motywacją, poza statystyczną ważnością, dlaczego interesujący jest ten współczynnik, jest fakt, że poszukiwane reguły powinny spełniać pewne wymaganie co do wysokości wartości $sup$ z powodów biznesowych. Jeśli poziom pokrycia nie jest wystarczająco wysoki, to oznacza to, iż reguła nie jest warta brania pod uwagę, bądź jest ona mniej preferowana (może być rozpatrzona później)~\cite{Problem:Statement}.
+Reguły asocjacyjne zazwyczaj powinny spełniać pewne wymagania zdefiniowane przez użytkownika - minimalne wsparcie oraz minimalny poziom ufności, oznaczane odpowiednio $minsup$ oraz $minconf$. Wyznaczają one dla aplikacji progi, jakie powinny spełniać zbiory oraz reguł, aby były brane pod uwagę w trakcie analizy.
+
+\begin{df}
+Zbiorem częstym $X \subseteq I$ nazywamy taki zbiór, który spełnia zależność $sup(X) \geq minsup$.
+\end{df}
+
+Generowanie reguł asocjacyjnych zazwyczaj sprowadza się do dwóch, osobnych kroków:
+\begin{enumerate}
+	\item Minimalne wsparcie jest używane do odnalezienia wszystkich zbiorów częstych w bazie danych $DB$.
+	\item Znalezione zbiory często oraz minimalny poziom ufności są używane do wygenerownia reguł.
+\end{enumerate}
+
+Znalezienie wszystkich zbiorów częstych w bazie danych $DB$ jest zadaniem wymagającym przeszukania wszystkich możliwych kombinacji bez powtórzeń ze zbioru $I$. Zbiór możliwych zbiorów elementów ma liczność równą $2^n - 1$ (wszystkie zbiory, poza zbiorem pustym, który nie jest w tym wypadku sensownym zbiorem). 
+
+Warto zauważyć, że dla każdego zbioru częstego $Y$, każdy jego podzbiór $X$ jest również zbiorem częstym~\cite{Problem:Statement}. Korzystając z tej właściwości wsparcia możliwe jest w sposó efektywny znalezienie wszystkich zbiorów częstych w zadanej bazie danyh. Dodatkowo, wszystkie reguły zbudowane na podstawie zbioru częstego $Y$ muszą spełniać warunek minimalnego wsparcia ponieważ spełnia ten warunek zbiór $Y$, a suma zbiorów reguły jest zbiorem wyjściowym $Y$.
+
+\section{Aktualna wiedza}
+W rozdziale tym zebrana została oraz opracowana dotychczasowa wiedza (\english{state-of-the-art}) na temat odkrywania reguł asocjacyjnych. Przedstawione zostaną dwa podstawowe algorytmy wykorzystywane w tym procesie: Apriori oraz FP-growth. Na podstawie tych dwóch algorytmów w chwili obecnej budowane są nowe algorytmy, ich modyfikacje wykorzystujące możliwości współczesnych komputerów.
+
+\subsection{Algorytm Apriori}
+Pierwszy algorytm odkrywania reguł asocjacyjnych został przedstawiony w roku 1994 w pracy \cite{Apriori:Main}. Niżej przedstawione zostaną szczegóły działania algorytmu \emph{Apriori}.
+
+Zagadnienie odkrywania reguł asocjacyjnych można podzielić na dwa etapy~\cite{Problem:Statement}:
+\begin{enumerate}
+	\item Generowanie zbiorów częstych, których wartość wsparcia jest wyższa od wartości $minsup$
+	\item Generowanie reguł asocjacyjnych na podstawie zbiorów częstych. Reguła $X \Rightarrow Y$ jest wynikiem działania algorytmu, jeżeli spełnia ona nierówność $conf(X \Rightarrow Y) \geq minconf$. Ponieważ zbiór $Z = X \cup Y$ jest zbiorem częstym, to reguła spełnia również warunek przekraczania minimalnego wsparcia.
+
+	Na tym etapie możliwe jest tworzenie reguł, w których w zbiorze \emph{poprzedników} ($X$ z oznaczeń z definicji~\ref{regula:def}) jest wiele elementów~\cite{Problem:Statement} oraz jeden w \emph{następniku} (zbiór $Y$ z definicji~\ref{regula:def}) lub dopuszczana jest możliwość wielu elementów w następniku również~\cite{Apriori:Main}. W niniejszej pracy analizowany jest taki sposób generowania reguł, w którym oba zbiory mogą być zbiorami więcej niż jednoelementowymi.
+\end{enumerate}
+
+
+
+\subsubsection{Generowanie zbiorów częstych}
+W celu wyznaczenia zbiorów częstych algorytm dokonule analizy bazy danych, by w kolejnych iteracjach generować rodziny coraz to liczniejszych zbiorów, będących zbiorami częstymi dla zadanej wartości $minsup$. Algorytm zaczyna od znalezienia wszystkich zbiorów jednoelementowych, które są zbiorami częstymi. W każdym kolejnym kroku generowane są zbiory częste na podstawie zbiorów wygenerowanych zbiorów w kroku poprzednim. Proces ten jest kontynuowany do momentu aż nie zostaną znalezione żadne zbiory częste.
+
+Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odkrytych w kroku poprzednim - co ważne generowanie ich odbywa się bez przeglądania bazy danych transakcji. Intuicja podpowiada, że każdy podzbiór zbioru częstego jest zbiorem częstym. Zatem, każdy zbiór częsty zawierający $k$ elementów może być wygenerowany na podstawie połączenia dwóch zbiorów posiadających $k-1$ elementów, a na koniec kasując te zbiory, których jakikolwiek podzbiór nie jest częsty~\cite{Apriori:Main}.
+
+Proces szukania kandydatów, zwany \emph{apriori-gen}, zawiera dwie główne operacje: łączenie i przycinanie. Zbiór kandydatów k-elementowych jest generowany przez łączenie zbioru Lk-1 z nim samym a następnie przycinany poprzez usuwanie zbędnych zbiorów.
+
+%Kluczową własnością wykorzystywaną w tym etapie jest antymonotoniczność funkcji wsparcia:
+
+%Własność Apriori Niech X i Y będą zbiorami towarów. Jeśli X   Y, to 
+%support(X)  support(Y)
+%Dowód: X  Y  cover(X)  cover(Y)  support(X)  support(Y).
+
+%Rysunek 3: Ilustracja własności Apriori: jeśli AB nie jest częsty, to możemy wykluczyć wszystkie jego nadzbiory
+ 
+%Antymonotoniczność wsparcia ze względu na zawieranie się zbiorów oznacza, że rozszerzenie nieczęstego zbioru nie może prowadzić do częstego zbioru. Jeżeli zatem k-zbiór X nie jest częsty, wówczas możemy pominąć wszystkie zbiory Y, takie że X Í Y (por. rysunek 3).
+
+%Niżej przedstawiamy szczegóły algorytmu, w którym własność Apriori jest wykorzystywana. Analizujemy, jak rodzina k-zbiorów częstych Lk powstaje z k-1 zbiorów częstych Lk-1.
+
+%Dowolny k-zbiór nazywamy kandydatem, jeśli każdy jego (k-1)-podzbiór jest częsty. 
+
+%Łączenie:
+%Zakładamy, że towary w bazie transakcyjnej są ponumerowane i wszystkie zbiory są uporządkowane leksykograficznie w rosnącym porządku. Czyli każdy częsty l Î Lk-1 jest reprezentowany jako tablica 
+%l = (l[1], l[2],...,l[k-1])
+%gdzie l[1] < l[2] < ... < l[k-1]. Operacja łączenia Lk-1  Lk-1 jest wykonywana przez łączenie wszystkich par (k-1)-zbiorów częstych.
+
+%Dwa zbiory l1,l2 Î Lk-1 zostają połączone, jeśli mają one k-2 takich samych elementów na początku, tzn. 
+%(l1[1] = l2[1]) Ù (l1[2] = l2[2]) Ù...Ù(l1[k-2] = l2[k-2]) oraz (l1[k-1] < l2[k-1])
+%(1)
+%Warunek l1[k-1] < l2[k-1] jest po to, aby zapobiegać powstawaniu powtarzających się kandydatów. Wynikiem łączenia zbiorów l1 i l2 spełniających warunek jest k-elementowy zbiór l, który powstaje przez dołączenie l2[k-1] na końcu l1. 
+
+%Przycinanie: Można zauważyć, że powstający zbiór kandydatów Ck jest nadzbiorem zbioru Lk, tzn. że jego elemnety mogą być częste lub nieczęste, ale wszystkie k-zbiory częste należą do Ck. Celem operacji przycinania jest redukowanie rozmiaru zbioru Ck kandydatów przed sprawdzaniem ich wsparcia w bazie transakcji. W tym celu wykorzystujemy własciwość Apriori, z której wynika, że jeśli jakiś (k-1)-podzbiór danego kandydata nie występuje w Lk-1, to ten kandydat powinien być usunięty z Ck. Algorytm sprawdzania obecności podzbiorów kandydatów w Lk-1 może być efektywnie implementowany za pomocą drzewa haszującego dla częstych zbiorów w Lk-1.
+
+\subsubsection{Generowanie reguł asocjacyjnych}
+Rozdział do opisania.
+
+\subsection{Algorytm FP-growth}
+
+
+%Dzięki wykorzystaniu "downward-closure"~\cite{Problem:Statement} właściwości wsparcia, który gwarantuje, że wszystkie podzbiory zbioru częstego, również są zbiorami częstymi (i na odwrót), możliwe jest w sposób efektywny znalezienie wszystkich zbiorów częstych w zadaniej bazie danych.
+
+%While the second step is straight forward, the first step needs more attention.
+%Finding all frequent itemsets in a database is difficult since it involves searching all possible itemsets (item combinations). The set of possible itemsets is the power set over I and has size 2n - 1 (excluding the empty set which is not a valid itemset). Although the size of the powerset grows exponentially in the number of items n in I, efficient search is possible using the downward-closure property of support[2][4] (also called anti-monotonicity "Jian Pei, Jiawei Han, and Laks V.S. Lakshmanan. Mining frequent itemsets with convertible constraints. In Proceedings of the 17th International Conference on Data Engineering, April 2–6, 2001, Heidelberg, Germany, pages 433-442, 2001.") which guarantees that for a frequent itemset, all its subsets are also frequent and thus for an infrequent itemset, all its supersets must also be infrequent. Exploiting this property, efficient algorithms (e.g., Apriori[6] and Eclat[7]) can find all frequent itemsets.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% GARBAGE!!!
+
+%Z uwagi na fakt, że należy w pewien sposób ograniczyć liczbę reguł, jako wyniku działania algorytmu, wprowadza się dwie wartości $minsup$ oraz $minconf$. Wszystkie kombinacje przedmiotów ($\mathbf{X}_k$), które spełniają nierówność $sup(\mathbf{X}_k) \leq minsup$ nazywane są zbiorami dużymi (LARGE?). Pozostałe zbiory nazywane są zbiorami małymi (SMALL?)~\cite{Problem:Statement}.
+
+%Ze wzoru wynika, że poziom ufności jest estymacją prawdopodobieństwa tego, że elementy tworzące zbiór $\mathbf{Y}$ zostaną kupione przez danego klienta pod warunkiem, że klient kupi elementy należące do zbioru $\mathbf{X}$.
+
+%Inną motywacją, poza statystyczną ważnością, dlaczego interesujący jest poziom pokrycia, jest fakt, że poszukiwane reguły powinny spełniać pewne wymaganie, co do wysokości wartości $sup$ z powodów biznesowych. Jeśli poziom pokrycia nie jest wystarczająco wysoki, to oznacza to, iż reguła nie jest warta brania pod uwagę, bądź jest ona mniej preferowana (może być rozpatrzona później)~\cite{Problem:Statement}. Dlatego też w przypadku reguły asocjacyjnej określenie wartości $sup$ dla każdej reguły i weryfikowanie tylko tych, które spełniają pewne wymagania co do wysokości tego współczynnika.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Reguła asocjacyjna zdefiniowana w Definicji~\ref{regula:def} określa, że jeśli dany klient kupił towary ze zbioru $\mathbf{X}$, najprawdopodobniej kupi też towary ze zbioru $\mathbf{Y}$. Aby reguła asocjacyjna stanowiła interesujące źródło informacji dla analityka stosującego techniki eksploracji danych, musi ona spełniać określone warunki wyrażone za pomocą odpowiednich miar. Dwie najbardziej popularne miary jakości reguł asocjacyjnych to poziom pokrycia (\\english{support}) oraz poziom ufności (\english{confidence}).
+
+
+%Oznacza to, że poziom pokrycia ($sup$) jest stosunkiem liczby transakcji zawierających elementy sumy zbiorów (czyli $|\mathbf{Z}|$, gdzie $\mathbf{Z} = \mathbf{X} \cup \mathbf{Y}$) do liczby wszystkich transakcji w systemie ($|\mathbf{T}|$). Wzór \ref{support2:def} przedstawia sposó obliczania wartości $sup$.
+
+%\begin{equation}\label{support2:def}
+	%sup = \frac{|\mathbf{Z}|}{|\mathbf{T}|}
+%\end{equation}
