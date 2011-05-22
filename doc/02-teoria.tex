@@ -63,14 +63,65 @@ Zagadnienie odkrywania reguł asocjacyjnych można podzielić na dwa etapy~\cite
 	Na tym etapie możliwe jest tworzenie reguł, w których w zbiorze \emph{poprzedników} ($X$ z oznaczeń z definicji~\ref{regula:def}) jest wiele elementów~\cite{Problem:Statement} oraz jeden w \emph{następniku} (zbiór $Y$ z definicji~\ref{regula:def}) lub dopuszczana jest możliwość wielu elementów w następniku również~\cite{Apriori:Main}. W niniejszej pracy analizowany jest taki sposób generowania reguł, w którym oba zbiory mogą być zbiorami więcej niż jednoelementowymi.
 \end{enumerate}
 
-
-
-\subsubsection{Generowanie zbiorów częstych}
+\subsubsection{Generowanie zbiorów częstych}\label{apriori:gen}
 W celu wyznaczenia zbiorów częstych algorytm dokonule analizy bazy danych, by w kolejnych iteracjach generować rodziny coraz to liczniejszych zbiorów, będących zbiorami częstymi dla zadanej wartości $minsup$. Algorytm zaczyna od znalezienia wszystkich zbiorów jednoelementowych, które są zbiorami częstymi. W każdym kolejnym kroku generowane są zbiory częste na podstawie zbiorów wygenerowanych zbiorów w kroku poprzednim. Proces ten jest kontynuowany do momentu aż nie zostaną znalezione żadne zbiory częste.
 
 Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odkrytych w kroku poprzednim - co ważne generowanie ich odbywa się bez przeglądania bazy danych transakcji. Intuicja podpowiada, że każdy podzbiór zbioru częstego jest zbiorem częstym. Zatem, każdy zbiór częsty zawierający $k$ elementów może być wygenerowany na podstawie połączenia dwóch zbiorów posiadających $k-1$ elementów, a na koniec kasując te zbiory, których jakikolwiek podzbiór nie jest częsty~\cite{Apriori:Main}.
 
-Proces szukania kandydatów, zwany \emph{apriori-gen}, zawiera dwie główne operacje: łączenie i przycinanie. Zbiór kandydatów k-elementowych jest generowany przez łączenie zbioru Lk-1 z nim samym a następnie przycinany poprzez usuwanie zbędnych zbiorów.
+Procedura \proc{AlgorytmApriori} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm Apriori.
+
+\begin{codebox}
+	\Procname{$\proc{AlgorytmApriori}$}\label{apriori:listing}
+	\li $\id{L_1} \gets \lbrace 1$-elementowe zbiory częste $\rbrace$
+		\li \For $(k = 2; \id{L_{k-1}} \neq \emptyset; k++)$
+		\li \Do
+			\li $\id{C_k} \gets aprioriGen(\id{L_{k-1}})$
+			\li \textbf{forall} trasakcja $t \in \id{DB}$
+			\li \Do
+					\li $C_t \gets subset(C_k, t)$
+					\li \textbf{forall} kandydat $c \in \id{C_t}$
+					\li \Do c.count++
+					\End
+				\End
+			\li $L_k \gets \lbrace c \in C_k | c.count \geq minsup \rbrace$	
+		\End
+	\li Answer $\gets \bigcup_k L_k $
+\end{codebox}
+
+\paragraph{Procedura aprioriGen}
+Procedura \id{aprioriGen} reprezentuje proces twórzenia zbiorów $k$-elementowych kandydatów na podstawie zbiorów wejściowych ${k-1}$-elementowych. Procedura ta jest podzielona na dwa etapy: łączenia oraz przycinania. 
+
+Jak łatwo zauważyć wynikiem działania \proc{JoinStep} są zbiory $k$-elementowe, które powstały na podstawie zbiorów wejściowych $L_{k-1}$, a ich zawartość różni się tylko jednym elementem.
+
+\begin{codebox}
+	\Procname{$\proc{JoinStep}$}
+	\li \textbf{insert into} $C_k$
+	\li \textbf{select} p.item$_1$, p.item$_2$, \dots, p.item$_{k-1}$, q.item$_{k-1}$
+	\li \textbf{from} $L_{k-1}$ p, $L_{k-1}$ q
+	\li \textbf{where} p.item$_1 = $ q.item$_1$, \dots, p.item$_{k-2}$ = q.item$_{k-2}$, p.item$_{k-1}$ $<$ q.item$_{k-1}$
+\end{codebox}
+
+Następnym krokiem jest \proc{PruneStep}, w którym usuwane są wszystkie elementy $c \in C_k$, którego jakikolwiek podzbiór $(k-1)$-elementowy zbioru $c$ nie należy do $L_{k-1}$.
+
+\begin{codebox}
+	\Procname{$\proc{PruneStep}$}
+		\li \textbf{forall} zbiór $c \in C_k$ 
+		\li \Do
+			\li \textbf{forall} $(k-1)$-elementowy podzbiór s zbioru $c$
+					\li \Do 
+						\li \If $s \notin L_{k-1}$
+						\li \Then
+							\li \textbf{delete} $c$ z $C_k$
+						\End
+					\End
+		\End
+\end{codebox}
+
+\subsection{Generowanie reguł asocjacyjnych}
+
+Po wyznaczeniu zbiorów częstych algorytm przystępuje do drugiego etapu, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru. Mniej ogólny sposób generowania reguł został przedstawiony w pracy~\cite{Problem:Statement}, jednakże podjęto decyzję, że jest to sposób zbyt mało użyteczny w środowisku produkcyjnym.
+
+Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconr$. Warto zauważyć, że dla każdego zbioru częstego generowane są wszystkie możliwe niepuste podzbiory - zapewnia to, że odkryte zostaną wszystkie możliwe reguły.
 
 %Kluczową własnością wykorzystywaną w tym etapie jest antymonotoniczność funkcji wsparcia:
 
@@ -97,9 +148,6 @@ Proces szukania kandydatów, zwany \emph{apriori-gen}, zawiera dwie główne ope
 %Warunek l1[k-1] < l2[k-1] jest po to, aby zapobiegać powstawaniu powtarzających się kandydatów. Wynikiem łączenia zbiorów l1 i l2 spełniających warunek jest k-elementowy zbiór l, który powstaje przez dołączenie l2[k-1] na końcu l1. 
 
 %Przycinanie: Można zauważyć, że powstający zbiór kandydatów Ck jest nadzbiorem zbioru Lk, tzn. że jego elemnety mogą być częste lub nieczęste, ale wszystkie k-zbiory częste należą do Ck. Celem operacji przycinania jest redukowanie rozmiaru zbioru Ck kandydatów przed sprawdzaniem ich wsparcia w bazie transakcji. W tym celu wykorzystujemy własciwość Apriori, z której wynika, że jeśli jakiś (k-1)-podzbiór danego kandydata nie występuje w Lk-1, to ten kandydat powinien być usunięty z Ck. Algorytm sprawdzania obecności podzbiorów kandydatów w Lk-1 może być efektywnie implementowany za pomocą drzewa haszującego dla częstych zbiorów w Lk-1.
-
-\subsubsection{Generowanie reguł asocjacyjnych}
-Rozdział do opisania.
 
 \subsection{Algorytm FP-growth}
 
