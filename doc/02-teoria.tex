@@ -51,7 +51,7 @@ Znalezienie wszystkich zbiorów częstych w bazie danych $DB$ jest zadaniem wyma
 Warto zauważyć, że dla każdego zbioru częstego $Y$, każdy jego podzbiór $X$ jest również zbiorem częstym~\cite{Problem:Statement}. Korzystając z tej właściwości wsparcia możliwe jest w sposób efektywny znalezienie wszystkich zbiorów częstych w zadanej bazie danych - z tej zależności korzysta algorytm apriori opisany w rozdziale~\ref{apriori:section}. Dodatkowo, wszystkie reguły zbudowane na podstawie zbioru częstego $Y$ muszą spełniać warunek minimalnego wsparcia, ponieważ spełnia ten warunek zbiór $Y$, a suma zbiorów reguły jest zbiorem wyjściowym $Y$.
 
 \section{Aktualna wiedza}
-W rozdziale tym zebrana została oraz opracowana dotychczasowa wiedza (\english{state-of-the-art}) na temat odkrywania reguł asocjacyjnych. Przedstawione zostaną dwa podstawowe algorytmy wykorzystywane w tym procesie: Apriori oraz FP-growth. W chwili obecnej te dwa algorytmy stanowią podstawę, na któej budowane są nowe algorytmy, wykorzystujące możliwości współczesnych algorytmów (\emph{Czy wymieniać tutaj przykłady algorytmów, które bazują na nich + refy do kilku artykułów?}).
+W rozdziale tym zebrana została oraz opracowana dotychczasowa wiedza (\english{state-of-the-art}) na temat odkrywania reguł asocjacyjnych. Przedstawione zostaną dwa podstawowe algorytmy wykorzystywane w tym procesie: Apriori oraz FP-growth. W chwili obecnej te dwa algorytmy stanowią podstawę, na której budowane są nowe algorytmy, wykorzystujące możliwości współczesnych algorytmów (\emph{Czy wymieniać tutaj przykłady algorytmów, które bazują na nich + refy do kilku artykułów?}).
 
 \subsection{Algorytm Apriori}\label{apriori:section}
 Pierwszy algorytm odkrywający reguły asocjacyjne został przedstawiony w roku 1994 w pracy~\cite{Apriori:Main}. Niżej przedstawione zostaną szczegóły działania tego algorytmu nazwanego algorytmem \emph{Apriori}.
@@ -77,11 +77,11 @@ Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odk
 	$k$-zbiór & Zbiór zawierający $k$ elementów. \\ \hline
 	$L_k$ & Zbiór zawierający $k$-zbiory. Każdy zbiór zawarty w $L_k$ zawiera dwa pola: i) zbiór oraz ii) wartość $support$. \\ \hline
 	$C_k$ & Zbiór $k$-zbiorów kandydatów (potencjalnych zbiorów częstych). Każdy zbiór zawarty w $C_k$ zawiera dwa pola: i) zbiór oraz ii) wartość $support$. \\ \hline
-	\end{tabular}
-	\caption{Oznaczenie skrótów w opisie algorytmu}\label{skroty:znaczanie}
+	\end{tabular}\label{skroty:znaczanie}
+	\caption{Oznaczenie skrótów w opisie algorytmu}
 \end{table}
 
-Tabela~\ref{skroty:znaczenie} zawiera spis oznaczeń używanych w opisie algorytmu. 
+Tabela~\ref{skroty:znaczanie} zawiera spis oznaczeń używanych w opisie algorytmu. 
 
 Procedura \proc{Apriori Frequent Set Generaion} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm generowania zbiorów częstych.
 
@@ -141,7 +141,7 @@ Celem operacji przycinania (\english{prune}) jest ograniczenie rozmiaru zbioru $
 \subsubsection{Generowanie reguł asocjacyjnych}
 Po zakończeniu pierwszego etapu algorytm przystępuje do drugiego, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy, generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru. Mniej ogólny sposób generowania reguł został przedstawiony w pracy~\cite{Problem:Statement}, jednakże podjęto decyzję, że jest to sposób zbyt mało użyteczny w środowisku produkcyjnym.
 
-Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconr$. Warto zauważyć, że dla każdego zbioru częstego generowane są wszystkie możliwe niepuste podzbiory - zapewnia to, że odkryte zostaną wszystkie możliwe reguły.
+Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconf$. Warto zauważyć, że dla każdego zbioru częstego generowane są wszystkie możliwe niepuste podzbiory - zapewnia to, że odkryte zostaną wszystkie możliwe reguły.
 
 Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocjacyjnych na podstawie odkrytych zbiorów częstych.
 
@@ -157,11 +157,14 @@ Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocja
 \begin{codebox}
 	\Procname{$\proc{Genrules}$($l_k$: $k$-zbiór częsty, $a_m$: $m$-zbiór częsty)}
 		\li $\id{A} \gets \lbrace (m-1)$-zbiór $a_{m-1} | a_{m-1} \subset a_m \rbrace$
-		\li \For $a_{m-1} \in A$ \Do
+		\li \For $a_{m-1} \in A$
+			\li \Do
 			\li $\id{conf} \gets \frac{support(l_k)}{support(a_{m-1})}$
-			\li \If $\id{conf} \geq \id{minconf}$ \Then
+			\li \If $\id{conf} \geq \id{minconf}$
+				\li \Then
 						\li \textbf{output} reguła $a_{m-1} \Rightarrow (l_k - a_{m-1})$ \\ ufność = $conf$ oraz wsparcie= $support(l_k)$
-						\li \If $m-1 > 1$ \Then
+						\li \If $m-1 > 1$ 
+							\li \Then
 							\li \textbf{call} genrules($l_k$, $a_{m-1}$) \\ generowanie reguł podzbiorów zbioru $a_{m-1}$
 						\End
 				\End
@@ -197,7 +200,39 @@ Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocja
 
 \subsection{Algorytm FP-growth}
 
-Test~\cite{Main:FPgrowth}
+Podstawową wadą algorytmu Apriori jest wysoki koszt przetważania dużych zbiorów danych. Przykładowo, dla $10^4$ 1-zbiorów częstych, algorytm Apriori wygeneruje około $10^7$ 2-zbiorów kandydatów, które następnie poddane zostaną weryfikacji, czy są zbiorami częstymi. Fakt ten stał się podstwawowym powodem, dla którego zaprojektowany oraz zaimplementowany został algorytm \emph{FP-growth} w pracy~\cite{Main:FPgrowth}. Algorytm ten pozwala wyeliminować konieczność generowania tak dużej liczby kandydujących zbiorów elementów. 
+
+Algorytm FP-growth można podzielić na trzy podstawowe kroki.
+\begin{enumerate}
+	\item W kroku pierwszym generowana jest skompresowana wersja bazy danych $DB$, mająca postać drzewa częstych wzorców.W pierwszym dochodzi do kompresji bazy danych, 
+	\item Drugim krokiem jest transformacja tak skonstruowanego drzewa do postaci FP-drzewa (patrz definicja~\ref{fptree:def}).
+	\item Trzeci krok polega na analizie FP-drzewa celem odnalezienia reguł asocjacyjnych. W kroku tym stosowana jest metoda dziel i zwyciężaj (\english{divide-and-conquer}) zamiast podejścia Apriori. Takie podejście w sposób znaczący zmniejsza rozmiar 
+\end{enumerate}
+
+\subsubsection{Definicje}
+\begin{df}\label{fptree:def}
+FP-drzewo (\english{frequent-pattern tree}) jest to ukorzeniony, etykietowany w wierzchołkach graf acykliczny spełniający poniższe cechy.
+\end{df}
+\begin{enumerate}
+	\item Korzeniem drzewa jest jeden element \id{null}, zbiór poddrzew prefixowanych elementami (jako dzieci elementu \id{null}) oraz tablicy wskaźników \id{element} $\rightarrow$ \emph{wskaźnik na element drzewa}.
+	\item Każdy wierzchołek poddrzewa składa się z trzech elementów: nazwy element, licznika (\english{count}) oraz wskaźnika na inny wierzchołek. Nazwa elementu w sposób jednoznaczny identyfikuje element ze zbioru elementów $I$, licznik przechowuje liczbę transakcji reprezentowanych przez ścieżkę od \id{null} do tego elementu, natomiast wskaźnik wskazuje na kolejny wierzchołek w FP-drzewie, którego nazwa jest identyczna do danego.
+	\item Każdy wpis w tablicy nagłówkowej (\english{frequent-item-header table}) skałada się z dwóch elementów: nazwy elementu oraz wskaźnika na pierwszy element w drzewie posiadający identyczną nazwę.
+\end{enumerate}
+
+\subsubsection{Konstrukcja FP-drzewa}
+\textbf{Input:} Baza danych transakcji $DB$ oraz minimalne wsparcie (\id{minsupp}).
+
+\textbf{Output:} FP-drzewo utworzone na podstawie zawartości $DB$
+
+\textbf{Metoda:} Poniżej zostanie opisany proces konstrukcji FP-drzewa.
+
+\begin{enumerate}
+	\item Przeskanowanie bazy danych transakcji $DB$ odbywa się jednokrotnie. Utworzony na tej podstawie zostanie zbiór $F$, zawierający 1-zbiory częste. Posortowany malejąco zbiór $F$ na podstawie wartości $support$ dla każdego elementu tworzy listę $FList$, czyli listę wsystkich elementów tworzących jednoelementowe zbiory częste.
+	\item f
+\end{enumerate}
+
+\subsubsection{Eksploracja FP-drzewa}
+
 %Dzięki wykorzystaniu "downward-closure"~\cite{Problem:Statement} właściwości wsparcia, który gwarantuje, że wszystkie podzbiory zbioru częstego, również są zbiorami częstymi (i na odwrót), możliwe jest w sposób efektywny znalezienie wszystkich zbiorów częstych w zadaniej bazie danych.
 
 %While the second step is straight forward, the first step needs more attention.
