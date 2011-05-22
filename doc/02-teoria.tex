@@ -1,7 +1,7 @@
 
 \chapter{Podstawy teoretyczne}
 
-W rozdziale tym przedstawiony zostanie przegląd literatury, który stanowi podstawy wiedzy na temat eksploracji danych, a w szczególności problemu odkrywania reguł asocjacyjnych w dużych zbiorach danych.
+W rozdziale tym przedstawiony zostanie przegląd literatury, który stanowi podstawy wiedzy na temat eksploracji danych, a w szczególności problemu odkrywania reguł asocjacyjnych w dużych zbiorach danych. Zebrana wiedza posłużyła autorowi do opracowania algorytmu wykorzystującego możliwości współczesnych kart graficznych.
 
 \section{Definicje}
 
@@ -16,11 +16,11 @@ Niech $I = \lbrace i_1,i_2,...,i_m \rbrace$ będzie \emph{zbiorem elementów} o 
 sup(X)=\frac{| \lbrace id: (id,Y)\in DB \wedge X\subseteq Y \rbrace |}{|DB|}
 \end{equation} 
 
+Łatwo zauważyć, że jeśli poziom ten jest niski, to oznacza to, że nie ma jednoznacznych dowodów na łączne występowanie elementów zbioru $Z = X \cup Y$, ponieważ zbiór $Z$ występuje w niewielkiej liczbie transakcji. 
+
 \begin{df}\label{regula:def}
 Niech będą dane dwie transakcje $X$ i $Y$ takie, że $X\cap Y=\emptyset$. Implikację postaci $X\Rightarrow  Y$ nazwano \emph{regułą asocjacyjną}.
 \end{df}
-
-Łatwo zauważyć, że jeśli poziom ten jest niski, to oznacza to, że nie ma jednoznacznych dowodów na łączne występowanie elementów zbioru $Z = X \cup Y$, ponieważ zbiór $Z$ występuje w niewielkiej liczbie transakcji. 
 
 \emph{Poziom ufności} (\english{confidence}) jest miarą zdefiniowaną dla implikacji reprezentowanej przez regułę asocjacyjną~\cite{Elmasri:db}. 
 
@@ -33,46 +33,61 @@ Pioziom ufności ($conf$) reguły asocjacyjnej $X \Rightarrow Y$ jest równy
 
 Po analizie definicji~\ref{confidence:def} łatwo zauważyć, że poziom ufności może być interpretowany, jako estymacja prawdopodobieństwa $P(Y | X)$.
 
-Reguły asocjacyjne zazwyczaj powinny spełniać pewne wymagania zdefiniowane przez użytkownika - minimalne wsparcie oraz minimalny poziom ufności, oznaczane odpowiednio $minsup$ oraz $minconf$. Wyznaczają one dla aplikacji progi, jakie powinny spełniać zbiory oraz reguł, aby były brane pod uwagę w trakcie analizy.
+
+Reguły asocjacyjne zazwyczaj powinny spełniać pewne wymagania zdefiniowane przez użytkownika - minimalne wsparcie oraz minimalny poziom ufności, oznaczane odpowiednio $minsup$ oraz $minconf$. Wyznaczają one dla aplikacji progi, jakie powinny spełniać zbiory oraz reguły, aby były brane pod uwagę w trakcie analizy.
 
 \begin{df}
 Zbiorem częstym $X \subseteq I$ nazywamy taki zbiór, który spełnia zależność $sup(X) \geq minsup$.
 \end{df}
 
-Generowanie reguł asocjacyjnych zazwyczaj sprowadza się do dwóch, osobnych kroków:
+Generowanie reguł asocjacyjnych zazwyczaj sprowadza się do dwóch, niezależnych kroków:
 \begin{enumerate}
 	\item Minimalne wsparcie jest używane do odnalezienia wszystkich zbiorów częstych w bazie danych $DB$.
-	\item Znalezione zbiory często oraz minimalny poziom ufności są używane do wygenerownia reguł.
+	\item Znalezione zbiory często oraz minimalny poziom ufności są używane do wygenerownia reguł asocjacyjnych.
 \end{enumerate}
 
-Znalezienie wszystkich zbiorów częstych w bazie danych $DB$ jest zadaniem wymagającym przeszukania wszystkich możliwych kombinacji bez powtórzeń ze zbioru $I$. Zbiór możliwych zbiorów elementów ma liczność równą $2^n - 1$ (wszystkie zbiory, poza zbiorem pustym, który nie jest w tym wypadku sensownym zbiorem). 
+Znalezienie wszystkich zbiorów częstych w bazie danych $DB$ jest zadaniem wymagającym przeszukania wszystkich możliwych kombinacji bez powtórzeń ze zbioru $I$. Zbiór możliwych zbiorów elementów ma liczność równą $2^n - 1$ (wszystkie zbiory, poza zbiorem pustym, który nie jest w tym wypadku zbiorem sensownym w znaczeniu poddania go analizie). 
 
-Warto zauważyć, że dla każdego zbioru częstego $Y$, każdy jego podzbiór $X$ jest również zbiorem częstym~\cite{Problem:Statement}. Korzystając z tej właściwości wsparcia możliwe jest w sposó efektywny znalezienie wszystkich zbiorów częstych w zadanej bazie danyh. Dodatkowo, wszystkie reguły zbudowane na podstawie zbioru częstego $Y$ muszą spełniać warunek minimalnego wsparcia ponieważ spełnia ten warunek zbiór $Y$, a suma zbiorów reguły jest zbiorem wyjściowym $Y$.
+Warto zauważyć, że dla każdego zbioru częstego $Y$, każdy jego podzbiór $X$ jest również zbiorem częstym~\cite{Problem:Statement}. Korzystając z tej właściwości wsparcia możliwe jest w sposób efektywny znalezienie wszystkich zbiorów częstych w zadanej bazie danych - z tej zależności korzysta algorytm apriori opisany w rozdziale~\ref{apriori:section}. Dodatkowo, wszystkie reguły zbudowane na podstawie zbioru częstego $Y$ muszą spełniać warunek minimalnego wsparcia, ponieważ spełnia ten warunek zbiór $Y$, a suma zbiorów reguły jest zbiorem wyjściowym $Y$.
 
 \section{Aktualna wiedza}
-W rozdziale tym zebrana została oraz opracowana dotychczasowa wiedza (\english{state-of-the-art}) na temat odkrywania reguł asocjacyjnych. Przedstawione zostaną dwa podstawowe algorytmy wykorzystywane w tym procesie: Apriori oraz FP-growth. Na podstawie tych dwóch algorytmów w chwili obecnej budowane są nowe algorytmy, ich modyfikacje wykorzystujące możliwości współczesnych komputerów.
+W rozdziale tym zebrana została oraz opracowana dotychczasowa wiedza (\english{state-of-the-art}) na temat odkrywania reguł asocjacyjnych. Przedstawione zostaną dwa podstawowe algorytmy wykorzystywane w tym procesie: Apriori oraz FP-growth. W chwili obecnej te dwa algorytmy stanowią podstawę, na któej budowane są nowe algorytmy, wykorzystujące możliwości współczesnych algorytmów (\emph{Czy wymieniać tutaj przykłady algorytmów, które bazują na nich + refy do kilku artykułów?}).
 
-\subsection{Algorytm Apriori}
-Pierwszy algorytm odkrywania reguł asocjacyjnych został przedstawiony w roku 1994 w pracy \cite{Apriori:Main}. Niżej przedstawione zostaną szczegóły działania algorytmu \emph{Apriori}.
+\subsection{Algorytm Apriori}\label{apriori:section}
+Pierwszy algorytm odkrywający reguły asocjacyjne został przedstawiony w roku 1994 w pracy~\cite{Apriori:Main}. Niżej przedstawione zostaną szczegóły działania tego algorytmu nazwanego algorytmem \emph{Apriori}.
 
 Zagadnienie odkrywania reguł asocjacyjnych można podzielić na dwa etapy~\cite{Problem:Statement}:
 \begin{enumerate}
-	\item Generowanie zbiorów częstych, których wartość wsparcia jest wyższa od wartości $minsup$
-	\item Generowanie reguł asocjacyjnych na podstawie zbiorów częstych. Reguła $X \Rightarrow Y$ jest wynikiem działania algorytmu, jeżeli spełnia ona nierówność $conf(X \Rightarrow Y) \geq minconf$. Ponieważ zbiór $Z = X \cup Y$ jest zbiorem częstym, to reguła spełnia również warunek przekraczania minimalnego wsparcia.
+	\item Odkrywanie zbiorów częstych, których wartość wsparcia jest wyższa od wartości $minsup$.
+	\item Generowanie reguł asocjacyjnych na podstawie znalezionych zbiorów częstych. Reguła $X \Rightarrow Y$ jest wynikiem działania algorytmu dla zbioru $Z = X \cup Y$, jeżeli spełnia ona nierówność $conf(X \Rightarrow Y) \geq minconf$. Ponieważ zbiór $Z = X \cup Y$ jest zbiorem częstym, to reguła spełnia również warunek przekraczania minimalnego wsparcia.
 
-	Na tym etapie możliwe jest tworzenie reguł, w których w zbiorze \emph{poprzedników} ($X$ z oznaczeń z definicji~\ref{regula:def}) jest wiele elementów~\cite{Problem:Statement} oraz jeden w \emph{następniku} (zbiór $Y$ z definicji~\ref{regula:def}) lub dopuszczana jest możliwość wielu elementów w następniku również~\cite{Apriori:Main}. W niniejszej pracy analizowany jest taki sposób generowania reguł, w którym oba zbiory mogą być zbiorami więcej niż jednoelementowymi.
+	Na tym etapie możliwe jest tworzenie reguł, w których w zbiorze \emph{poprzedników} ($X$ z oznaczeń z definicji~\ref{regula:def}) jest wiele elementów oraz jeden w \emph{następniku} (zbiór $Y$ z definicji~\ref{regula:def})~\cite{Problem:Statement} lub dopuszczana jest możliwość wielu elementów również w następniku~\cite{Apriori:Main}. W niniejszej pracy analizowany jest sposób generowania reguł, w którym oba zbiory mogą być zbiorami wieloelementowymi.
 \end{enumerate}
 
+W kolejnych podrozdziałach przedstawione zostaną etapy tworzące razem algorytmy Apriori.
+
 \subsubsection{Generowanie zbiorów częstych}\label{apriori:gen}
-W celu wyznaczenia zbiorów częstych algorytm dokonule analizy bazy danych, by w kolejnych iteracjach generować rodziny coraz to liczniejszych zbiorów, będących zbiorami częstymi dla zadanej wartości $minsup$. Algorytm zaczyna od znalezienia wszystkich zbiorów jednoelementowych, które są zbiorami częstymi. W każdym kolejnym kroku generowane są zbiory częste na podstawie zbiorów wygenerowanych zbiorów w kroku poprzednim. Proces ten jest kontynuowany do momentu aż nie zostaną znalezione żadne zbiory częste.
+W celu wyznaczenia zbiorów częstych algorytm dokonuje analizy bazy danych $DB$, by w kolejnych iteracjach generować rodziny coraz to liczniejszych zbiorów, będących zbiorami częstymi dla zadanej wartości $minsup$. Algorytm zaczyna od znalezienia wszystkich zbiorów jednoelementowych, które są zbiorami częstymi. W każdym kolejnym kroku generowane są zbiory częste na podstawie zbiorów wygenerowanych w kroku poprzednim. Proces ten jest kontynuowany do momentu aż nie zostaną znalezione żadne zbiory częste.
 
-Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odkrytych w kroku poprzednim - co ważne generowanie ich odbywa się bez przeglądania bazy danych transakcji. Intuicja podpowiada, że każdy podzbiór zbioru częstego jest zbiorem częstym. Zatem, każdy zbiór częsty zawierający $k$ elementów może być wygenerowany na podstawie połączenia dwóch zbiorów posiadających $k-1$ elementów, a na koniec kasując te zbiory, których jakikolwiek podzbiór nie jest częsty~\cite{Apriori:Main}.
+Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odkrytych w kroku poprzednim - co ważne generowanie ich odbywa się bez wielokrotnego przeglądania bazy danych transakcji. Intuicja podpowiada, że każdy podzbiór zbioru częstego jest zbiorem częstym. Zatem, każdy zbiór częsty zawierający $k$ elementów może być wygenerowany na podstawie połączenia dwóch zbiorów posiadających $k-1$ elementów, a na koniec kasując te zbiory, których jakikolwiek podzbiór nie jest częsty~\cite{Apriori:Main}.
 
-Procedura \proc{AlgorytmApriori} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm Apriori.
+\begin{table}
+	\centering
+	\begin{tabular}{|c|p{7.7cm}|} \hline
+	$k$-zbiór & Zbiór zawierający $k$ elementów. \\ \hline
+	$L_k$ & Zbiór zawierający $k$-zbiory. Każdy zbiór zawarty w $L_k$ zawiera dwa pola: i) zbiór oraz ii) wartość $support$. \\ \hline
+	$C_k$ & Zbiór $k$-zbiorów kandydatów (potencjalnych zbiorów częstych). Każdy zbiór zawarty w $C_k$ zawiera dwa pola: i) zbiór oraz ii) wartość $support$. \\ \hline
+	\end{tabular}
+	\caption{Oznaczenie skrótów w opisie algorytmu}\label{skroty:znaczanie}
+\end{table}
+
+Tabela~\ref{skroty:znaczenie} zawiera spis oznaczeń używanych w opisie algorytmu. 
+
+Procedura \proc{Apriori Frequent Set Generaion} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm generowania zbiorów częstych.
 
 \begin{codebox}
-	\Procname{$\proc{AlgorytmApriori}$}\label{apriori:listing}
-	\li $\id{L_1} \gets \lbrace 1$-elementowe zbiory częste $\rbrace$
+	\Procname{$\proc{Apriori Frequent Set Generaion}$}\label{apriori:listing}
+	\li $\id{L_1} \gets \lbrace 1$-zbiory częste $\rbrace$
 		\li \For $(k = 2; \id{L_{k-1}} \neq \emptyset; k++)$
 		\li \Do
 			\li $\id{C_k} \gets aprioriGen(\id{L_{k-1}})$
@@ -91,23 +106,27 @@ Procedura \proc{AlgorytmApriori} przedstawia pseudokod realizujący opisywany w 
 \paragraph{Procedura aprioriGen}
 Procedura \id{aprioriGen} reprezentuje proces twórzenia zbiorów $k$-elementowych kandydatów na podstawie zbiorów wejściowych ${k-1}$-elementowych. Procedura ta jest podzielona na dwa etapy: łączenia oraz przycinania. 
 
-Jak łatwo zauważyć wynikiem działania \proc{JoinStep} są zbiory $k$-elementowe, które powstały na podstawie zbiorów wejściowych $L_{k-1}$, a ich zawartość różni się tylko jednym elementem.
+Jak łatwo zauważyć wynikiem działania \proc{Join Step} są zbiory $k$-elementowe, które powstały na podstawie zbiorów wejściowych $L_{k-1}$, a ich zawartość różni się tylko jednym elementem - ostatnim. Ważnym faktem jest to, iż elementy w zbiorach są uporządkowane leksykograficzne, co wykorzystywane jest w tej procedurze.
 
 \begin{codebox}
-	\Procname{$\proc{JoinStep}$}
+	\Procname{$\proc{Join Step}$}
 	\li \textbf{insert into} $C_k$
 	\li \textbf{select} p.item$_1$, p.item$_2$, \dots, p.item$_{k-1}$, q.item$_{k-1}$
 	\li \textbf{from} $L_{k-1}$ p, $L_{k-1}$ q
 	\li \textbf{where} p.item$_1 = $ q.item$_1$, \dots, p.item$_{k-2}$ = q.item$_{k-2}$, p.item$_{k-1}$ $<$ q.item$_{k-1}$
 \end{codebox}
 
-Następnym krokiem jest \proc{PruneStep}, w którym usuwane są wszystkie elementy $c \in C_k$, którego jakikolwiek podzbiór $(k-1)$-elementowy zbioru $c$ nie należy do $L_{k-1}$.
+Warto zauważyć, że \proc{Join Step} jest ekwiwalentem rozszerania zbioru $L_{k-1}$ każdym elementem zbioru elementów $I$, a następnie kasowania tych $(k-1)$-zbiorów otrzymanych przez usuwanie $(k-1)$ elementu, które nie są w $L_{k-1}$. 
+
+Warunek p.item$_{k-1}$ $<$ q.item$_{k-1}$ zapewnia, że nie będą generowane duplikaty. Dlatego też po etapie łączenia zachodzi zależność $C_k \supseteq L_k$.
+
+Następnym krokiem jest \proc{Prune Step}, w którym usuwane są wszystkie elementy $c \in C_k$, którego jakikolwiek podzbiór $(k-1)$-elementowy zbioru $c$ nie należy do $L_{k-1}$.
 
 \begin{codebox}
-	\Procname{$\proc{PruneStep}$}
+	\Procname{$\proc{Prune Step}$}
 		\li \textbf{forall} zbiór $c \in C_k$ 
 		\li \Do
-			\li \textbf{forall} $(k-1)$-elementowy podzbiór s zbioru $c$
+			\li \textbf{forall} $(k-1)$-podzbiór s zbioru $c$
 					\li \Do 
 						\li \If $s \notin L_{k-1}$
 						\li \Then
@@ -117,11 +136,38 @@ Następnym krokiem jest \proc{PruneStep}, w którym usuwane są wszystkie elemen
 		\End
 \end{codebox}
 
-\subsection{Generowanie reguł asocjacyjnych}
+Celem operacji przycinania (\english{prune}) jest ograniczenie rozmiaru zbioru $C_k$ przed sprawdzeniem wsparcia dla kandydatów w bazie danych $DB$. W tym celu wykorzystywana jest właściwość, z której wynika, że jeśli jakiś $(k-1)$-podzbiór danego kandydata ($c \in C_k$) nie występuje w $L_{k-1}$, to kandydatk $c$ nie jest zbiorem częstym i powinien być usunięty z $C_k$.
 
-Po wyznaczeniu zbiorów częstych algorytm przystępuje do drugiego etapu, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru. Mniej ogólny sposób generowania reguł został przedstawiony w pracy~\cite{Problem:Statement}, jednakże podjęto decyzję, że jest to sposób zbyt mało użyteczny w środowisku produkcyjnym.
+\subsubsection{Generowanie reguł asocjacyjnych}
+Po zakończeniu pierwszego etapu algorytm przystępuje do drugiego, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy, generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru. Mniej ogólny sposób generowania reguł został przedstawiony w pracy~\cite{Problem:Statement}, jednakże podjęto decyzję, że jest to sposób zbyt mało użyteczny w środowisku produkcyjnym.
 
 Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconr$. Warto zauważyć, że dla każdego zbioru częstego generowane są wszystkie możliwe niepuste podzbiory - zapewnia to, że odkryte zostaną wszystkie możliwe reguły.
+
+Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocjacyjnych na podstawie odkrytych zbiorów częstych.
+
+\begin{codebox}
+	\Procname{$\proc{Generate Frequent Itemsets}$}
+		\li \textbf{forall} zbiór częsty $l_k$, $k \geq 2$ \Do
+			\li \textbf{call} genrules($l_k$, $l_k$)
+					\End
+		\End
+\end{codebox}
+
+
+\begin{codebox}
+	\Procname{$\proc{Genrules}$($l_k$: $k$-zbiór częsty, $a_m$: $m$-zbiór częsty)}
+		\li $\id{A} \gets \lbrace (m-1)$-zbiór $a_{m-1} | a_{m-1} \subset a_m \rbrace$
+		\li \For $a_{m-1} \in A$ \Do
+			\li $\id{conf} \gets \frac{support(l_k)}{support(a_{m-1})}$
+			\li \If $\id{conf} \geq \id{minconf}$ \Then
+						\li \textbf{output} reguła $a_{m-1} \Rightarrow (l_k - a_{m-1})$ \\ ufność = $conf$ oraz wsparcie= $support(l_k)$
+						\li \If $m-1 > 1$ \Then
+							\li \textbf{call} genrules($l_k$, $a_{m-1}$) \\ generowanie reguł podzbiorów zbioru $a_{m-1}$
+						\End
+				\End
+			\End
+		\End
+\end{codebox}
 
 %Kluczową własnością wykorzystywaną w tym etapie jest antymonotoniczność funkcji wsparcia:
 
@@ -151,7 +197,7 @@ Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepu
 
 \subsection{Algorytm FP-growth}
 
-
+Test~\cite{Main:FPgrowth}
 %Dzięki wykorzystaniu "downward-closure"~\cite{Problem:Statement} właściwości wsparcia, który gwarantuje, że wszystkie podzbiory zbioru częstego, również są zbiorami częstymi (i na odwrót), możliwe jest w sposób efektywny znalezienie wszystkich zbiorów częstych w zadaniej bazie danych.
 
 %While the second step is straight forward, the first step needs more attention.
