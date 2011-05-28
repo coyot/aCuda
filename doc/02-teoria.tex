@@ -90,11 +90,11 @@ Procedura \proc{Apriori Frequent Set Generaion} przedstawia pseudokod realizują
 	\li $\id{L_1} \gets \lbrace 1$-zbiory częste $\rbrace$
 		\li \For $(k = 2; \id{L_{k-1}} \neq \emptyset; k++)$
 		\li \Do
-			\li $\id{C_k} \gets aprioriGen(\id{L_{k-1}})$
-			\li \textbf{forall} trasakcja $t \in \id{DB}$
+			 $\id{C_k} \gets aprioriGen(\id{L_{k-1}})$
+			\li \For \textbf{each} trasakcja $t \in \id{DB}$
 			\li \Do
-					\li $C_t \gets subset(C_k, t)$
-					\li \textbf{forall} kandydat $c \in \id{C_t}$
+					$C_t \gets subset(C_k, t)$
+					\li \For \textbf{each} kandydat $c \in \id{C_t}$
 					\li \Do c.count++
 					\End
 				\End
@@ -124,13 +124,13 @@ Następnym krokiem jest \proc{Prune Step}, w którym usuwane są wszystkie eleme
 
 \begin{codebox}
 	\Procname{$\proc{Prune Step}$}
-		\li \textbf{forall} zbiór $c \in C_k$ 
+		\li \For \textbf{each} zbiór $c \in C_k$ 
 		\li \Do
-			\li \textbf{forall} $(k-1)$-podzbiór s zbioru $c$
+			\li \For \textbf{each} $(k-1)$-podzbiór s zbioru $c$
 					\li \Do 
-						\li \If $s \notin L_{k-1}$
+						\If $s \notin L_{k-1}$
 						\li \Then
-							\li \textbf{delete} $c$ z $C_k$
+							\textbf{delete} $c$ z $C_k$
 						\End
 					\End
 		\End
@@ -147,113 +147,130 @@ Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocja
 
 \begin{codebox}
 	\Procname{$\proc{Generate Frequent Itemsets}$}
-		\li \textbf{forall} zbiór częsty $l_k$, $k \geq 2$ \Do
-			\li \textbf{call} genrules($l_k$, $l_k$)
-					\End
+		\li \For \textbf{each} zbiór częsty $l_k$, $k \geq 2$ 
+		\li \Do
+			\textbf{call} genrules($l_k$, $l_k$)
+			\End
 		\End
 \end{codebox}
 
+W powyższym algorytmie wykorzystana została funkcja \proc{Genrules}, która na podstawie dwóch zbiorów generuje reguły asocjacyjne. Zapis pseudokodu tej funkcji przedstawiony jest poniżej.
 
 \begin{codebox}
 	\Procname{$\proc{Genrules}$($l_k$: $k$-zbiór częsty, $a_m$: $m$-zbiór częsty)}
 		\li $\id{A} \gets \lbrace (m-1)$-zbiór $a_{m-1} | a_{m-1} \subset a_m \rbrace$
 		\li \For $a_{m-1} \in A$
 			\li \Do
-			\li $\id{conf} \gets \frac{support(l_k)}{support(a_{m-1})}$
+			$\id{conf} \gets \frac{support(l_k)}{support(a_{m-1})}$
 			\li \If $\id{conf} \geq \id{minconf}$
 				\li \Then
-						\li \textbf{output} reguła $a_{m-1} \Rightarrow (l_k - a_{m-1})$ \\ ufność = $conf$ oraz wsparcie= $support(l_k)$
+						\textbf{output} reguła $a_{m-1} \Rightarrow (l_k - a_{m-1})$ \\ ufność = $conf$ oraz wsparcie= $support(l_k)$
 						\li \If $m-1 > 1$ 
 							\li \Then
-							\li \textbf{call} genrules($l_k$, $a_{m-1}$) \\ generowanie reguł podzbiorów zbioru $a_{m-1}$
+							\textbf{call} genrules($l_k$, $a_{m-1}$) \\ generowanie reguł podzbiorów zbioru $a_{m-1}$
 						\End
 				\End
 			\End
 		\End
 \end{codebox}
 
-%Kluczową własnością wykorzystywaną w tym etapie jest antymonotoniczność funkcji wsparcia:
-
-%Własność Apriori Niech X i Y będą zbiorami towarów. Jeśli X   Y, to 
-%support(X)  support(Y)
-%Dowód: X  Y  cover(X)  cover(Y)  support(X)  support(Y).
-
-%Rysunek 3: Ilustracja własności Apriori: jeśli AB nie jest częsty, to możemy wykluczyć wszystkie jego nadzbiory
- 
-%Antymonotoniczność wsparcia ze względu na zawieranie się zbiorów oznacza, że rozszerzenie nieczęstego zbioru nie może prowadzić do częstego zbioru. Jeżeli zatem k-zbiór X nie jest częsty, wówczas możemy pominąć wszystkie zbiory Y, takie że X Í Y (por. rysunek 3).
-
-%Niżej przedstawiamy szczegóły algorytmu, w którym własność Apriori jest wykorzystywana. Analizujemy, jak rodzina k-zbiorów częstych Lk powstaje z k-1 zbiorów częstych Lk-1.
-
-%Dowolny k-zbiór nazywamy kandydatem, jeśli każdy jego (k-1)-podzbiór jest częsty. 
-
-%Łączenie:
-%Zakładamy, że towary w bazie transakcyjnej są ponumerowane i wszystkie zbiory są uporządkowane leksykograficznie w rosnącym porządku. Czyli każdy częsty l Î Lk-1 jest reprezentowany jako tablica 
-%l = (l[1], l[2],...,l[k-1])
-%gdzie l[1] < l[2] < ... < l[k-1]. Operacja łączenia Lk-1  Lk-1 jest wykonywana przez łączenie wszystkich par (k-1)-zbiorów częstych.
-
-%Dwa zbiory l1,l2 Î Lk-1 zostają połączone, jeśli mają one k-2 takich samych elementów na początku, tzn. 
-%(l1[1] = l2[1]) Ù (l1[2] = l2[2]) Ù...Ù(l1[k-2] = l2[k-2]) oraz (l1[k-1] < l2[k-1])
-%(1)
-%Warunek l1[k-1] < l2[k-1] jest po to, aby zapobiegać powstawaniu powtarzających się kandydatów. Wynikiem łączenia zbiorów l1 i l2 spełniających warunek jest k-elementowy zbiór l, który powstaje przez dołączenie l2[k-1] na końcu l1. 
-
-%Przycinanie: Można zauważyć, że powstający zbiór kandydatów Ck jest nadzbiorem zbioru Lk, tzn. że jego elemnety mogą być częste lub nieczęste, ale wszystkie k-zbiory częste należą do Ck. Celem operacji przycinania jest redukowanie rozmiaru zbioru Ck kandydatów przed sprawdzaniem ich wsparcia w bazie transakcji. W tym celu wykorzystujemy własciwość Apriori, z której wynika, że jeśli jakiś (k-1)-podzbiór danego kandydata nie występuje w Lk-1, to ten kandydat powinien być usunięty z Ck. Algorytm sprawdzania obecności podzbiorów kandydatów w Lk-1 może być efektywnie implementowany za pomocą drzewa haszującego dla częstych zbiorów w Lk-1.
-
 \subsection{Algorytm FP-growth}
 
-Podstawową wadą algorytmu Apriori jest wysoki koszt przetważania dużych zbiorów danych. Przykładowo, dla $10^4$ 1-zbiorów częstych, algorytm Apriori wygeneruje około $10^7$ 2-zbiorów kandydatów, które następnie poddane zostaną weryfikacji, czy są zbiorami częstymi. Fakt ten stał się podstwawowym powodem, dla którego zaprojektowany oraz zaimplementowany został algorytm \emph{FP-growth} w pracy~\cite{Main:FPgrowth}. Algorytm ten pozwala wyeliminować konieczność generowania tak dużej liczby kandydujących zbiorów elementów. 
+Podstawową wadą algorytmu Apriori jest wysoki koszt przetważania dużych zbiorów danych. Przykładowo, dla $10^4$ 1-zbiorów częstych, algorytm Apriori wygeneruje około $10^7$ 2-zbiorów kandydatów, które następnie poddane zostaną weryfikacji, czy są zbiorami częstymi. Poza tym algorytm ten wymaga wielokrotnego odczytywania zawartości bazy danych - w każdym kroku algorytmu należy odczytać całą bazę danych w celu obliczenia wsparcia zbiorów kandydujących.
+
+Wymienione wyżej wady algorytmu Apriori nie występują w algorytmie \emph{FP-growth} przedstawionym w pełni w pracy~\cite{Main:FPgrowth}. Algorytm ten pozwala wyeliminować konieczność generowania tak dużej liczby kandydujących zbiorów elementów oraz ogranicza liczbę dostępu do bazy danych do absolutnego minimum.  Co więcej algorytm ten harakteryzuje się kompletnością, co oznacza, że znajdowane są wszystkie wzorce o określonej częstości.
 
 Algorytm FP-growth można podzielić na trzy podstawowe kroki.
 \begin{enumerate}
-	\item W kroku pierwszym generowana jest skompresowana wersja bazy danych $DB$, mająca postać drzewa częstych wzorców.W pierwszym dochodzi do kompresji bazy danych, 
-	\item Drugim krokiem jest transformacja tak skonstruowanego drzewa do postaci FP-drzewa (patrz definicja~\ref{fptree:def}).
-	\item Trzeci krok polega na analizie FP-drzewa celem odnalezienia reguł asocjacyjnych. W kroku tym stosowana jest metoda dziel i zwyciężaj (\english{divide-and-conquer}) zamiast podejścia Apriori. Takie podejście w sposób znaczący zmniejsza rozmiar 
+	\item W kroku pierwszym generowana jest skompresowana wersja bazy danych $DB$, mająca postać drzewa częstych wzorców.
+	\item Drugim krokiem jest transformacja tak skonstruowanego drzewa do postaci \emph{FP-drzewa} (patrz definicja~\ref{fptree:def}).
+	\item Trzeci krok polega na analizie FP-drzewa celem odnalezienia reguł asocjacyjnych. W kroku tym stosowana jest metoda dziel i zwyciężaj (\english{divide-and-conquer}) zamiast podejścia Apriori, czyli generowania na każdym poziomie zbioru kandydatów na zbiory częste, a następnie odcinaniu kandydatów nie spełniających kryteriów akceptacji. Takie podejście przekształca problem znajdowania długich reguł w problem szukania krótszych, a następnie konkatenacji wyników. 
 \end{enumerate}
 
-\subsubsection{Definicje}
 \begin{df}\label{fptree:def}
 FP-drzewo (\english{frequent-pattern tree}) jest to ukorzeniony, etykietowany w wierzchołkach graf acykliczny spełniający poniższe cechy.
 \end{df}
 \begin{enumerate}
-	\item Korzeniem drzewa jest jeden element \id{null}, zbiór poddrzew prefixowanych elementami (jako dzieci elementu \id{null}) oraz tablicy wskaźników \id{element} $\rightarrow$ \emph{wskaźnik na element drzewa}.
-	\item Każdy wierzchołek poddrzewa składa się z trzech elementów: nazwy element, licznika (\english{count}) oraz wskaźnika na inny wierzchołek. Nazwa elementu w sposób jednoznaczny identyfikuje element ze zbioru elementów $I$, licznik przechowuje liczbę transakcji reprezentowanych przez ścieżkę od \id{null} do tego elementu, natomiast wskaźnik wskazuje na kolejny wierzchołek w FP-drzewie, którego nazwa jest identyczna do danego.
+	\item Korzeniem drzewa jest jeden element \id{null}, zbiór poddrzew prefiksowanych elementami (jako dzieci elementu \id{null}) oraz tablicy nagłówkowej zawierającej wpisy \id{element} $\rightarrow$ \emph{wskaźnik na element drzewa}.
+	\item Każdy wierzchołek poddrzewa składa się z trzech elementów: nazwy elementu (\english{item name}), licznika (\english{count}) oraz wskaźnika na inny wierzchołek. Nazwa elementu (\id{itemName}) w sposób jednoznaczny identyfikuje element ze zbioru elementów $I$, licznik przechowuje liczbę transakcji reprezentowanych przez ścieżkę od \id{null} do tego elementu, natomiast wskaźnik wskazuje na kolejny wierzchołek w FP-drzewie, którego nazwa jest identyczna do danego.
 	\item Każdy wpis w tablicy nagłówkowej (\english{frequent-item-header table}) skałada się z dwóch elementów: nazwy elementu oraz wskaźnika na pierwszy element w drzewie posiadający identyczną nazwę.
 \end{enumerate}
 
-\subsubsection{Konstrukcja FP-drzewa}
-\textbf{Input:} Baza danych transakcji $DB$ oraz minimalne wsparcie (\id{minsupp}).
+Rysunek~\ref{rys:fptree} przedstawia przykładowe FP-drzewo wraz z tablicą nagłówkową.
 
-\textbf{Output:} FP-drzewo utworzone na podstawie zawartości $DB$
+\begin{figure}[h]
+\centering\includegraphics{figures/fptree.png}
+\caption{Ilustracja przykładowego FP-drzewa}\label{rys:fptree}
+\end{figure}
 
-\textbf{Metoda:} Poniżej zostanie opisany proces konstrukcji FP-drzewa.
+\subsubsection{Kompresja bazy danych}
+Pierwszy etap polega na znalezieniu wszystkich $1$-zbiorów częstych występujących w bazie danych $DB$. Po ich odnalezieniu ($F_1$ - zbiór znalezionych $1$-zbiorów częstych) z każdej transakcji $T$ usuwany jest ten element, który nie należy do $F_1$. 
 
-\begin{enumerate}
-	\item Przeskanowanie bazy danych transakcji $DB$ odbywa się jednokrotnie. Utworzony na tej podstawie zostanie zbiór $F$, zawierający 1-zbiory częste. Posortowany malejąco zbiór $F$ na podstawie wartości $support$ dla każdego elementu tworzy listę $FList$, czyli listę wsystkich elementów tworzących jednoelementowe zbiory częste.
-	\item f
-\end{enumerate}
+W wyniku usunięcia elementów nie tworzących jednoelementowych zbiorów częstych, baza ma zazwyczaj znacznie mniejszy rozmiar niż wyjściowa baza danych. Dodatkowo w tym kroku elementy w każdej transakcji zostają posortowane według maljącej wartości ich wsparcia.
+
+
+\subsubsection{Konstrukcja FP-drzewa}\label{fptree:construction}
+\begin{alg}\label{alg:fptre:econstruction}
+	\emph{Konstrukcja FP-drzewa}.
+
+	\textbf{Input:} Baza danych transakcji $DB$ oraz minimalne wsparcie (\id{minsup}).
+
+	\textbf{Output:} FP-drzewo utworzone na podstawie zawartości $DB$
+
+	\textbf{Metoda:} Poniżej zostanie opisany proces konstrukcji FP-drzewa.
+
+	\begin{enumerate}
+		\item Przeskanowanie bazy danych transakcji $DB$ odbywa się jednokrotnie. Utworzony na tej podstawie zostanie zbiór $F$, zawierający 1-zbiory częste. Posortowany malejąco zbiór $F$ na podstawie wartości $support$ dla każdego elementu tworzy listę $FList$, czyli listę wsystkich elementów tworzących jednoelementowe zbiory częste.
+		\item Tworzony jest pierwszy element drzewa - korzeniem zostaje (zgodnie z definicją~\ref{fptree:def}) element z etykietą \id{null}. Dla każdej transakcji w bazie danych $DB$ wykonywane jest, co następuje.
+		\begin{quote}
+			Wybierane są elementy częste z transakcji, a następnie sortowane zgodnie z kolejnością w $FList$. Niech taka posortowana lista elementów częstych ma postać $[p|P]$, gdzie $p$ jest pierwszym elementem, a \id{P} jest pozostałą częscią listy. Następnie wywoływana jest funkcja $insertTree([p|P], T)$, gdzie \id{T} jest FP-drzewem.
+		\end{quote}
+			\paragraph{Funkcja insertTree} Jeśli drzewo \id{T} ma dziecko \id{N} takie, że $N.itemName = p.itemName$, zwiększana jest wartość $N.count$ o wartość 1; w przeciwnym wypadku tworzony jest nowe element \id{N} z wartością $count = 1$, a wskaźnik rodzica ustawiany jest na \id{T} oraz wskaźnik sąsiedzctwa elementu ustawiany jest na element z takim samym $itemName$. Jeśli lista \id{P} była niepusta, to wywoływana jest funkcja $insertTree(P, T)$ rekurencyjnie, w przeciwnym wypadku kończone jest działanie funkcji.
+	\end{enumerate}
+\end{alg}
 
 \subsubsection{Eksploracja FP-drzewa}
+Po utworzeniu FP-drzewa przeprowadzana jest jego analiza w celu znalezienia wszystkich zbiorów częstych. Eksploracja bazuje na obserwacji, że dla każdego $1$-zbioru częstego $\alpha$ wszystkie częste nadzbiory tego zbioru są reprezentowane w FP-drzewie przez ścieżki zawierające wierzchołek (bądź wierzchołki) $\alpha$.
 
-%Dzięki wykorzystaniu "downward-closure"~\cite{Problem:Statement} właściwości wsparcia, który gwarantuje, że wszystkie podzbiory zbioru częstego, również są zbiorami częstymi (i na odwrót), możliwe jest w sposób efektywny znalezienie wszystkich zbiorów częstych w zadaniej bazie danych.
+Analiza rozpoczyna się od znalezienia dla każdego $1$-zbioru częstego $\alpha$ wszystkich ścieżek w FP-drzewie, których końcowym wierzchołkiem jest wierzchołek odpowiadający zbiorowi $\alpha$. Pojedyncza ścieżka, na której końcu znajduje się wierzchołek $\alpha$ w dalszej analizie będzie nazywana \emph{ścieżką prefiksową wzorca} $\alpha$.
 
-%While the second step is straight forward, the first step needs more attention.
-%Finding all frequent itemsets in a database is difficult since it involves searching all possible itemsets (item combinations). The set of possible itemsets is the power set over I and has size 2n - 1 (excluding the empty set which is not a valid itemset). Although the size of the powerset grows exponentially in the number of items n in I, efficient search is possible using the downward-closure property of support[2][4] (also called anti-monotonicity "Jian Pei, Jiawei Han, and Laks V.S. Lakshmanan. Mining frequent itemsets with convertible constraints. In Proceedings of the 17th International Conference on Data Engineering, April 2–6, 2001, Heidelberg, Germany, pages 433-442, 2001.") which guarantees that for a frequent itemset, all its subsets are also frequent and thus for an infrequent itemset, all its supersets must also be infrequent. Exploiting this property, efficient algorithms (e.g., Apriori[6] and Eclat[7]) can find all frequent itemsets.
+Poniżej zaprezentowany zostanie pseudokod algorytmu przeszukiwania FP-drzewa celem odnalezienia reguł asocjacyjnych.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%% GARBAGE!!!
+\begin{alg}
+	\emph{FP-growth: Przeszukiwanie FP-drzewa celem odnalezienia reguł asocjacyjnych}.
 
-%Z uwagi na fakt, że należy w pewien sposób ograniczyć liczbę reguł, jako wyniku działania algorytmu, wprowadza się dwie wartości $minsup$ oraz $minconf$. Wszystkie kombinacje przedmiotów ($\mathbf{X}_k$), które spełniają nierówność $sup(\mathbf{X}_k) \leq minsup$ nazywane są zbiorami dużymi (LARGE?). Pozostałe zbiory nazywane są zbiorami małymi (SMALL?)~\cite{Problem:Statement}.
+	\textbf{Input:} Baza danych transakcji $DB$ reprezentowana przez FP-drzewo zwrócone przez algorytm~\ref{alg:fptre:econstruction} oraz minimalne wsparcie (\id{minsup}).
 
-%Ze wzoru wynika, że poziom ufności jest estymacją prawdopodobieństwa tego, że elementy tworzące zbiór $\mathbf{Y}$ zostaną kupione przez danego klienta pod warunkiem, że klient kupi elementy należące do zbioru $\mathbf{X}$.
+	\textbf{Output:} Kompletny zbiór reguł asocjacyjnych.
 
-%Inną motywacją, poza statystyczną ważnością, dlaczego interesujący jest poziom pokrycia, jest fakt, że poszukiwane reguły powinny spełniać pewne wymaganie, co do wysokości wartości $sup$ z powodów biznesowych. Jeśli poziom pokrycia nie jest wystarczająco wysoki, to oznacza to, iż reguła nie jest warta brania pod uwagę, bądź jest ona mniej preferowana (może być rozpatrzona później)~\cite{Problem:Statement}. Dlatego też w przypadku reguły asocjacyjnej określenie wartości $sup$ dla każdej reguły i weryfikowanie tylko tych, które spełniają pewne wymagania co do wysokości tego współczynnika.
+	\textbf{Metoda:} Wywołanie \proc{FP-growth}$(FP-drzewo, null)$.
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Reguła asocjacyjna zdefiniowana w Definicji~\ref{regula:def} określa, że jeśli dany klient kupił towary ze zbioru $\mathbf{X}$, najprawdopodobniej kupi też towary ze zbioru $\mathbf{Y}$. Aby reguła asocjacyjna stanowiła interesujące źródło informacji dla analityka stosującego techniki eksploracji danych, musi ona spełniać określone warunki wyrażone za pomocą odpowiednich miar. Dwie najbardziej popularne miary jakości reguł asocjacyjnych to poziom pokrycia (\\english{support}) oraz poziom ufności (\english{confidence}).
-
-
-%Oznacza to, że poziom pokrycia ($sup$) jest stosunkiem liczby transakcji zawierających elementy sumy zbiorów (czyli $|\mathbf{Z}|$, gdzie $\mathbf{Z} = \mathbf{X} \cup \mathbf{Y}$) do liczby wszystkich transakcji w systemie ($|\mathbf{T}|$). Wzór \ref{support2:def} przedstawia sposó obliczania wartości $sup$.
-
-%\begin{equation}\label{support2:def}
-	%sup = \frac{|\mathbf{Z}|}{|\mathbf{T}|}
-%\end{equation}
+	
+\begin{codebox}
+	\Procname{$\proc{FP-growth}$(\id{Tree}, $\alpha$)}
+		\li \If $\id{Tree}$ zawiera jedną ścieżkę prefiksową
+			\li \Then
+				\id{P} $\gets$ ścieżka prefiksowa drzewa \id{Tree}
+				\li \id{Q} $\gets$ wieloczęściowa ścieżka z najwyższym elementem zastąpionym przez korzeń $null$
+					\li \For \textbf{each} kombinacja ($\beta$) elementów z \id{P}
+						\li \Do
+							\textbf{generuj} regułę $\beta \cup \alpha$ z $support =$ minimalna wartość $support$ elementów w $\beta$
+							\li niech $freqPatternSet(\id{P})$ będzie zbiorem wygenerowanych do tej pory reguł
+						\End
+			\li \Else 
+				\id{Q} $\gets$ \id{Tree}
+				\li \For \textbf{each} element $a_i \in \id{Q}$
+					\li \Do
+					\textbf{generuj} regułę $\beta \gets a_i \cup \alpha$ z $support = a_i.support$
+					\li \textbf{stwórz} drzewo warunkowe z $\beta$ oraz FP-drzewo ($Tree_{\beta}$) dla $\beta$
+						\li	\If $Tree_{\beta} \neq \emptyset$
+							\li \Then
+							\textbf{call} $\proc{FP-growth}$($Tree_{\beta}$, $\beta$)
+								\End
+							\li niech $freqPatternSet(\id{Q})$ będzie zbiorem wygenerowanych do tej pory reguł
+						\End
+				\End
+		\li \textbf{return} $freqPatternSet(\id{P}) \cup freqPatternSet(\id{Q}) \cup (freqPatternSet(\id{P}) \times freqPatternSet(\id{Q}))$
+		\End
+\end{codebox}
+\end{alg}
