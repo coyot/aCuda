@@ -83,7 +83,7 @@
   <ItemGroup>
     <Reference Include="CUDA.NET, Version=2.3.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-    <HintPath>..\..\..\Libraries\CUDA.NET.dll</HintPath>
+      <HintPath>..\..\..\Libraries\CUDA.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="apriori_count.cu" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Settings.xml" />
