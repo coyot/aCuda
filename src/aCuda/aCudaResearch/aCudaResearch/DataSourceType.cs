@@ -5,7 +5,8 @@ using System.Text;
 
 namespace aCudaResearch
 {
-    public abstract class AbstractAlgorithm
+    public enum DataSourceType
     {
+        MsData
     }
 }
