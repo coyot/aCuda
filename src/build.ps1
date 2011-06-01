@@ -96,6 +96,8 @@ task Compile -depends Init {
 }
 
 task CompileCuda {
+    Write-Host "Compile the CUDA files for the project" -ForegroundColor Green
+
 	# load vs env variables
 	$script = "$env:VS90COMNTOOLS\vsvars32.bat"
 	$tempFile = [IO.Path]::GetTempFileName()
