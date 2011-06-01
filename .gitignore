@@ -2,8 +2,8 @@ log/*.log
 tmp/**/*
 obj
 bin
-/src/Build
-/src/Release
+src/Build
+src/Release
 doc/thesis-master.pdf
 _ReSharper.*
 *.ReSharper.user
@@ -18,5 +18,5 @@ _ReSharper.*
 *~
 *.swp
 *.cubin
-/src/aCuda/aCudaResearch/_*
-/src/aCuda/aCudaResearch/UpgradeLog.XML
+src/aCuda/aCudaResearch/_*
+src/aCuda/aCudaResearch/UpgradeLog.XML
