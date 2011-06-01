@@ -17,10 +17,9 @@ namespace aCudaResearch.Algorithms
 
             var frequentSets = data.Elements.Keys.Select(element => new List<int> { element }).ToList();
 
-            frequentSets = frequentSets.Where(set => set.IsFrequent<int>(data.Transactions, executionSettings.MinSup)).ToList();
+            frequentSets = frequentSets.Where(set => set.IsFrequent(data.Transactions, executionSettings.MinSup)).ToList();
             var frequentItemSets = frequentSets.ToDictionary(set => new FrequentItemSet<int>(set),
-                                                             set =>
-                                                             set.GetSupport(data.Transactions));
+                                                             set => set.GetSupport(data.Transactions));
             List<List<int>> candidates;
 
             while ((candidates = GenerateCandidates(frequentSets)).Count > 0)

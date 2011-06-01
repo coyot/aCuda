@@ -360,12 +360,12 @@
             <summary>Sets the mole of <see cref="M:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.#ctor"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.DatabaseGet">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Database"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.TransactionsGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Transactions"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.DatabaseSetDictionaryOfTInt32Array">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Database"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.TransactionsSetDictionaryOfTInt32Array">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Transactions"/>
             </summary>
         </member>
         <member name="T:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances">
@@ -387,12 +387,12 @@
             <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Elements"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.DatabaseGet">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Database"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.TransactionsGet">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Transactions"/>
             </summary>
         </member>
-        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.DatabaseSetDictionaryOfTInt32Array">
-            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Database"/>
+        <member name="P:aCudaResearch.FpGrowth.Data.MsWeb.Moles.MMsInstance`1.AllInstances.TransactionsSetDictionaryOfTInt32Array">
+            <summary>Sets the mole of <see cref="P:aCudaResearch.FpGrowth.Data.MsWeb.MsInstance`1.Transactions"/>
             </summary>
         </member>
         <member name="T:aCudaResearch.Settings.Moles.MXmlSettingsBuilder">
