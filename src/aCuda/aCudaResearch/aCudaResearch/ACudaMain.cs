@@ -1,4 +1,5 @@
 ﻿using System;
+using Mono.Options;
 using aCudaResearch.Helpers;
 using aCudaResearch.Settings;
 
@@ -14,7 +15,14 @@ namespace aCudaResearch
         public static void Main(string[] args)
         {
             Console.WriteLine("This is my master thesis research app.");
-            ISettingsBuilder builder = new XmlSettingsBuilder(@"D:\MGR\aCuda\src\aCuda\aCudaResearch\aCudaResearch\Data\Settings.xml");
+
+            int verbose = 0;
+            string settingsFilePath = @"D:\MGR\aCuda\src\aCuda\aCudaResearch\aCudaResearch\Data\Settings.xml";
+            OptionSet p = new OptionSet()
+              .Add("s=", v => settingsFilePath = v);
+            p.Parse(args);
+
+            ISettingsBuilder builder = new XmlSettingsBuilder(settingsFilePath);
 
             try
             {
