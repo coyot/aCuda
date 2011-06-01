@@ -17,3 +17,4 @@ _ReSharper
 *.swp
 *.cubin
 /src/aCuda/aCudaResearch/_*
+/src/aCuda/aCudaResearch/UpgradeLog.XML
