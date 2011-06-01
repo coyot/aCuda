@@ -5,7 +5,9 @@ bin
 /src/Build
 /src/Release
 doc/thesis-master.pdf
-_ReSharper
+_ReSharper.*
+*.ReSharper.user
+*.resharper.user
 *.g.cs
 *.dll
 *.resharper.user
