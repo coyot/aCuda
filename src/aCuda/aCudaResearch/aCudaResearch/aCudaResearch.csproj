@@ -89,6 +89,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -109,9 +110,12 @@
     <Compile Include="AlgorithmBuilder.cs" />
     <Compile Include="Algorithms\KosarakAbstractAlgorithm.cs" />
     <Compile Include="Algorithms\MsWebAprioriAlgorithm.cs" />
+    <Compile Include="Algorithms\MsWebCudaAprioriAlgorithm.cs" />
     <Compile Include="Algorithms\MsWebFpGrowthAlgorithm.cs" />
     <Compile Include="Algorithms\MsWebParallelAprioriAlgorithm.cs" />
     <Compile Include="AlgorithmType.cs" />
+    <Compile Include="CudaFunctionCall.cs" />
+    <Compile Include="Cuda\BitmapWrapper.cs" />
     <Compile Include="DataProvider.cs" />
     <Compile Include="DataSourceType.cs" />
     <Compile Include="Algorithms\MsWebAbstractAlgorithm.cs" />
@@ -120,6 +124,7 @@
     <Compile Include="Helpers\DictionaryHelper.cs" />
     <Compile Include="Helpers\EnumerableHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
+    <Compile Include="Helpers\ParallelListHelper.cs" />
     <Compile Include="IDataBuilder.cs" />
     <Compile Include="Data\MsWeb\MsDataBuilder.cs" />
     <Compile Include="Data\MsWeb\MsInstance.cs" />
