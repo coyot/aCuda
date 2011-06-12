@@ -14,11 +14,15 @@ namespace aCudaResearch.Data.MsWeb
 
         /// <summary>
         /// Information about individual elements from the website.
+        /// 
+        /// e_id -> info
         /// </summary>
         public Dictionary<T, MsElement> Elements { get; set; }
 
         /// <summary>
         /// Read data from the archive file.
+        /// 
+        /// t_id -> table od e_ids
         /// </summary>
         public Dictionary<T, T[]> Transactions { get; set; }
 

@@ -39,7 +39,9 @@ namespace aCudaResearch
         /// <summary>
         /// Engine main method to execute computation process.
         /// </summary>
-        public Dictionary<AlgorithmType, long> ExecuteComputation()
+        /// <param name="printRules">Specifies if the association rules</param>
+        /// <returns>Dictionary of times per each executed algorithm</returns>
+        public Dictionary<AlgorithmType, long> ExecuteComputation(bool printRules)
         {
             //! here the computation time measuring should be placed!!!
             var result = new Dictionary<AlgorithmType, long>();
@@ -52,7 +54,7 @@ namespace aCudaResearch
                 var stopWatch = new Stopwatch();
                 
                 stopWatch.Start();
-                Algorithms[algorithm].Run(Settings);
+                Algorithms[algorithm].Run(Settings, printRules);
                 stopWatch.Stop();
 
                 result.Add(algorithm, stopWatch.ElapsedMilliseconds);
