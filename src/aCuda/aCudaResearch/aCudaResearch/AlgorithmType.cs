@@ -4,6 +4,7 @@
     {
         Apriori,
         FpGrowth,
-        ParallelApriori
+        ParallelApriori,
+        CudaApriori
     }
 }
