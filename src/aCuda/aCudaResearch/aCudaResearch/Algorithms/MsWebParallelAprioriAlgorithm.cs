@@ -9,15 +9,15 @@ namespace aCudaResearch.Algorithms
 {
     public class MsWebParallelAprioriAlgorithm : MsWebAbstractAlgorithm
     {
-        public override void Run(ExecutionSettings executionSettings)
+        public override void Run(ExecutionSettings executionSettings, bool printRules)
         {
             builder = new MsDataBuilder();
             var data = builder.BuildInstance(executionSettings);
 
-            var frequentSets = data.Elements.Keys.Select(element => new List<int> { element }).ToList();
+            var frequentSets = data.Elements.Keys.Select(element => new List<int> { element }).AsParallel().ToList();
 
-            frequentSets = frequentSets.Where(set => set.IsFrequent(data.Transactions, executionSettings.MinSup)).ToList();
-            var frequentItemSets = frequentSets.ToDictionary(set => new FrequentItemSet<int>(set),
+            frequentSets = frequentSets.Where(set => set.IsFrequent(data.Transactions, executionSettings.MinSup)).AsParallel().ToList();
+            var frequentItemSets = frequentSets.AsParallel().ToDictionary(set => new FrequentItemSet<int>(set),
                                                              set => set.GetSupport(data.Transactions));
             List<List<int>> candidates;
 
@@ -27,14 +27,14 @@ namespace aCudaResearch.Algorithms
 
                 // leave only these sets which are frequent
                 candidates =
-                    candidates.Where(set => set.IsFrequent(data.Transactions, executionSettings.MinSup)).ToList();
+                    candidates.Where(set => set.IsFrequent(data.Transactions, executionSettings.MinSup)).AsParallel().ToList();
 
                 if (candidates.Count > 0)
                 {
                     frequentSets = candidates;
                     foreach (var candidate in candidates)
                     {
-                        frequentItemSets.Add(new FrequentItemSet<int>(candidate), candidate.GetSupport(data.Transactions));
+                        frequentItemSets.Add(new FrequentItemSet<int>(candidate), candidate.GetSupportParallel(data.Transactions));
                     }
                 }
                 else
@@ -62,18 +62,18 @@ namespace aCudaResearch.Algorithms
                             continue;
                         }
 
-                        if (frequentItemSets.ContainsKey(leftSide))
+                        if (!frequentItemSets.ContainsKey(leftSide)) continue;
+                        var confidence = (double)frequentItemSets[new FrequentItemSet<int>(frequentSet)] / frequentItemSets[leftSide];
+                        if (confidence >= executionSettings.MinConf)
                         {
-                            var confidence = (double)frequentItemSets[new FrequentItemSet<int>(frequentSet)] / frequentItemSets[leftSide];
-                            if (confidence >= executionSettings.MinConf)
-                            {
-                                var rule = new DecisionRule<int>(leftSide.ItemSet, rightSide.ItemSet, frequentItemSets[new FrequentItemSet<int>(frequentSet)], confidence);
-                                decisionRules.Add(rule);
-                            }
+                            var rule = new DecisionRule<int>(leftSide.ItemSet, rightSide.ItemSet, frequentItemSets[new FrequentItemSet<int>(frequentSet)], confidence);
+                            decisionRules.Add(rule);
                         }
                     }
                 }
             }
+
+            if (!printRules) return;
 
             var result = PrintRules(decisionRules, executionSettings.DataSourcePath, executionSettings.MinSup, executionSettings.MinConf, data.Transactions.Keys.Count, data.Elements);
             Console.WriteLine(result);
@@ -86,13 +86,12 @@ namespace aCudaResearch.Algorithms
             {
                 for (var j = i + 1; j < source.Count; j++)
                 {
-                    if (source[i].Take(source[i].Count - 1).AreEqual(source[j].Take(source[j].Count - 1)))
+                    if (source[i].Take(source[i].Count - 1).AreEqualParallel(source[j].Take(source[j].Count - 1)))
                     {
-                        candidates.Add((List<int>)source[i].Merge(source[j]));
+                        candidates.Add(source[i].Merge(source[j]).AsParallel().ToList());
                     }
                 }
             }
-
 
             return candidates;
         }
