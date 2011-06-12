@@ -20,3 +20,16 @@ _ReSharper.*
 *.cubin
 src/aCuda/aCudaResearch/_*
 src/aCuda/aCudaResearch/UpgradeLog.XML
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/BuildScriptCache/.crc
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/BuildScriptCache/.version
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/BuildScriptCache/4/16fb66ef.dat
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/NamedArguments/.crc
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/NamedArguments/3/4c91b939.dat
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/Resources/.version
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/SymbolCache.bin
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/TodoCache/.crc
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/TodoCache/.version
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/TodoCache/4/16fb66ef.dat
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/WordIndex/.crc
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/WordIndex/.version
+/src/aCuda/aCudaResearch/_ReSharper.aCudaResearch/WordIndex/3/4c91b939.dat
