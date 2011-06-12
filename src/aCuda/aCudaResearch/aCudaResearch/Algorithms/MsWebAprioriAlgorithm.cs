@@ -10,7 +10,7 @@ namespace aCudaResearch.Algorithms
 {
     public class MsWebAprioriAlgorithm : MsWebAbstractAlgorithm
     {
-        public override void Run(ExecutionSettings executionSettings)
+        public override void Run(ExecutionSettings executionSettings, bool printRules)
         {
             builder = new MsDataBuilder();
             var data = builder.BuildInstance(executionSettings);
@@ -76,7 +76,10 @@ namespace aCudaResearch.Algorithms
                 }
             }
 
-            var result = PrintRules(decisionRules, executionSettings.DataSourcePath, executionSettings.MinSup, executionSettings.MinConf, data.Transactions.Keys.Count, data.Elements);
+            if (!printRules) return;
+
+            var result = PrintRules(decisionRules, executionSettings.DataSourcePath, executionSettings.MinSup,
+                                    executionSettings.MinConf, data.Transactions.Keys.Count, data.Elements);
             Console.WriteLine(result);
         }
 
