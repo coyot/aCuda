@@ -116,11 +116,14 @@
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="CudaFunctionCall.cs" />
     <Compile Include="Cuda\BitmapWrapper.cs" />
+    <Compile Include="Cuda\Names.cs" />
+    <Compile Include="Cuda\ProjectConstants.cs" />
     <Compile Include="DataProvider.cs" />
     <Compile Include="DataSourceType.cs" />
     <Compile Include="Algorithms\MsWebAbstractAlgorithm.cs" />
     <Compile Include="Data\DecisionRule.cs" />
     <Compile Include="Data\FrequentItemSet.cs" />
+    <Compile Include="Helpers\CudaListHelper.cs" />
     <Compile Include="Helpers\DictionaryHelper.cs" />
     <Compile Include="Helpers\EnumerableHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
