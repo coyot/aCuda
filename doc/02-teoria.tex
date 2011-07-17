@@ -9,30 +9,64 @@ W rozdziale tym przedstawiony zostanie przegląd literatury, który stanowi pods
 
 Niech $I = \lbrace i_1,i_2,...,i_m \rbrace$ będzie \emph{zbiorem elementów} o liczności $|I| = m$. \emph{Transakcją} nazwano dowolny, niepusty podzbiór $X \subseteq I$ zbioru elementów. Bazą danych $DB$ nazwano dowolny zbiór par $(id, X)$, gdzie $X$ jest transakcją, a $id$ jest dowolną wartością unikalną w ramach bazy danych nazywaną \emph{identyfikatorem transakcji}. Bez utraty ogólności założono iż $id\in \mathbb{N}$. 
 
+\begin{table}
+	\centering
+	\begin{tabular}{|c|l|} \hline
+	$I$ & $\lbrace$ beer, bread, butter, diapers, jam, juice, milk, water $\rbrace$ \\ \hline
+	Transakcje & $1$: $\lbrace$ bread, milk, butter, beer $\rbrace$ \\
+	 & $2$:  $\lbrace$ bread, butter, water, jam, beer $\rbrace$ \\ 
+	 & $3$:  $\lbrace$ beer, diapers, bread, butter, jam $\rbrace$ \\ 
+	 & $4$:  $\lbrace$ butter, milk, juice $\rbrace$ \\
+	 & $5$:  $\lbrace$ diapers, beer, juice, water $\rbrace$ \\ \hline
+	\end{tabular}
+	\caption{Przykładowe dane\label{example:data}}
+\end{table}
+
+W tabeli~\ref{example:data} zaperezentowany został przykładowy zbiór elementów oraz zestaw transakcji. Na podstawie tych danych obliczane będą wartości wprowadzanych kolejno definicji.
+
 \emph{Wsparciem} (\english{support}) $sup(X)$ transakcji $X$, w bazie danych nazwano częstość wystąpień transakcji w bazie danych. Formalnie przedstawia to wzór~\ref{support:def}.
 
 \begin{equation}
 \label{support:def}
 sup(X)=\frac{| \lbrace id: (id,Y)\in DB \wedge X\subseteq Y \rbrace |}{|DB|}
-\end{equation} 
+\end{equation}
 
-Łatwo zauważyć, że jeśli poziom ten jest niski, to oznacza to, że nie ma jednoznacznych dowodów na łączne występowanie elementów zbioru $Z = X \cup Y$, ponieważ zbiór $Z$ występuje w niewielkiej liczbie transakcji. 
+Łatwo zauważyć, że jeśli poziom ten jest niski, to oznacza to, że elementy zbioru $X$ w transakcjach rzadko występują razem.
+
+Dla przykładowego zbioru $X=\lbrace \textrm{milk} \rbrace$ wartość $sup(X)$ została obliczona w przykładzie~\ref{sample:sup}, ponieważ zbiór $X$ jest podzbiorem dwóch transakcji - $1 = \lbrace$ bread, milk, butter, beer $\rbrace$ oraz $4 = \lbrace$ butter, milk, juice $\rbrace$.
+
+\begin{equation}\label{sample:sup}
+\begin{split}
+sup(X)= sup(\lbrace \textrm{milk} \rbrace) =& \frac{|\lbrace 1, 4 \rbrace|}{|DB|} =\\
+ &= \frac{2}{5}
+\end{split}
+\end{equation}
 
 \begin{df}\label{regula:def}
 Niech będą dane dwie transakcje $X$ i $Y$ takie, że $X\cap Y=\emptyset$. Implikację postaci $X\Rightarrow  Y$ nazwano \emph{regułą asocjacyjną}.
 \end{df}
 
-\emph{Poziom ufności} (\english{confidence}) jest miarą zdefiniowaną dla implikacji reprezentowanej przez regułę asocjacyjną~\cite{Elmasri:db}. 
+\emph{Poziom ufności} (\english{confidence}) jest miarą określającą jakość reguły asocjacyjnej~\cite{Elmasri:db}. 
 
 \begin{df}\label{confidence:def}
-Pioziom ufności ($conf$) reguły asocjacyjnej $X \Rightarrow Y$ jest równy 
+Poziom ufności ($conf$) reguły asocjacyjnej $X \Rightarrow Y$ jest równy 
 \begin{equation}
 	conf(X \Rightarrow Y) = \frac{sup(X \cup Y)}{sup(X)}
 \end{equation}
 \end{df}
 
-Po analizie definicji~\ref{confidence:def} łatwo zauważyć, że poziom ufności może być interpretowany, jako estymacja prawdopodobieństwa $P(Y | X)$.
+Z definicji~\ref{confidence:def} wynika, że poziom ufności może być interpretowany, jako estymacja prawdopodobieństwa w transakcji zbioru $Y$ pod warunkiem wystąpienia w niej również zbioru $X$ - co oznaczone jest poprzez $P(Y | X)$.
 
+Przykładową regułą asocjacyjną znalezioną dla danych przedstawionych w tabeli~\ref{example:data} może być reguła $\lbrace \textrm{butter} \rbrace \Rightarrow \lbrace \textrm{bread, beer} \rbrace$, która zostałaby znaleziona dla $minsup = 0,6$. Taka reguła posiada współczynnik pewności równy obliczony w przykładzie~\ref{sample:conf}.
+
+\begin{equation}\label{sample:conf}
+\begin{split}
+conf(X \Rightarrow Y)& = conf(\lbrace \textrm{butter} \rbrace \Rightarrow \lbrace \textrm{bread, beer} \rbrace) =\\
+& = \frac{sup(\lbrace \textrm{butter} \rbrace \cup \lbrace \textrm{bread, beer} \rbrace)}{sup(\lbrace \textrm{butter} \rbrace)} =\\
+& = \frac{sup(\lbrace \textrm{butter, bread, beer} \rbrace)}{sup(\lbrace \textrm{butter} \rbrace)} =\\
+& = \frac{3}{4}
+\end{split}
+\end{equation}
 
 Reguły asocjacyjne zazwyczaj powinny spełniać pewne wymagania zdefiniowane przez użytkownika - minimalne wsparcie oraz minimalny poziom ufności, oznaczane odpowiednio $minsup$ oraz $minconf$. Wyznaczają one dla aplikacji progi, jakie powinny spełniać zbiory oraz reguły, aby były brane pod uwagę w trakcie analizy.
 
@@ -46,15 +80,15 @@ Generowanie reguł asocjacyjnych zazwyczaj sprowadza się do dwóch, niezależny
 	\item Znalezione zbiory często oraz minimalny poziom ufności są używane do wygenerownia reguł asocjacyjnych.
 \end{enumerate}
 
-Znalezienie wszystkich zbiorów częstych w bazie danych $DB$ jest zadaniem wymagającym przeszukania wszystkich możliwych kombinacji bez powtórzeń ze zbioru $I$. Zbiór możliwych zbiorów elementów ma liczność równą $2^n - 1$ (wszystkie zbiory, poza zbiorem pustym, który nie jest w tym wypadku zbiorem sensownym w znaczeniu poddania go analizie). 
+W naiwnym podejściu znalezienie wszystkich zbiorów częstych w bazie danych $DB$ jest zadaniem wymagającym przeszukania wszystkich możliwych kombinacji bez powtórzeń ze zbioru $I$. Zbiór $X$ nazwywamy $k$-zbiorem, jeśli $|X|=k$, tzn. zbior $X$ ma $k$ elementów. Zbiór możliwych zbiorów elementów ma liczność równą $2^n - 1$ (wszystkie zbiory, poza zbiorem pustym, który nie jest w tym wypadku zbiorem sensownym w znaczeniu poddania go analizie), czyli zbiór ten jest $(2^n - 1)$-zbiorem.
 
 Warto zauważyć, że dla każdego zbioru częstego $Y$, każdy jego podzbiór $X$ jest również zbiorem częstym~\cite{Problem:Statement}. Korzystając z tej właściwości wsparcia możliwe jest w sposób efektywny znalezienie wszystkich zbiorów częstych w zadanej bazie danych - z tej zależności korzysta algorytm apriori opisany w rozdziale~\ref{apriori:section}. Dodatkowo, wszystkie reguły zbudowane na podstawie zbioru częstego $Y$ muszą spełniać warunek minimalnego wsparcia, ponieważ spełnia ten warunek zbiór $Y$, a suma zbiorów reguły jest zbiorem wyjściowym $Y$.
 
 \section{Aktualna wiedza}
-W rozdziale tym zebrana została oraz opracowana dotychczasowa wiedza (\english{state-of-the-art}) na temat odkrywania reguł asocjacyjnych. Przedstawione zostaną dwa podstawowe algorytmy wykorzystywane w tym procesie: Apriori oraz FP-growth. W chwili obecnej te dwa algorytmy stanowią podstawę, na której budowane są nowe algorytmy, wykorzystujące możliwości współczesnych algorytmów (\emph{Czy wymieniać tutaj przykłady algorytmów, które bazują na nich + refy do kilku artykułów?}).
+W rozdziale tym zebrana została oraz opracowana dotychczasowa wiedza (\english{state-of-the-art}) na temat algorytmów odkrywania reguł asocjacyjnych. Przedstawione zostaną dwa podstawowe algorytmy wykorzystywane w tym procesie: Apriori oraz FP-growth. W chwili obecnej te dwa algorytmy stanowią podstawę, na której budowane są nowe algorytmy, wykorzystujące możliwości współczesnych algorytmów (\emph{Czy wymieniać tutaj przykłady algorytmów, które bazują na nich + refy do kilku artykułów?}).
 
 \subsection{Algorytm Apriori}\label{apriori:section}
-Pierwszy algorytm odkrywający reguły asocjacyjne został przedstawiony w roku 1994 w pracy~\cite{Apriori:Main}. Niżej przedstawione zostaną szczegóły działania tego algorytmu nazwanego algorytmem \emph{Apriori}.
+Pierwszy algorytm odkrywający reguły asocjacyjne został przedstawiony w roku 1994 w pracy~\cite{Apriori:Main}, który jest rozszerzeniem algorytmu zaprezentowanego przez autorów w~\cite{Problem:Statement}. Niżej przedstawione zostaną szczegóły działania tego algorytmu nazwanego algorytmem \emph{Apriori}.
 
 Zagadnienie odkrywania reguł asocjacyjnych można podzielić na dwa etapy~\cite{Problem:Statement}:
 \begin{enumerate}
@@ -74,11 +108,10 @@ Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odk
 \begin{table}
 	\centering
 	\begin{tabular}{|c|p{7.7cm}|} \hline
-	$k$-zbiór & Zbiór zawierający $k$ elementów. \\ \hline
 	$L_k$ & Zbiór zawierający $k$-zbiory. Każdy zbiór zawarty w $L_k$ zawiera dwa pola: i) zbiór oraz ii) wartość $support$. \\ \hline
 	$C_k$ & Zbiór $k$-zbiorów kandydatów (potencjalnych zbiorów częstych). Każdy zbiór zawarty w $C_k$ zawiera dwa pola: i) zbiór oraz ii) wartość $support$. \\ \hline
-	\end{tabular}\label{skroty:znaczanie}
-	\caption{Oznaczenie skrótów w opisie algorytmu}
+	\end{tabular}
+	\caption{Oznaczenie w opisach algorytmów\label{skroty:znaczanie}}
 \end{table}
 
 Tabela~\ref{skroty:znaczanie} zawiera spis oznaczeń używanych w opisie algorytmu. 
@@ -104,7 +137,7 @@ Procedura \proc{Apriori Frequent Set Generaion} przedstawia pseudokod realizują
 \end{codebox}
 
 \paragraph{Procedura aprioriGen}
-Procedura \id{aprioriGen} reprezentuje proces twórzenia zbiorów $k$-elementowych kandydatów na podstawie zbiorów wejściowych ${k-1}$-elementowych. Procedura ta jest podzielona na dwa etapy: łączenia oraz przycinania. 
+Procedura \id{aprioriGen} reprezentuje proces twórzenia zbiorów $k-$ elementowych kandydatów na podstawie zbiorów wejściowych $(k-1)$-elementowych. Procedura ta jest podzielona na dwa etapy: łączenia oraz przycinania. 
 
 Jak łatwo zauważyć wynikiem działania \proc{Join Step} są zbiory $k$-elementowe, które powstały na podstawie zbiorów wejściowych $L_{k-1}$, a ich zawartość różni się tylko jednym elementem - ostatnim. Ważnym faktem jest to, iż elementy w zbiorach są uporządkowane leksykograficzne, co wykorzystywane jest w tej procedurze.
 
@@ -143,7 +176,7 @@ Po zakończeniu pierwszego etapu algorytm przystępuje do drugiego, czyli do bud
 
 Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconf$. Warto zauważyć, że dla każdego zbioru częstego generowane są wszystkie możliwe niepuste podzbiory - zapewnia to, że odkryte zostaną wszystkie możliwe reguły.
 
-Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocjacyjnych na podstawie odkrytych zbiorów częstych.
+Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocjacyjnych na podstawie odkrytych $k$-zbiorów częstych $l_k$ będących elementami zbioru $L_k$ ($l_k \in L_k$).
 
 \begin{codebox}
 	\Procname{$\proc{Generate Frequent Itemsets}$}
@@ -178,7 +211,7 @@ W powyższym algorytmie wykorzystana została funkcja \proc{Genrules}, która na
 
 Podstawową wadą algorytmu Apriori jest wysoki koszt przetważania dużych zbiorów danych. Przykładowo, dla $10^4$ 1-zbiorów częstych, algorytm Apriori wygeneruje około $10^7$ 2-zbiorów kandydatów, które następnie poddane zostaną weryfikacji, czy są zbiorami częstymi. Poza tym algorytm ten wymaga wielokrotnego odczytywania zawartości bazy danych - w każdym kroku algorytmu należy odczytać całą bazę danych w celu obliczenia wsparcia zbiorów kandydujących.
 
-Wymienione wyżej wady algorytmu Apriori nie występują w algorytmie \emph{FP-growth} przedstawionym w pełni w pracy~\cite{Main:FPgrowth}. Algorytm ten pozwala wyeliminować konieczność generowania tak dużej liczby kandydujących zbiorów elementów oraz ogranicza liczbę dostępu do bazy danych do absolutnego minimum.  Co więcej algorytm ten harakteryzuje się kompletnością, co oznacza, że znajdowane są wszystkie wzorce o określonej częstości.
+Wymienione wyżej wady algorytmu Apriori nie występują w algorytmie \emph{FP-growth} przedstawionym w pełni w pracy~\cite{Main:FPgrowth}. Algorytm ten pozwala wyeliminować konieczność generowania tak dużej liczby kandydujących zbiorów elementów oraz ogranicza liczbę dostępu do bazy danych do absolutnego minimum.  Co więcej algorytm ten charakteryzuje się kompletnością, co oznacza, że znajdowane są wszystkie wzorce o określonej częstości.
 
 Algorytm FP-growth można podzielić na trzy podstawowe kroki.
 \begin{enumerate}
@@ -206,7 +239,7 @@ Rysunek~\ref{rys:fptree} przedstawia przykładowe FP-drzewo wraz z tablicą nag�
 \subsubsection{Kompresja bazy danych}
 Pierwszy etap polega na znalezieniu wszystkich $1$-zbiorów częstych występujących w bazie danych $DB$. Po ich odnalezieniu ($F_1$ - zbiór znalezionych $1$-zbiorów częstych) z każdej transakcji $T$ usuwany jest ten element, który nie należy do $F_1$. 
 
-W wyniku usunięcia elementów nie tworzących jednoelementowych zbiorów częstych, baza ma zazwyczaj znacznie mniejszy rozmiar niż wyjściowa baza danych. Dodatkowo w tym kroku elementy w każdej transakcji zostają posortowane według maljącej wartości ich wsparcia.
+W wyniku usunięcia elementów nie tworzących jednoelementowych zbiorów częstych, baza ma zazwyczaj znacznie mniejszy rozmiar niż wyjściowa baza danych. Dodatkowo w tym kroku elementy w każdej transakcji zostają posortowane według malejącej wartości ich wsparcia.
 
 
 \subsubsection{Konstrukcja FP-drzewa}\label{fptree:construction}
@@ -220,7 +253,7 @@ W wyniku usunięcia elementów nie tworzących jednoelementowych zbiorów częst
 	\textbf{Metoda:} Poniżej zostanie opisany proces konstrukcji FP-drzewa.
 
 	\begin{enumerate}
-		\item Przeskanowanie bazy danych transakcji $DB$ odbywa się jednokrotnie. Utworzony na tej podstawie zostanie zbiór $F$, zawierający 1-zbiory częste. Posortowany malejąco zbiór $F$ na podstawie wartości $support$ dla każdego elementu tworzy listę $FList$, czyli listę wsystkich elementów tworzących jednoelementowe zbiory częste.
+		\item Przeskanowanie bazy danych transakcji $DB$ odbywa się jednokrotnie. Utworzony na tej podstawie zostanie zbiór $F$, zawierający 1-zbiory częste. Posortowany malejąco zbiór $F$ na podstawie wartości $support$ dla każdego elementu tworzy listę $FList$, czyli listę wszystkich elementów tworzących jednoelementowe zbiory częste.
 		\item Tworzony jest pierwszy element drzewa - korzeniem zostaje (zgodnie z definicją~\ref{fptree:def}) element z etykietą \id{null}. Dla każdej transakcji w bazie danych $DB$ wykonywane jest, co następuje.
 		\begin{quote}
 			Wybierane są elementy częste z transakcji, a następnie sortowane zgodnie z kolejnością w $FList$. Niech taka posortowana lista elementów częstych ma postać $[p|P]$, gdzie $p$ jest pierwszym elementem, a \id{P} jest pozostałą częscią listy. Następnie wywoływana jest funkcja $insertTree([p|P], T)$, gdzie \id{T} jest FP-drzewem.

@@ -1,0 +1,34 @@
+\chapter{Uniwersalna architektura procesorów wielordzeniowych}
+Rozdział ten stanowi wprowadzenie to zagadnienia obliczeń wielordzeniowych. Przedstawiona została w nim pokrótce historia rozwoju technologii oraz sprzętu komputerowego, który podążał za wymaganiami stawianymi przez użytkowników. Przedstawiona zostanie historia rozwoju procesora - głównej jednostki obliczeniowej w praktycznie każdym urządzeniu elektronicznym. Później opisany zostanie rozwój karty graficznej oraz zmiana jej zastosowania. Ostatnim, lecz nie najmniej ważnym elementem tego rozdziału jest opis uniwersalnej architektury obliczeniowej CUDA (\english{Compute Unified Device Architecture}) wprowadzonej przez firmę nVidia w roku 2007, która umożliwia wykorzystanie mocy obliczeniowej \termdef{procesorów graficznych} (\acronym{GPU}, \english{Graphics Processing Unit}), bądź innych procesorów wielordzeniowych, do rozwiązywania ogólnych problemów obliczeniowych w sposób znacząco wydajniejszy niż w przypadku tradycyjnych, sekwencyjnych procesorów~\cite{cuda:zone}.
+
+\section{Czas przetwarzania równoległego}
+W poprzednich latach dokonał się znaczący postęp w przechodzeniu przemysłu komputerowego na obliczenia wykonywane równolegle. W roku 2010 większość komputerów konsumenckich była dostarczana do odbiorcy z procesorem zawierającym więcej niż jeden rdzeń (\english{core}). Począwszy od procesorów dwurdzeniowych w laptopach do 8- czy 16-rdzeniowych stacji roboczych - od pewnego czasu obliczenia równoległe nie są już tylko domeną superkomputerów lub mainframe'ów (ang. \emph{main} – główny, \emph{frame} – struktura). Co więcej, użądzenia elektroniczne takie jak telefony komórkowe czy też odtwarzacze muzyki wyposażane są w procesory wielordzeniowe, co zapewnia im funkcjonalność dalece przekraczającą tę dostępną dla ich poprzedników.
+
+Wynika z tego, że coraz to więcej programistów będzie musiało radzić sobie z implementacją oprogramowania przeznaczonego na jednostki równoległe, wykorzystywać nowe technologie, które będę pozwalały na dostarczenie nowatorskich rozwiązań dla co raz bardziej wymagającej rzeszy użytkowników. Wiersze poleceń to przeżytek - od dawna komputerem steruje się za pomocą skomplikowanych interfejsów graficznych. To samo tyczy się telefonów komórkowych - w chwili obecnej telefon to tylko jedna z wielu funkcji, jakich może dostarczyć. Teraz telefony mogą jednocześnie grać muzykę, dostarczać informacji o obecnej lokalizacji przy użyciu modułu nawigacji satelitarnej (\acronym{GPS}, \english{Global Positioning System}) oraz wyświetlać zdjęcia.
+
+\subsection{Procesor}
+Przez około 30 lat jedną z ważniejszych metod udoskonalania centralnych jednostek obliczeniowych, a przez to zwiększaniu komfortu korzystania z urządzenia przez użytkownika, było zwiększanie prędkości z jaką operował zegar procesora. W latach 80 XX wieku procesor przeznaczony na rynek konsumencki operował z prędkością oscylującą w okolicach $1$MHz. Około 30 lat później, w czasach współczesnych, większość komputerów osobistych wyposażona jest w procesory o prędkościach od $1$ do $4$GHz, czyli posiadają one niemalże $1000$ razy szybsze procesory w porównaniu ze wczesnymi jednostkami. Pomimo tego, że zwiększenie prędkości nie jest jedyną metodą na zwiększanie wydajności procesora, to mimo wszystko jest to niezawodne źródło większej wydajności.
+
+Jednakże ograniczenia technologiczne wyznaczają pewne granice, w jakich może wzrastać prędkość zegara procesora. Dlatego też poszukuje się innych, równie niezawodnego źródła zwiększenia wydajności. Nie można już dłużej polegać jedynie na zwiększaniu prędkości. Z powodu restrykcji na mocy oraz wydzielanym cieple oraz docieraniu do granicy rozmiaru tranzystora, naukowcy oraz producenci rozpoczęli poszukiwanie nowych źródeł.
+
+Poza światem konsumentów, czyli w świecie tzw. superkomputerów przez dekady osiągano niezwykle wielkie przyrosty mocy w bardzo podobny sposób. Moc procesora używanego w tych komputerach rosła tak samo szybko, jak w przypadku przyrostów procesorów desktopowych. Jednakże, poza wielkimi przyrostami mocy obliczeniowej na jednej jednostce, producenci superkomputerów tworzyli komputery, w których solidne przyrosty w wydajności osiągano dzięki zwiększaniu liczby używanych procesorów. Nie jest niczym niezwykłym, że pojedynczy superkomputer składa się z dziesiątek lub setek tysięcy procesorów działających równolegle.
+
+W poszukiwaniu dodatkowych możliwości dla komputerów osobistych, poprawa wydajności w przypadku superkomputerów rodzi pytanie: Dlaczego zamiast zwiększać wydajność pojedynczej jednostki, nie umieścić w komputerze osobistym więcej procesorów? W wypadku zwiększania liczby rdzeni rozwój jednostek obliczeniowych nie byłby ograniczony przez te same niedogodności, co w przypadku ciągłego zwiększania prędkości zegara procesora.
+
+W roku 2005 wiodący producenci prosesorów zaczęli oferować jednostki z dwoma, zamiast z jednym rdzeniem. W latach następnych kontynuowano tę taktykę, tworząc jednostki trzy-, cztero-, sześcio oraz ośmio-rdzeniowe. Czasami nazywa się ten okres \emph{rewolucją wielordzeniową}, ponieważ zmiana podejścia do zwiększania wydajności jednostek w znaczący sposób wpłynęła na ewolucję konsumenckiego rynku komputerów.
+
+W chwili obecnej praktycznie każdy komputer osobisty jest wyposażony w procesor dwurdzeniowy. Nawet na rynku niskobudżetowych komputerów z bardzo niskim zapotrzebowaniem na moc, dokonała się rewolucja wielordzeniowa - netbooki będą wyposażone w dwa rdzenie~\cite{intel:netbook}. 
+
+\section{Wpływ procesorów graficznych na procesy obliczeniowe}
+
+Użycie procesora graficznego, jako jednostki obliczeniowej dla problemów nie związanych bezpośrednio z przetwarzaniem grafiki jest podejściem stosunkowo nowym. W rzeczywostości obliczenia na jednostkach graficznych nie są tak nowe, jak mogłoby się wydawać na pierwszy rzut oka. 
+
+\subsection{Krótka historia kart graficznych}
+
+\subsection{Wczesne obliczenia na kartach graficznych}
+
+\section{CUDA}
+
+\subsection{Czym jest architektura CUDA?}
+
+\subsection{Używanie CUDA}
