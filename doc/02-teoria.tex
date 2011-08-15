@@ -7,7 +7,7 @@ W rozdziale tym przedstawiony zostanie przegląd literatury, który stanowi pods
 
 \subsection{Model teoretyczny}
 
-Niech $I = \lbrace i_1,i_2,...,i_m \rbrace$ będzie \emph{zbiorem elementów} o liczności $|I| = m$. \emph{Transakcją} nazwano dowolny, niepusty podzbiór $X \subseteq I$ zbioru elementów. Bazą danych $DB$ nazwano dowolny zbiór par $(id, X)$, gdzie $X$ jest transakcją, a $id$ jest dowolną wartością unikalną w ramach bazy danych nazywaną \emph{identyfikatorem transakcji}. Bez utraty ogólności założono iż $id\in \mathbb{N}$. 
+Niech $I = \lbrace i_1,i_2,...,i_m \rbrace$ będzie \emph{zbiorem elementów} o liczności $|I| = m$. \emph{Transakcją} $T$ nazwano dowolny, niepusty podzbiór $X \subseteq I$ zbioru elementów. Bazą danych $DB$ nazwano dowolny zbiór par $(id, X)$, gdzie $X$ jest transakcją, a $id$ jest dowolną wartością unikalną w ramach bazy danych nazywaną \emph{identyfikatorem transakcji}. Bez utraty ogólności założono iż $id\in \mathbb{N}$. 
 
 \begin{table}
 	\centering
@@ -33,7 +33,7 @@ sup(X)=\frac{| \lbrace id: (id,Y)\in DB \wedge X\subseteq Y \rbrace |}{|DB|}
 
 Łatwo zauważyć, że jeśli poziom ten jest niski, to oznacza to, że elementy zbioru $X$ w transakcjach rzadko występują razem.
 
-Dla przykładowego zbioru $X=\lbrace \textrm{milk} \rbrace$ wartość $sup(X)$ została obliczona w przykładzie~\ref{sample:sup}, ponieważ zbiór $X$ jest podzbiorem dwóch transakcji - $1 = \lbrace$ bread, milk, butter, beer $\rbrace$ oraz $4 = \lbrace$ butter, milk, juice $\rbrace$.
+Dla przykładowego zbioru $X \subseteq I=\lbrace \textrm{milk} \rbrace$ wartość $sup(X)$ została obliczona w przykładzie~\ref{sample:sup}, ponieważ zbiór $X$ jest podzbiorem dwóch transakcji - $1 = \lbrace$ bread, milk, butter, beer $\rbrace$ oraz $4 = \lbrace$ butter, milk, juice $\rbrace$.
 
 \begin{equation}\label{sample:sup}
 \begin{split}
@@ -43,32 +43,36 @@ sup(X)= sup(\lbrace \textrm{milk} \rbrace) =& \frac{|\lbrace 1, 4 \rbrace|}{|DB|
 \end{equation}
 
 \begin{df}\label{regula:def}
-Niech będą dane dwie transakcje $X$ i $Y$ takie, że $X\cap Y=\emptyset$. Implikację postaci $X\Rightarrow  Y$ nazwano \emph{regułą asocjacyjną}.
+Niech będą dane dwie transakcje $X$ i $Y$ takie, że $X\cap Y=\emptyset$ oraz $Y \neq \emptyset$. \emph{Regułą asocjacyjną} $R$ nazwano implikację postaci $X\Rightarrow  Y$.
 \end{df}
 
 \emph{Poziom ufności} (\english{confidence}) jest miarą określającą jakość reguły asocjacyjnej~\cite{Elmasri:db}. 
 
 \begin{df}\label{confidence:def}
-Poziom ufności ($conf$) reguły asocjacyjnej $X \Rightarrow Y$ jest równy 
+Poziom ufności ($conf$) reguły asocjacyjnej $R:\ X \Rightarrow Y$ jest równy 
 \begin{equation}
 	conf(X \Rightarrow Y) = \frac{sup(X \cup Y)}{sup(X)}
 \end{equation}
 \end{df}
 
-Z definicji~\ref{confidence:def} wynika, że poziom ufności może być interpretowany, jako estymacja prawdopodobieństwa w transakcji zbioru $Y$ pod warunkiem wystąpienia w niej również zbioru $X$ - co oznaczone jest poprzez $P(Y | X)$.
+Z definicji~\ref{confidence:def} wynika, że poziom ufności może być interpretowany, jako estymacja prawdopodobieństwa w transakcji zbioru $Y$ pod warunkiem wystąpienia w niej również zbioru $X$ - co oznaczone jest poprzez $P(Y | X)$. Formalnie zapisane jest to za pomocą wzoru~\ref{confidence:def2}~\cite{ParallelAlgorithms}.
 
-Przykładową regułą asocjacyjną znalezioną dla danych przedstawionych w tabeli~\ref{example:data} może być reguła $\lbrace \textrm{butter} \rbrace \Rightarrow \lbrace \textrm{bread, beer} \rbrace$, która zostałaby znaleziona dla $minsup = 0,6$. Taka reguła posiada współczynnik pewności równy obliczony w przykładzie~\ref{sample:conf}.
+\begin{equation}\label{confidence:def2}
+	conf(X \Rightarrow Y) = p(Y \subseteq T | X\subseteq T) = \frac{p(Y \subseteq T \land X\subseteq T)}{p(X\subseteq T)} =\frac{sup(X \cup Y)}{sup(X)}
+\end{equation}
+
+Reguły asocjacyjne zazwyczaj powinny spełniać pewne wymagania zdefiniowane przez użytkownika - minimalne wsparcie oraz minimalny poziom ufności, oznaczane odpowiednio $minsup$ oraz $minconf$. Wyznaczają one dla aplikacji progi, jakie powinny spełniać zbiory oraz reguły, aby były brane pod uwagę w trakcie analizy. Motywacją za tymi minimalnymi wartościami jest fakt, by do analizy brane były tylko te zbiory, które pojawiają się w $DB$ wystarczającą liczbę razy.
+
+Przykładową regułą asocjacyjną znalezioną dla danych przedstawionych w tabeli~\ref{example:data} może być reguła $\lbrace \textrm{butter} \rbrace \Rightarrow \lbrace \textrm{bread, beer} \rbrace$, która zostałaby znaleziona dla $minsup = 0,6$. Taka reguła posiada współczynnik pewności równy $\frac{3}{4}=75\%$, obliczony w przykładzie~\ref{sample:conf}.
 
 \begin{equation}\label{sample:conf}
 \begin{split}
 conf(X \Rightarrow Y)& = conf(\lbrace \textrm{butter} \rbrace \Rightarrow \lbrace \textrm{bread, beer} \rbrace) =\\
 & = \frac{sup(\lbrace \textrm{butter} \rbrace \cup \lbrace \textrm{bread, beer} \rbrace)}{sup(\lbrace \textrm{butter} \rbrace)} =\\
 & = \frac{sup(\lbrace \textrm{butter, bread, beer} \rbrace)}{sup(\lbrace \textrm{butter} \rbrace)} =\\
-& = \frac{3}{4}
+& = \frac{3}{4} = 75\%
 \end{split}
 \end{equation}
-
-Reguły asocjacyjne zazwyczaj powinny spełniać pewne wymagania zdefiniowane przez użytkownika - minimalne wsparcie oraz minimalny poziom ufności, oznaczane odpowiednio $minsup$ oraz $minconf$. Wyznaczają one dla aplikacji progi, jakie powinny spełniać zbiory oraz reguły, aby były brane pod uwagę w trakcie analizy.
 
 \begin{df}
 Zbiorem częstym $X \subseteq I$ nazywamy taki zbiór, który spełnia zależność $sup(X) \geq minsup$.
