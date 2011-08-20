@@ -109,12 +109,13 @@ W swoim źródle CUDA posiada trzy kluczowe elementy: hierarchię grup wątków,
 
 Te abstrakcyjne elementy dostarczają drobnoziarnistą równoległość na poziomie danych oraz wątków, zagnieżdżone w gruboziarnistej równoległości danch oraz zadań (\english{task}). Takie podejście prowadzi programistę do podziału problemu na większe podproblemy, które mogą być rozwiązane niezależnie przez bloki wątków, a każdy podproblem może być podzielony na mniejsze, które mogą być rozwiązywane wspólnie przez wątki wewnątrz jednego bloku.
 
-Taka dekompozycja zachowuje wszystkie dostępne funkcjonalności języka programowania umożliwiając wątkom kooperować w trakcie rozwiązywania każdego z podproblemów, a w tym samym czasie udostępnia automatyczną skalowalność programu. W rzeczywistości, każdy blok wątków może być zaplanowany na każdym z dostępnych korów na procesorze, w dowolnym porządku, jednocześnie lub sekwencyjnie, tak że skompilowany program w CUDA może być wykonany na dowolnej liczbnie korów procesora, jak zostało to zilustrowane na rysunku~\ref{rys:threads_gpu}. Jedynie \emph{system uruchomieniowy} (\english{runtime system}) musi znać faktyczną liczbę jednostek procesora. Wielowątkowy program jest podzielony na bloki wątkó, które wykonywane są niezależnie jeden od drugiego, dlatego też GPU z większą liczbą korów będzie automatycznie wykonywać program w krótszym czasie niż karta graficzna z mniejszą liczbą jednostek.
-
-\begin{figure}[h]
+\begin{figure}
 \centering\includegraphics[width=1.0\textwidth]{figures/03/threads_gpu.png}
 \caption{Zilustrowanie automatycznej skalowalności~\cite{Cuda:PGuide}}\label{rys:threads_gpu}
 \end{figure}
+
+Taka dekompozycja zachowuje wszystkie dostępne funkcjonalności języka programowania umożliwiając wątkom kooperować w trakcie rozwiązywania każdego z podproblemów, a w tym samym czasie udostępnia automatyczną skalowalność programu. W rzeczywistości, każdy blok wątków może być zaplanowany na każdym z dostępnych rdzeni na procesorze, w dowolnym porządku, jednocześnie lub sekwencyjnie, tak że skompilowany program w CUDA może być wykonany na dowolnej liczbnie rdzeni procesora, jak zostało to zilustrowane na rysunku~\ref{rys:threads_gpu}. Jedynie \emph{system uruchomieniowy} (\english{runtime system}) musi znać faktyczną liczbę jednostek procesora (liczbe rdzeni procesora). Wielowątkowy program jest podzielony na bloki wątkó, które wykonywane są niezależnie jeden od drugiego, dlatego też GPU z większą liczbą rdzeni będzie automatycznie wykonywać program w krótszym czasie niż karta graficzna z mniejszą liczbą jednostek.
+
 
 Ten skalowalny model programistyczny umożliwia architekturze CUDA być stosowaną w szerokim spektrum zastosowań: od wysokowydajnych kart graficznych GeForce czy też na profesjonalnych kartach Quadro na komputerach entuzjastów, kartach Tesla przeznaczonych tylko do obliczeń, do kart GeForce przeznaczonych na domowe komputery.
 

@@ -12,8 +12,8 @@ Niech $I = \lbrace i_1,i_2,...,i_m \rbrace$ będzie \emph{zbiorem elementów} o 
 \begin{table}
 	\centering
 	\begin{tabular}{|c|l|} \hline
-	$I$ & $\lbrace$ beer, bread, butter, diapers, jam, juice, milk, water $\rbrace$ \\ \hline
-	Transakcje & $1$: $\lbrace$ bread, milk, butter, beer $\rbrace$ \\
+	$\mathbf{I}$ & $\lbrace$ beer, bread, butter, diapers, jam, juice, milk, water $\rbrace$ \\ \hline
+	\textbf{Transakcje} & $1$: $\lbrace$ bread, milk, butter, beer $\rbrace$ \\
 	 & $2$:  $\lbrace$ bread, butter, water, jam, beer $\rbrace$ \\ 
 	 & $3$:  $\lbrace$ beer, diapers, bread, butter, jam $\rbrace$ \\ 
 	 & $4$:  $\lbrace$ butter, milk, juice $\rbrace$ \\
@@ -219,10 +219,49 @@ Wymienione wyżej wady algorytmu Apriori nie występują w algorytmie \emph{FP-g
 
 Algorytm FP-growth można podzielić na trzy podstawowe kroki.
 \begin{enumerate}
-	\item W kroku pierwszym generowana jest skompresowana wersja bazy danych $DB$, mająca postać drzewa częstych wzorców.
+	\item W kroku pierwszym generowana jest skompresowana wersja bazy danych $DB$, mająca postać drzewa częstych wzorców - jako posortowane listy elementów częstych w każdej z transakcji.
 	\item Drugim krokiem jest transformacja tak skonstruowanego drzewa do postaci \emph{FP-drzewa} (patrz definicja~\ref{fptree:def}).
 	\item Trzeci krok polega na analizie FP-drzewa celem odnalezienia reguł asocjacyjnych. W kroku tym stosowana jest metoda dziel i zwyciężaj (\english{divide-and-conquer}) zamiast podejścia Apriori, czyli generowania na każdym poziomie zbioru kandydatów na zbiory częste, a następnie odcinaniu kandydatów nie spełniających kryteriów akceptacji. Takie podejście przekształca problem znajdowania długich reguł w problem szukania krótszych, a następnie konkatenacji wyników. 
 \end{enumerate}
+
+\begin{table}
+	\centering
+	\begin{tabular}{|c|c|c|} \hline
+	\textbf{TID} &  \textbf{Lista elementów} & \textbf{Posortowana lista elementów częstych} \\ \hline
+	$100$ & f, a, c, d, g, i, m, p & f, c, a m, p \\ 
+	$200$ & a, b, c, f, l, m, o & f, c, a, b, m \\ 
+	$300$ & b, f, h, j, o & f, b \\
+	$400$ & b, c, k, s, p & c, b, p \\
+	$500$ & a, f, c, e, l, p, m, n & f, c, a, m, p \\ \hline
+	\end{tabular}
+	\caption{Przykładowy zbiór transakcji\label{example:fp_data}}
+\end{table}
+
+\subsubsection{Przykład budowy FP-drzewa}\label{sec:example_fptree}
+Niech zbiór transakcji $DB$ będzie zdefiniowany przez tablicę~\ref{example:fp_data}. Dla przykładu przyjęto, że $minsup = 3$.
+
+\begin{enumerate}
+	\item Ponieważ w budowie FP-drzewa (patrz definicja~\ref{fptree:def}) będą uczestniczyc jedynie elementy będące elementami częstymi, to pierwszym etapem algorytmu jest jednokrotne przejrzenie zawartości $DB$ oraz zidentyfikowanie zbioru elementów częstych (z wartością $f_count$ dla każdego elementu, przechowujący liczbę jego wystąpień).
+	\item Jeśli zbiory elementów częstych, dla każdej z transakcji, mogą być przechowywane w relatywnie małej strukturze - warto jest zachować wynik skanowania, by uniknąć w kolejnych etapach kolejnych, niepotrzebnych i wyraźnie obniżających wydajność algorytmu, skanów bazy danych.
+	\item Jeśli kilka transakcji posiada te same zbiory elementów częstych, możliwe jest przechowywanie tych zbiorów jako jednego, z licznikiem w ilu transakcjach on występuje ($count$). Czy dwa zbiory są identyczne można w łatwy sposób zweryfikować, jeśli w każdym ze zbiorów są posortowane zgodnie z przyjętym dla wszystkich porządkiem.
+	\item Możliwe jest również częściowe współzapamiętywanie zbiorów, jeśli prefiksy (czyli części zbiorów posortowanych) są identyczne dla dwóch transakcji. Te same części mogą być scalone do jednego prefiksu, jeśli wartość $count$ jest właściwie obliczona. Jeśli elementy częste są posortowane w porządku malejącej liczby wystąpień, istnieje większe prawdopodobieństwo znalezienia większej liczby wspólnych prefiksów.
+\end{enumerate}
+
+Dla danych zawartych w tabeli~\ref{example:fp_data} przedstawione zostanie teraz działanie algorytmu.
+
+Na początek, skan bazy danych $DB$ tworzy \emph{listę elementów częstych}: $\lbrace (f, 4), (c, 4), (a, 3),$ $ (b, 3), (m, 3), (p, 3) \rbrace$ (pary reprezentują odpowiednio - element oraz liczbę jego wystąpień), w której elementy posortowane są zgodnie z malejącą liczbą wystąpień. Sposób sortowania jest istotny, ponieważ proces budowy drzewa będzie właśnie oparty na tym porządku. Dla wygody analizy oraz łatwiejszego zrozumiania, pierwszą kolumnę z prawej w tablicy~\ref{example:fp_data} tworzą elementy częste z danej transakcji, posortowane właśnie w ten sposób.
+
+Co więcej, korzeń drzewa jest tworzony i oznaczony jako \emph{null}, czyli wartość pusta. FP-drzewo jest tworzone poprzez skanowanie raz jeszcze bazy danych $DB$ i działania opisane przez kolejne kroki poniżej.
+
+\begin{enumerate}
+	\item Skan pierwszej transakcji ($TID = 100$) prowadzi do wprowadzenia w drzewie pierwszej gałęzi: $\lbrace (f, 1), (c, 1), (a, 1), (m, 1), (p, 1) \rbrace$. Warto zauważyć, że elementy częste z danej transakcji są wylistowane zgodnie z porządkiem w \emph{liście elementów częstych}.
+	\item Analizując drugą transakcję ($TID = 200$), dla której lista elementów częstych $\lbrace f, c, a, b, m \rbrace$ współdzieli ten sam prefiks $\lbrace f, c, a \rbrace$ z istniejąca już ścieżką $\lbrace f, c, a, m, p \rbrace$, dlatego też liczba wystąpień na tej ścieżce inkrementowana jest o $1$, a także tworzony jest nowy element $(b, 1)$ oraz dodawany jako potomek elementu $(a, 2)$, a następny nowy element $(m, 1)$ jest dodawany, jako potomek elementu $(b, 1)$.
+	\item Trzecia transakcja ($TID = 300$) $\lbrace f, b \rbrace$ współdzieli jedynie pierwszy element $\lbrace f \rbrace$ z $f$-poddrzewem prefiksowym, wartość $count$ dla elementu $(f, 2)$ jest inkrementowana o $1$, a nowy element $(b, 1)$ jest dodawany, jako bezpośredni potomek elementu $(f, 3)$.
+	\item Skan czwartej transakcji ($TID = 400$) prowadzi do utworzenia nowej gałęzi drzewa $\lbrace (c, 1),$ $(b, 1), (p, 1) \rbrace$, ponieważ transakcja ta nie współdzieli żadnego fragmentu z istniejącą już ścieżką w FP-drzewie.
+	\item Ostatnia transakcja ($TID = 500$) posiada identyczną listę elementów częstych, jak transakcja pierwsza ($TID = 100$), dlatego też elementy na tej ścieżce są inkrementowane odpowiednio o $1$.
+\end{enumerate}
+
+By ułatwić \emph{przechodzenie drzewa} (\english{tree traversal}) stworzona została również tablica nagłówkowa, w której każdy element posiada wskaźnik do elementu drzewa. Wierzchołki reprezentujące ten sam element, są oprócz tego połączone bezpośrednio między sobą. Po przeskanowaniu wszystkich transakcji, drzewo razem z połączeniami pomiędzy wierzchołkami zostało zaprezentowane na rysunku~\ref{rys:fptree}.
 
 \begin{df}\label{fptree:def}
 FP-drzewo (\english{frequent-pattern tree}) jest to ukorzeniony, etykietowany w wierzchołkach graf acykliczny spełniający poniższe cechy.
@@ -230,21 +269,20 @@ FP-drzewo (\english{frequent-pattern tree}) jest to ukorzeniony, etykietowany w 
 \begin{enumerate}
 	\item Korzeniem drzewa jest jeden element \id{null}, zbiór poddrzew prefiksowanych elementami (jako dzieci elementu \id{null}) oraz tablicy nagłówkowej zawierającej wpisy \id{element} $\rightarrow$ \emph{wskaźnik na element drzewa}.
 	\item Każdy wierzchołek poddrzewa składa się z trzech elementów: nazwy elementu (\english{item name}), licznika (\english{count}) oraz wskaźnika na inny wierzchołek. Nazwa elementu (\id{itemName}) w sposób jednoznaczny identyfikuje element ze zbioru elementów $I$, licznik przechowuje liczbę transakcji reprezentowanych przez ścieżkę od \id{null} do tego elementu, natomiast wskaźnik wskazuje na kolejny wierzchołek w FP-drzewie, którego nazwa jest identyczna do danego.
-	\item Każdy wpis w tablicy nagłówkowej (\english{frequent-item-header table}) skałada się z dwóch elementów: nazwy elementu oraz wskaźnika na pierwszy element w drzewie posiadający identyczną nazwę.
+	\item Każdy wpis w \emph{tablicy nagłówkowej} (\english{frequent-item-header table}) skałada się z dwóch elementów: nazwy elementu oraz wskaźnika na pierwszy element w drzewie posiadający identyczną nazwę.
 \end{enumerate}
 
-Rysunek~\ref{rys:fptree} przedstawia przykładowe FP-drzewo wraz z tablicą nagłówkową.
+Rysunek~\ref{rys:fptree} przedstawia przykładowe FP-drzewo wraz z tablicą nagłówkową reprezentujący dane z przykładu wprowadzonego i analizowanego wcześniej.
 
 \begin{figure}[h]
-\centering\includegraphics{figures/fptree.png}
-\caption{Ilustracja przykładowego FP-drzewa}\label{rys:fptree}
+\centering\includegraphics{figures/02/fptree.png}
+\caption{Ilustracja przykładowego FP-drzewa dla zbioru danych z tablicy~\ref{example:fp_data}}\label{rys:fptree}
 \end{figure}
 
 \subsubsection{Kompresja bazy danych}
 Pierwszy etap polega na znalezieniu wszystkich $1$-zbiorów częstych występujących w bazie danych $DB$. Po ich odnalezieniu ($F_1$ - zbiór znalezionych $1$-zbiorów częstych) z każdej transakcji $T$ usuwany jest ten element, który nie należy do $F_1$. 
 
 W wyniku usunięcia elementów nie tworzących jednoelementowych zbiorów częstych, baza ma zazwyczaj znacznie mniejszy rozmiar niż wyjściowa baza danych. Dodatkowo w tym kroku elementy w każdej transakcji zostają posortowane według malejącej wartości ich wsparcia.
-
 
 \subsubsection{Konstrukcja FP-drzewa}\label{fptree:construction}
 \begin{alg}\label{alg:fptre:econstruction}
@@ -299,7 +337,7 @@ Poniżej zaprezentowany zostanie pseudokod algorytmu przeszukiwania FP-drzewa ce
 				\li \For \textbf{each} element $a_i \in \id{Q}$
 					\li \Do
 					\textbf{generuj} regułę $\beta \gets a_i \cup \alpha$ z $support = a_i.support$
-					\li \textbf{stwórz} drzewo warunkowe z $\beta$ oraz FP-drzewo ($Tree_{\beta}$) dla $\beta$
+					\li \textbf{stwórz} warunkową bazę prefiksów z $\beta$ oraz FP-drzewo ($Tree_{\beta}$) dla $\beta$
 						\li	\If $Tree_{\beta} \neq \emptyset$
 							\li \Then
 							\textbf{call} $\proc{FP-growth}$($Tree_{\beta}$, $\beta$)
@@ -311,3 +349,14 @@ Poniżej zaprezentowany zostanie pseudokod algorytmu przeszukiwania FP-drzewa ce
 		\End
 \end{codebox}
 \end{alg}
+
+Przez \emph{warunkowea baza prefiksów} (\english{conditional pattern base}) rozumie się podprefiks pod warunkiem istnienia danego prefiksu, pod warunkiem występowania elementu podstawowego.
+
+\subsubsection{Przykład eksploracji FP-drzewa}
+W rozdziale~\ref{sec:example_fptree} zaprezentowano
+
+
+\begin{figure}[h]
+\centering\includegraphics{figures/02/mining_fptree.png}
+\caption{Ilustracja przykładowego FP-drzewa dla zbioru danych z tablicy~\ref{example:fp_data}}\label{rys:fptree}
+\end{figure}
