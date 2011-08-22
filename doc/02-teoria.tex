@@ -165,9 +165,9 @@ Następnym krokiem jest \proc{Prune Step}, w którym usuwane są wszystkie eleme
 		\li \Do
 			\li \For \textbf{each} $(k-1)$-podzbiór s zbioru $c$
 					\li \Do 
-						\If $s \notin L_{k-1}$
+						\If $s \notin L_{k-1}$ \label{li:prune_delete_if}
 						\li \Then
-							\textbf{delete} $c$ z $C_k$
+							\textbf{delete} $c$ z $C_k$\label{li:prune_delete}
 						\End
 					\End
 		\End
@@ -175,10 +175,15 @@ Następnym krokiem jest \proc{Prune Step}, w którym usuwane są wszystkie eleme
 
 Celem operacji przycinania (\english{prune}) jest ograniczenie rozmiaru zbioru $C_k$ przed sprawdzeniem wsparcia dla kandydatów w bazie danych $DB$. W tym celu wykorzystywana jest właściwość, z której wynika, że jeśli jakiś $(k-1)$-podzbiór danego kandydata ($c \in C_k$) nie występuje w $L_{k-1}$, to kandydatk $c$ nie jest zbiorem częstym i powinien być usunięty z $C_k$.
 
+\paragraph{Przykład działania procedury aprioriGen}
+Niech zbiór $L_3$ będzie równy $\lbrace \lbrace 1, 2, 3 \rbrace, \lbrace 1,2,4 \rbrace,$ $\lbrace 1,3,4 \rbrace, \lbrace 1, 3, 5 \rbrace, \lbrace 2, 3, 4 \rbrace \rbrace$. Po działaniu procedury $\proc{Join Step}$ wartość zbioru $C_4$ będzie zatem równa $\lbrace \lbrace 1, 2, 3, 4 \rbrace, \lbrace 1, 3, 4, 5 \rbrace \rbrace$. W następnym kroku, czyli wewnątrz procedury $\proc{Prune Step}$ usunięty zostanie z $C_4$ element $\lbrace 1, 3, 4, 5 \rbrace$ (patrz linia~\ref{li:prune_delete}), ponieważ element $\lbrace 1, 4, 5 \rbrace$ nie należy do $L_3$ (patrz linia~\ref{li:prune_delete_if}). Dlatego też $C_4 = \lbrace \lbrace 1, 2, 3, 4 \rbrace \rbrace$.
+
 \subsubsection{Generowanie reguł asocjacyjnych}
 Po zakończeniu pierwszego etapu algorytm przystępuje do drugiego, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy, generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru. Mniej ogólny sposób generowania reguł został przedstawiony w pracy~\cite{Problem:Statement}, jednakże podjęto decyzję, że jest to sposób zbyt mało użyteczny w środowisku produkcyjnym.
 
 Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconf$. Warto zauważyć, że dla każdego zbioru częstego generowane są wszystkie możliwe niepuste podzbiory - zapewnia to, że odkryte zostaną wszystkie możliwe reguły.
+
+Istnieje możliwość poprawienia tego podejścia poprzez generowanie podzbiorów dużego zbioru w sposób rekurencyjnego wywołania \emph{najpierw w głąb} (\english{depth-first fashion}). Na przykład, dla zbioru $\lbrace A, B, C, D \rbrace$, najpierw rozważany jest podzbiór $\lbrace A, B, C \rbrace$, potem $\lbrace A, B \rbrace$ itd. Wtedy, jeśli podzbiór $a$ zbioru $l$ nie jest źródłem reguły asocjacyjnj, podzbiór $a$ nie musi być rozważany w generowaniu reguł ze zbioru $l$. Dla przykładu, jeśli reguła $\lbrace A, B, C \rbrace \Rightarrow \lbrace D \rbrace$ nie posiada wystarczającego współczynnika $conf$, wówczas nie ma potrzeby sprawdzać reguły $\lbrace A, B \rbrace \Rightarrow \lbrace C, D \rbrace$. Nie jest pominięta żadna możliwa reguła, ponieważ wartość $sup$ dowolnego $\tilde{a} \in a$ nie może być większe niż wartość $sup$ dla zbioru $a$. Dlatego też, wartość $conf$ dla reguły $\tilde{a} \Rightarrow (l - \tilde{a})$ nie może być większa niż poziom ufności $a \Rightarrow (l-a)$. Stąd, jeżeli $a$ nie zwrócił reguły zawierającej wszystkich elementów z $l$ w $a$, jako poprzednika, nie dokona tego również $\tilde{a}$~\cite{Main:Apriori}.
 
 Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocjacyjnych na podstawie odkrytych $k$-zbiorów częstych $l_k$ będących elementami zbioru $L_k$ ($l_k \in L_k$).
 
@@ -249,15 +254,15 @@ Niech zbiór transakcji $DB$ będzie zdefiniowany przez tablicę~\ref{example:fp
 
 Dla danych zawartych w tabeli~\ref{example:fp_data} przedstawione zostanie teraz działanie algorytmu.
 
-Na początek, skan bazy danych $DB$ tworzy \emph{listę elementów częstych}: $\lbrace (f, 4), (c, 4), (a, 3),$ $ (b, 3), (m, 3), (p, 3) \rbrace$ (pary reprezentują odpowiednio - element oraz liczbę jego wystąpień), w której elementy posortowane są zgodnie z malejącą liczbą wystąpień. Sposób sortowania jest istotny, ponieważ proces budowy drzewa będzie właśnie oparty na tym porządku. Dla wygody analizy oraz łatwiejszego zrozumiania, pierwszą kolumnę z prawej w tablicy~\ref{example:fp_data} tworzą elementy częste z danej transakcji, posortowane właśnie w ten sposób.
+Na początek, skan bazy danych $DB$ tworzy \emph{listę elementów częstych}: $\langle f: 4, c: 4, a: 3,$ $ b: 3, m: 3, p: 3\rangle$ (gdzie para $a:0\dots n$ reprezentuje odpowienio - element $a$ oraz liczbę jego wystąpień), w której elementy posortowane są zgodnie z malejącą liczbą wystąpień. Sposób sortowania jest istotny, ponieważ proces budowy drzewa będzie właśnie oparty na tym porządku. Dla wygody analizy oraz łatwiejszego zrozumiania, pierwszą kolumnę z prawej w tablicy~\ref{example:fp_data} tworzą elementy częste z danej transakcji, posortowane właśnie w ten sposób.
 
 Co więcej, korzeń drzewa jest tworzony i oznaczony jako \emph{null}, czyli wartość pusta. FP-drzewo jest tworzone poprzez skanowanie raz jeszcze bazy danych $DB$ i działania opisane przez kolejne kroki poniżej.
 
 \begin{enumerate}
-	\item Skan pierwszej transakcji ($TID = 100$) prowadzi do wprowadzenia w drzewie pierwszej gałęzi: $\lbrace (f, 1), (c, 1), (a, 1), (m, 1), (p, 1) \rbrace$. Warto zauważyć, że elementy częste z danej transakcji są wylistowane zgodnie z porządkiem w \emph{liście elementów częstych}.
-	\item Analizując drugą transakcję ($TID = 200$), dla której lista elementów częstych $\lbrace f, c, a, b, m \rbrace$ współdzieli ten sam prefiks $\lbrace f, c, a \rbrace$ z istniejąca już ścieżką $\lbrace f, c, a, m, p \rbrace$, dlatego też liczba wystąpień na tej ścieżce inkrementowana jest o $1$, a także tworzony jest nowy element $(b, 1)$ oraz dodawany jako potomek elementu $(a, 2)$, a następny nowy element $(m, 1)$ jest dodawany, jako potomek elementu $(b, 1)$.
-	\item Trzecia transakcja ($TID = 300$) $\lbrace f, b \rbrace$ współdzieli jedynie pierwszy element $\lbrace f \rbrace$ z $f$-poddrzewem prefiksowym, wartość $count$ dla elementu $(f, 2)$ jest inkrementowana o $1$, a nowy element $(b, 1)$ jest dodawany, jako bezpośredni potomek elementu $(f, 3)$.
-	\item Skan czwartej transakcji ($TID = 400$) prowadzi do utworzenia nowej gałęzi drzewa $\lbrace (c, 1),$ $(b, 1), (p, 1) \rbrace$, ponieważ transakcja ta nie współdzieli żadnego fragmentu z istniejącą już ścieżką w FP-drzewie.
+	\item Skan pierwszej transakcji ($TID = 100$) prowadzi do wprowadzenia w drzewie pierwszej gałęzi: $\langle f: 1, c: 1, a: 1, m: 1, p: 1\rangle$. Warto zauważyć, że elementy częste z danej transakcji są wylistowane zgodnie z porządkiem w \emph{liście elementów częstych}.
+	\item Analizując drugą transakcję ($TID = 200$), dla której lista elementów częstych $\lbrace f, c, a, b, m \rbrace$ współdzieli ten sam prefiks $\lbrace f, c, a \rbrace$ z istniejąca już ścieżką $\lbrace f, c, a, m, p \rbrace$, dlatego też liczba wystąpień na tej ścieżce inkrementowana jest o $1$, a także tworzony jest nowy element $b: 1$ oraz dodawany jako potomek elementu $a: 2$, a następny nowy element $m: 1$ jest dodawany, jako potomek elementu $b: 1$.
+	\item Trzecia transakcja ($TID = 300$) $\lbrace f, b \rbrace$ współdzieli jedynie pierwszy element $\lbrace f \rbrace$ z $f$-poddrzewem prefiksowym, wartość $count$ dla elementu $f: 2$ jest inkrementowana o $1$, a nowy element $b: 1$ jest dodawany, jako bezpośredni potomek elementu $f: 3$.
+	\item Skan czwartej transakcji ($TID = 400$) prowadzi do utworzenia nowej gałęzi drzewa $\langle c: 1,$ $b: 1, p: 1\rangle$, ponieważ transakcja ta nie współdzieli żadnego fragmentu z istniejącą już ścieżką w FP-drzewie.
 	\item Ostatnia transakcja ($TID = 500$) posiada identyczną listę elementów częstych, jak transakcja pierwsza ($TID = 100$), dlatego też elementy na tej ścieżce są inkrementowane odpowiednio o $1$.
 \end{enumerate}
 
@@ -337,7 +342,7 @@ Poniżej zaprezentowany zostanie pseudokod algorytmu przeszukiwania FP-drzewa ce
 				\li \For \textbf{each} element $a_i \in \id{Q}$
 					\li \Do
 					\textbf{generuj} regułę $\beta \gets a_i \cup \alpha$ z $support = a_i.support$
-					\li \textbf{stwórz} warunkową bazę prefiksów z $\beta$ oraz FP-drzewo ($Tree_{\beta}$) dla $\beta$
+					\li \textbf{stwórz} warunkową bazę wzorców z $\beta$ oraz FP-drzewo ($Tree_{\beta}$) dla $\beta$
 						\li	\If $Tree_{\beta} \neq \emptyset$
 							\li \Then
 							\textbf{call} $\proc{FP-growth}$($Tree_{\beta}$, $\beta$)
@@ -350,13 +355,40 @@ Poniżej zaprezentowany zostanie pseudokod algorytmu przeszukiwania FP-drzewa ce
 \end{codebox}
 \end{alg}
 
-Przez \emph{warunkowea baza prefiksów} (\english{conditional pattern base}) rozumie się podprefiks pod warunkiem istnienia danego prefiksu, pod warunkiem występowania elementu podstawowego.
-
 \subsubsection{Przykład eksploracji FP-drzewa}
-W rozdziale~\ref{sec:example_fptree} zaprezentowano
+W rozdziale pt.~\emph{\nameref{sec:example_fptree}} zaprezentowano sposób budowy FP-drzewa. Opierając się na przykładzie wprowadzonym w tablicy~\ref{example:fp_data} przedstawiony zostanie przykład działania eksploracji zbudowanego na tej podstawie FP-drzewa, które zostało zaprezentowane na rysunku~\ref{rys:fptree}.
 
+Przykład należy rozpocząć od spostrzeżenia, że wszystkie reguły asocjacyjne, zawierające element częsty $a_i$ mogą być zebrane poprzez wyjście ze wskaźnika z tablicy nagłówkowej FP-drzewa, a następnie podążając zgodnie z kolejnymi wskaźnikami na wystąpienia danego elementu w drzewie. W przykładzie analiza zostanie przeprowadzona od końca - tj. podąrzając od elementu najmniej licznego spośród elementów częstych.
+
+Dla elementu $p$ regułą częstą jest $p: 3$, która posiada dwie ścieżki w drzewie: $\langle f: 4, c: 3,$ $a: 3, m: 2, p: 2\rangle$ oraz $\langle c: 1, b: 1, p: 1\rangle$. Pierwsza ścieżka oznacza, że wartość ''$( f, c, a, m, p )$'' występuje w bazie danych $DB$ dwukrotnie. Warto zauważyć, że pierwsza ścieżka oznacza również, że ciąg ''$( f, c, a )$'' występuje w bazie dwukrotnie, a ''$(f)$'' nawet czterokrotnie. Jednakże występują one jednocześnie z $p$ jedynie dwukrotnie. Dlatego też, do analizy wartości występujących razem z $p$ tylko ścieżka prefiksowana $\langle f: 2, c: 2, a: 2, m: 2\rangle$ (lub zapisane krócej: $\langle fcam: 2\rangle$) jest brana pod uwagę. Podobnie w przypadku drugiej ścieżki - wynika z niej, że ciąg ''$(c, b, p)$'' występuje tylko raz w transakcjach w bazie danych $DB$, lub też prefiksowana ścieżka dla $p$ ma postać $\langle cb: 1 \rangle$. Te dwie ścieżki prefiksowane elementu $p$ ( czyli $\lbrace ( fcam: 2 ), (cb: 1) \rbrace$) tworzą bazę wzorca elementu $p$ (\english{subpattern-base}), która jest nazywana \emph{warunkową bazę wzorców} z $p$ (\english{conditional pattern base}) - to znaczy bazę wzorca pod warunkiem występowania elementu $p$~\cite{Main:FPgrowth}. Konstrukcja FP-drzewa na tej warunkowej bazie wzorców (które nazywane jest \emph{warunkowym FP-drzewem} elementu $p$ \english{conditional FP-tree}) prowadzi tylko do jednej gałęzi - $(c:3)$. Stąd też tylko jeden wzorzeć jest dziedziczony - $(cp:4)$. (Warto zauważyć, że wzorzec jest zbiorem elementów, który jest reprezentowany przez ciąg.) Poszukiwanie częstych wzorców związanych z elementem $p$ kończy działanie.
+
+Dla wierzchołka $m$ jego bezpośrednim wzorcem częstym jest $(m:3)$, posiada on również dwie ścieżki: $\langle f: 4, c: 3, a: 3, m: 2 \rangle$ oraz $\langle f: 4, c: 3, a: 3, b: 1, m: 1 \rangle$. W obu tych ścieżkach można zauważyć, że $m$ występuje razem z $p$, jednakże $p$ w tym miejscu nie musi być brane pod uwagę, ponieważ wszystkie wzorce częste dla tego elementu zostały znalezione wcześniej (opisano to akapit wcześniej). Wykonując działania podobnie, jak w poprzednim akapicie wyznaczona zostanie warunkowa baza wzorców o postaci $\lbrace (fca: 2), (fcab: 1) \rbrace$. Skonstruowane na tej podstawie FP-drzewo, czyli warunkowe FP-drzewo elementu $m$ ($\langle f: 3, c: 3, a: 3 \rangle$) posiada jedną ścieżkę częstą, co można zaobserwować na rysunku~\ref{rys:mining_fptree}. Następnie przeprowadzona jest rekurencyjna eksploracja tego warunkowego drzewa poprzez wywołanie $mine(\langle f: 3, c: 3, a: 3 \rangle | m)$.
 
 \begin{figure}[h]
 \centering\includegraphics{figures/02/mining_fptree.png}
-\caption{Ilustracja przykładowego FP-drzewa dla zbioru danych z tablicy~\ref{example:fp_data}}\label{rys:fptree}
+\caption{Eksploracja warunkowego FP-drzewa dla elementu $m$ (FP-tree $| m$)~\cite{Main:FPgrowth}}\label{rys:mining_fptree}
 \end{figure}
+
+Rysunek~\ref{rys:mining_fptree} ilustruje, że wywołanie $mine(\langle f: 3, c: 3, a: 3 \rangle | m)$ poddaje przetwarzaniu trzy elementy: $(a), (c), (f)$ sekwencyjnie. Przetwarzanie pierwszego tworzy częsty wzorzec o postaci $(am: 3)$, warunkową bazę wzorców $\lbrace (fc: 3) \rbrace$, a następnie wywoływana jest funkcja $mine(\langle f: 3, c: 3 \rangle | am)$; kolejny tworzy częsty wzorzec o postaci $(cm: 3)$, warunkową bazę wzorców $\lbrace (f: 3)\rbrace$, a następnie wywoływana jest funkcja $mine(\langle f: 3 \rangle | cm)$; trzecie natomiast tworzy jedynie częsty wzorzec $(fm: 3)$. Dalsze wywołanie metody $mine(\langle f: 3, c: 3 \rangle | am)$ tworzy dwa wzorce $(cam: 3)$ oraz $(fam: 3)$, warunkową bazę wzorców $\lbrace ( f: 3 ) \rbrace$, która prowadzi do wywołania $mine(\langle f: 3 \rangle | cam)$, czego wynikiem jest najdłuższy wzorzec częsty $(fcam: 3)$. Podobnie, wywołanie $mine(\langle f: 3 \rangle | cm)$ tworzy jednen wzorzec $(fcm: 3)$. 
+
+Z przeprowadzonej analizy wynika, że zbiór wszystkich wzorców częstych zawierający $m$ ma postać $\lbrace (m: 3), (am: 3), (cm: 3), (fm: 3), (cam: 3), (fam: 3), (fcam: 3), (fcm: 3) \rbrace$. Wynika z tego, że jedna ścieżka w FP-drzewie może być przeanalizowana poprzez wygenerowanie wszystkich kombinacji (bez powtórzeń) elementów na tej ścieżce.
+
+Podobnie, $b$ tworzy $(b: 3)$, posiada również trzy ścieżki: $\langle f:4, c:3, a:3, b:1 \rangle$, $\langle f:4, b:1 \rangle$ oraz $\langle c:1, b:1 \rangle$. Ponieważ warunkowa baza wzorca tego elementu $\lbrace (fca:1), (f:1), (c:1)\rbrace$ nie generuje żadnych elementów częstych, eksploracja po elemencie $b$ kończy działanie. 
+
+Element $a$ tworzy jeden element częsty $(a:3)$ oraz bazę wzorca $\lbrace (fc:3) \rbrace$, czyli FP-drzewo posiadające jedną ścieżkę. Wynika z tego, że zbiór częstych wzorców może być wygenerowany poprzez wygenerowanie wszystkich ich kombinacji. Dokonując konkatenacji z $(a:3)$, otrzymany zostanie zbiór $\lbrace (fa:3), (ca:3), (fca:3) \rbrace$. Wierzchołek $c$ generuje $(c:4)$, a także bazę wzorca $\lbrace (f:3) \rbrace$, a zbiór częstych wzorców skojarzonych z $(c:3)$ ma zawartość $\lbrace (fc:3)\rbrace$. Analiza elementu $f$ tworzy jedynie $(f:4)$, lecz bez warunkowych baz wzorców.
+
+\begin{table}
+	\centering
+	\begin{tabular}{|c|c|c|} \hline
+	\textbf{Element} &  \textbf{Warunkowa baza wzorców} & \textbf{Warunkowe FP-drzewo} \\ \hline
+	$p$ & $\lbrace ( fcam: 2 ), (cb: 1) \rbrace$ & $\lbrace (c:3) \rbrace | p$ \\ 
+	$m$ & $\lbrace ( fca: 2 ), (fcab: 1) \rbrace$ & $\lbrace (f:3, c:3, a:3) \rbrace | m$ \\ 
+	$b$ & $\lbrace ( fca: 2 ), (f: 1), (c: 1) \rbrace$ & $\emptyset$ \\ 
+	$a$ & $\lbrace ( fc: 3 ) \rbrace$ & $\lbrace (f:3, c:3) \rbrace | a$ \\ 
+	$c$ & $\lbrace ( f: 3 ) \rbrace$ & $\lbrace (f:3) \rbrace | c$ \\ 
+	$f$ & $\emptyset$ & $\emptyset$ \\ \hline
+	\end{tabular}
+	\caption{Wyniki eksploracji FP-drzewa dla przykładu opartego na danych w tablicy~\ref{example:fp_data}\label{example:sum_patterns}}
+\end{table}
+
+W tablicy~\ref{example:sum_patterns} zebrane zostały baze wzorców oraz warunkowe FP-drzewa dla poszczególnych elementów.
