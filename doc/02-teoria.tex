@@ -176,7 +176,14 @@ Następnym krokiem jest \proc{Prune Step}, w którym usuwane są wszystkie eleme
 Celem operacji przycinania (\english{prune}) jest ograniczenie rozmiaru zbioru $C_k$ przed sprawdzeniem wsparcia dla kandydatów w bazie danych $DB$. W tym celu wykorzystywana jest właściwość, z której wynika, że jeśli jakiś $(k-1)$-podzbiór danego kandydata ($c \in C_k$) nie występuje w $L_{k-1}$, to kandydatk $c$ nie jest zbiorem częstym i powinien być usunięty z $C_k$.
 
 \paragraph{Przykład działania procedury aprioriGen}
-Niech zbiór $L_3$ będzie równy $\lbrace \lbrace 1, 2, 3 \rbrace, \lbrace 1,2,4 \rbrace,$ $\lbrace 1,3,4 \rbrace, \lbrace 1, 3, 5 \rbrace, \lbrace 2, 3, 4 \rbrace \rbrace$. Po działaniu procedury $\proc{Join Step}$ wartość zbioru $C_4$ będzie zatem równa $\lbrace \lbrace 1, 2, 3, 4 \rbrace, \lbrace 1, 3, 4, 5 \rbrace \rbrace$. W następnym kroku, czyli wewnątrz procedury $\proc{Prune Step}$ usunięty zostanie z $C_4$ element $\lbrace 1, 3, 4, 5 \rbrace$ (patrz linia~\ref{li:prune_delete}), ponieważ element $\lbrace 1, 4, 5 \rbrace$ nie należy do $L_3$ (patrz linia~\ref{li:prune_delete_if}). Dlatego też $C_4 = \lbrace \lbrace 1, 2, 3, 4 \rbrace \rbrace$.
+Niech zbiór $L_3$ będzie równy $\lbrace \lbrace 1, 2, 3 \rbrace, \lbrace 1,2,4 \rbrace,$ $\lbrace 1,3,4 \rbrace, \lbrace 1, 3, 5 \rbrace, \lbrace 2, 3, 4 \rbrace \rbrace$. Po działaniu procedury $\proc{Join Step}$ wartość zbioru $C_4$ będzie zatem równa $\lbrace \lbrace 1, 2, 3, 4 \rbrace, \lbrace 1, 3, 4, 5 \rbrace \rbrace$. W następnym kroku, czyli wewnątrz procedury $\proc{Prune Step}$ usunięty zostanie z $C_4$ element $\lbrace 1, 3, 4, 5 \rbrace$ (patrz linia~\ref{li:prune_delete}), ponieważ element $\lbrace 1, 4, 5 \rbrace$ nie należy do $L_3$ (patrz linia~\ref{li:prune_delete_if}). Dlatego też $C_4 = \lbrace \lbrace 1, 2, 3, 4 \rbrace \rbrace$. 
+
+Opisane działanie zostało przedstawione schematycznie na rysunku~\ref{rys:example_candidates}, na którym zaznaczono poszczególne etapy wraz z zaznaczeniem części wspólnych poszczególnych zbiorów wejściowych (patrz procedura $\proc{Join Step}$).
+
+\begin{figure}[h]
+\centering\includegraphics{figures/02/candidates_generation.png}
+\caption{Zilustrowanie działania procedury aprioriGen}\label{rys:example_candidates}
+\end{figure}
 
 \subsubsection{Generowanie reguł asocjacyjnych}
 Po zakończeniu pierwszego etapu algorytm przystępuje do drugiego, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy, generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru. Mniej ogólny sposób generowania reguł został przedstawiony w pracy~\cite{Problem:Statement}, jednakże podjęto decyzję, że jest to sposób zbyt mało użyteczny w środowisku produkcyjnym.
