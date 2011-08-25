@@ -8,7 +8,9 @@ Język C\# oraz .NET zostały pierwszy raz przedstawione podczas międzynarodowe
 Należy również podkreślić, że firma Microsoft nie była jedyną, która wspierała tworzenie języka - oprócz niej w sponsoring tego języka włączył się firmy Helwett-Packard oraz Intel. Język C\# jest, podobnie, jak język Java, otwartym językiem, jednakże w zupełnie innym tego słowa znaczeniu. Microsoft sprzyja ścieżce standaryzacyjnej języka, gdy Sun (firma posiadająca prawa do platformy Java) stopniowo udostępnia kod źródłowy Javy na zasadach \emph{wolnego oprogramowania} (\english{open source}) i dopuszczając, a nawet zachęcając do tworzenia innych \emph{środowisk uruchomieniowych} (\english{runtime environments}) Javy. Istnieją alternatywne implementacje CLI oraz C\# (najbardziej znanym jest Mono~\cite{cs:mono}), jednakże należy podkreślić, że nie obejmują one swoją implementacją wszystkiego, co kryje się pod nazwą Microsoft .NET Framework. Ostatecznie język C\# oraz .NET zostały udostępnione w roku 2002, razem z narzędziem programistycznym Vistual Studio .NET 2002.
 
 \subsection{Platforma .NET}
-Kiedy wprowadzono termin ''.NET'', został on wcielony w szereg różnych technologii wychodzących spod sztandarów firmy Micorosft. Na przykład Windows Live ID był nazywany .NET Passport, pomimo tego, że nie istniało żadne bezpoźrednie połączenie pomiędzy tą technologią, a tym co jest obecnie znane, jako .NET. Na całe szczeście z czasem zaprzestano używanie .NET, który w chwili obecnej wiąże się jedynie ze światem programowanie.
+Kiedy wprowadzono termin ''.NET'', został on wcielony w szereg różnych technologii wychodzących spod sztandarów firmy Micorosft. Na przykład Windows Live ID był nazywany .NET Passport, pomimo tego, że nie istniało żadne bezpoźrednie połączenie pomiędzy tą technologią, a tym co jest obecnie znane, jako .NET. Na całe szczeście z czasem zaprzestano używanie .NET, który w chwili obecnej wiąże się jedynie ze światem programowania.
+
+Należy podkreślić, że .NET zawiera wspólną specyfikację języka (\acronym{CLS}, \english{Common Language Specification}), która udostępnia zestaw podstawowych reguł, niezbędnch do integracji języków na jednej platformie. CLS określa minimalne wymagania, jakie musi spełniać język z rodziny .NET. Kompilatory zgodne z CLS tworzą obiekty, które mogą ze sobą współpracować.
 
 Poniżej przedstawione zostaną trzy składniki, z jakich zbudowana jest platforma .NET oraz łączące je zależności.
 
@@ -16,7 +18,7 @@ Poniżej przedstawione zostaną trzy składniki, z jakich zbudowana jest platfor
 W skład platformy .NET wchodzą trzy podstawowe składniki: język programowania, biblioteki oraz środowisko uruchomieniowe. Wprawdzie rozróżnienie tych trzech nie zawsze jest możliwe, to ważna jest świadomość istnienia wyraźnych różnic pomiędzy tymi trzema składnikami.
 
 \paragraph{Język}
-Język C\# jest zdefiniowany przez swoją specyfikację, która opisuje format kodu programu w C\#, obejmując jednocześnie składnię oraz zachowanie. Nie jest tam zawarta natomiast informacja o platformie, na jakiej zostanie on uruchomiony, poza kilkoma kilkoma aspektami współpracy kompilatora z platformą. 
+Język C\# jest zdefiniowany przez swoją specyfikację (patrz~\cite{cSharp:spec}), która opisuje format kodu programu w C\#, obejmując jednocześnie składnię oraz zachowanie. Nie jest tam zawarta natomiast informacja o platformie, na jakiej zostanie on uruchomiony, poza kilkoma kilkoma aspektami współpracy kompilatora z platformą. 
 
 W teorii dowolna platforma, która wspiera wymagane funkcje (opisane w specyfikacji), może posiadać kompilator, który będzie budował oprogramowanie przeznaczone dla danej platformy.  Na przykład, kompilator języka C\# mógłby produkować na podstawie kodu źródłowego dowolny inny format niż tzw. \emph{język pośredni} (\acronym{IL}, \english{Intermediate Language}).
 
@@ -26,29 +28,46 @@ W teorii dowolna platforma, która wspiera wymagane funkcje (opisane w specyfika
 \paragraph{Biblioteki}
 \emph{Biblioteki} (\english{libraries}) dostarczają kod, który może być wykorzystywany przez oprogramowanie. Większość bibliotek frameworka .NET są gotowymi produktami języka IL (patrz punkt~\ref{sec:msil}) z \emph{kodem natywnym} (\english{native code}) wykorzystywanym tylko wtedy, gdy jest to potrzbne. Należy podkreślić, że kodu bilbiotek jest znacznie więcej niż kodu środowiska uruchomieniowego. W taki sam sposób można spojrzeć na samochód (biblioteki), który jest znacznie bardziej skomplikowaną jednostką niż sam jego silnik (środowisko uruchomieniowe).
 
-Warto podkreślić, że istnieje podział na biblioteki standardowe oraz pozostałe, które nie zostały ujęte w specyfikacji języka. Pisząc program, który wykorzystuje tylko te pierwsze można mieć dużą pewność, że będzie on możliwy do uruchomienia na dowolnej implementacji platrofmy - czy to Mono, .NET, czy jakiejkolwiek innej.
+Warto podkreślić, że istnieje podział na biblioteki standardowe oraz pozostałe, które nie zostały ujęte w specyfikacji języka~\cite{cSharp:spec}. Pisząc program, który wykorzystuje tylko te pierwsze można mieć dużą pewność, że będzie on możliwy do uruchomienia na dowolnej implementacji platrofmy - czy to Mono, .NET, czy jakiejkolwiek innej.
 
 Termin \emph{.NET} odnosi się do kombinacji środowiska uruchomieniowego wraz z bibliotekami dostarczanymi przez Microsoft, a także kompilatory C\# oraz VB.NET. .NET moze być pojmowany, jako cała \emph{platforma programistyczna} (\english{development platform}) zbudowana nad systemem Windows.
 
 
 \subsection{Kompilacja i język MSIL}\label{sec:msil}
+Programy pisane na platformie .NET nie są kompilowane do plików wykonywalnych, jak to ma miejsce w przypadku chociażby języka C++. Są one kompilowane do podzespołów, które składają się z instrukcji standardowego \emph{języka pośredniego Microsoft} (\acronym{MSIL}, \english{Microsoft Intermediate Language}). Środowisko CLR dokonuje przekształcenia instrukcji tego języka na kod maszynowy i wykonuje je. Pliki MSIL (często zamiennie używa się skrótowej nazwy IL) stworzone przez kompilator języka C\# są niemalże takie same, jak pliki IL innych języków z rodziny .NET. Kluczową cechą środowiska CLR jest to, że jest ono wspólne, co oznacza, że programy napisne w języku VB.NET czy też C\# są obsługiwane przez te samo środowisko uruchomieniowe.
+
+Kompilacja kodu w języku C\# do IL odbywa się w momencie budowania projektu. W wyniku czego kod IL jest zapisywany na dysku w postaci plików binarnych. W momencie uruchomienia programu zachodzi ponowna kompilacja - tym razem kodu IL. Jest to tak zwana kompilacja \acronym{JIT} (\english{Just In Time}), w wyniku której powstaje kod maszynowy, wykonywany przez procesor maszyny, na której program został uruchomiony.
+
+Kompilatory JIT, standardowo, są uruchamiana \emph{na żądanie} (\english{on demand}) - tzn. w momencie wywołania metody, kompilator JIT analizuje kod IL i tworzy bardzo wydajny (dzięki szeregu optymalizacji) kod maszynowy. Gdy aplikacja jest uruchomiona, kompilacja zachodzi jedynie wtedy, kiedy jest to potrzebne, a po kompilacji JIT kod znajduje się w pamięci podręcznej, przez co możliwe jest jego szybkie wykorzystywanie w późniejszych etapach przetwarzania. Wynika z tego, że aplikacja działa tym szybciej, im dłużej jest uruchomiona, ponieważ możliwe jest wykorzystanie większej ilości skompilowanego kodu.
+
+Specyfikacja CLS wymusza podobieństwo kodu IL w przypadku każdego języka z rodziny .NET. Wynika z tego bezpośrednio, że obiekty utworzone w jednym języku mogą być wykorzystywane w programach napisanych w innych językach (z rodziny .NET oczywisćie). Oznacza to np. fakt, że możliwe jest przygotowanie klasy bazowej w języku VB.NET oraz utworzenie od niej klas pochodnych w programie napisanej w języku C\#.
 
 \subsection{Język programowania C\#}
-\definicja{Java} jest obiektowym językiem programowania, zaprojektowanym i~obecnie rozwijanym prze \emph{Sun Microsystems} jako podstawowy komponent platformy Java. Przeznaczony jest do tworzenia kodu źródłowego aplikacji, który następnie przy pomocy kompilatora jest przekształcany do kodu bajtowego, czyli postaci która może być wykonana przez \definicja{wirtualną maszynę Java} (\akronim{JVM}, \english{Java Virtual Machine}). Tak przygotowany kod zawiera instrukcję w~języku maszynowym JVM, które są niezależne od rodzaju procesora oraz systemu operacyjnego, na którym kod został stworzony.
+Język C\# jest niezwykle wydajnym narzędziem do implementacji współczesnych technik programistyznych. Jest on językiem obsługującym strukturalne, oparte na komponentach i obiektowe programowanie, czego należy oczekiwać od współczesnego języka, zbudowanego na doświadczeniach z C++ oraz z językiem Java. 
 
-%\begin{figure}[h]
-%\centering\includegraphics[width=7cm]{figures/roz6/helloWorld.png}
-%\caption{Proces budowania i~uruchamiania oprogramowania w~języku Java}
-%\label{rys:helloWorld}
-%\end{figure}
+Programiści mówiący o nowej wersji .NET, mają zazwyczaj na myśli ważne wydania fremework'a. W większości przypadków wydanie nowej wersji platrofmy jest połączone z wydaniem Visual Studio, czyli zintegrowanego środowiska programistycznego firmy Microsoft. W tabeli~\ref{dotNet:dates} zebrane zostały informacje o poszczególnych wersjach, które były wydawane wraz z jakimi komponentami oraz kiedy.
+
+\begin{table}
+	\centering
+	\begin{tabular}{|l|l|l|l|l|} \hline
+	\textbf{Data} & \textbf{Framework} & \textbf{Visual Studio} & \textbf{C\#} & \textbf{CLR} \\ \hline
+	Luty 2002 & $1.0$ & 2002 & $1.0$ & $1.0$ \\ 
+	Kwiecień 2003 & $1.1$ & 2003 & $1.2$ & $1.1$ \\ 
+	Listopad 2005 & $2.0$ & 2005 & $2.0$ & $2.0$ \\ 
+	Listopad 2006 & $3.0$ & (rozszerzenia do wersji 2005) & [brak] & $2.0$ \\ 
+	Listopad 2007 & $3.5$ & 2008 & $3.0$ & $2.0$ SP1 \\ 
+	Kwiecień 2010 & $4.0$ & 2010 & $4.0$ & $4.0$ \\ \hline
+	\end{tabular}
+	\caption{Poszczególne wersje .NET Framework oraz ich składniki~\cite{cSharp:inDepthS}\label{dotNet:dates}}
+\end{table}
 
 \paragraph{Obiektowość}
 \definicja{Programowanie obiektowe} (\akronim{OOP}, \english{Object Oriented Programming}) jest to paradygmat programowania, w~którym program definiuje się przy pomocy obiektów.
-Podstawowe cechy języka, który realizuje paradygmat programowania obiektowego przedstawił Alan Kay w~odniesieniu do języka \definicja{Smalltalk}, pierwszego poprawnie zrealizowanego języka obiektowego, a~zarazem jednego z~poprzedników C\#. Cechy te opisują czyste podejście obiektowe.
+Podstawowe cechy języka, który realizuje paradygmat programowania obiektowego przedstawił Alan Kay w~odniesieniu do języka \definicja{Smalltalk}, pierwszego poprawnie zrealizowanego języka obiektowego, a~tym samym jednego z~poprzedników C\#. Cechy te opisują czyste podejście obiektowe.
 \begin{description}
-	\item \emph{Wszystko jest obiektem.} Obiekt można przedstawić jako specjalną zmienną, która nie tylko zawiera dane, ale i~także może realizować żądania, czyli wykonywać na swoich danych pewne ściśle określone operacje. Teoretycznie każdy element świata rzeczywistego np.: samochód, dom, zamek, pracownik może być reprezentowany w~programie przy pomocy tak skonstruowanego obiektu.
-	\item \emph{Aplikacja jest zbiorem komunikujących się między sobą obiektów.} Przesyłanie komunikatów do obiektu to żądanie od niego realizacji pewnej operacji. Można to nazwać wykonaniem funkcji należącej do konkretnego obiektu. Przykładem może być następujący scenariusz: obiekt \emph{Kierowca} wysyła do obiektu \emph{Samochód} komunikat \emph{przyspiesz} co powoduję wykonanie operacji zwiększenia prędkości.
-	\item \emph{Każdy obiekt posiada własną pamięć, na którą składają się inne obiekty.} Tworzenie nowego obiektu polega na łączeniu w~jeden element grupy już istniejących obiektów. Powstaje w~ten sposób wielowarstwowa aplikacja, która jednocześnie ukrywa swoją złożoność za prostymi obiektami. Przykładowo obiekt \emph{Samochód} można zbudować z~następujących obiektów \emph{Karoseria}, \emph{Koło}, \emph{Silnik} itd. Jednocześnie chcąc zwiększyć prędkość pojazdu odwołujemy się do obiektu \emph{Samochód}, a~nie bezpośrednio do obiektu \emph{Silnik}, który odpowiada za jego prędkość.
+	\item \emph{Wszystko jest obiektem.} Obiekt można przedstawić jako specjalną zmienną, która nie tylko zawiera dane, ale może również realizować żądania, czyli wykonywać na swoich danych pewne ściśle określone operacje. Teoretycznie każdy element świata rzeczywistego, np. samochód, dom, zamek, pracownik, może być reprezentowany w~programie przy pomocy tak skonstruowanego obiektu.
+	\item \emph{Aplikacja jest zbiorem komunikujących się między sobą obiektów.} Przesyłanie komunikatów do obiektu to żądanie od niego wykonania pewnej operacji. Można to nazwać wykonaniem funkcji należącej do konkretnego obiektu. Przykładem może być następujący scenariusz: obiekt \emph{Kierowca} wysyła do obiektu \emph{Samochód} komunikat \emph{przyspiesz}, co powoduję wykonanie operacji zwiększenia prędkości.
+	\item \emph{Każdy obiekt posiada własną pamięć, na którą składają się inne obiekty.} Tworzenie nowego obiektu polega na łączeniu w~jeden element grupy już istniejących obiektów. Powstaje w~ten sposób wielowarstwowa aplikacja, która jednocześnie ukrywa swoją złożoność za prostymi obiektami. Przykładowo obiekt \emph{Samochód} można zbudować z~następujących obiektów: \emph{Karoseria}, \emph{Koło}, \emph{Silnik} itd. Jednocześnie chcąc zwiększyć prędkość pojazdu odwołujemy się do obiektu \emph{Samochód}, a~nie bezpośrednio do obiektu \emph{Silnik}, który odpowiada za jego prędkość. Dopiero akcja \emph{przyspiesz} wykonana przez obiekt Samochód wykonuje odpowiednie operacje na poszczególnych podzespołach, z których się składa.
 	\item \emph{Każdy obiekt posiada swój typ.} W~odniesieniu do obiektu słowo \emph{typ} można zastąpić słowem \definicja{klasa}. Każdy obiekt jest instancją pewnej klasy, której głównym zadaniem jest zdefiniowanie jakie komunikaty można wysłać do obiektu będącego jej egzemplarzem.
 	\item \emph{Wszystkie obiekty danego typu obsługują te same komunikaty.} Każdy obiekt danej klasy obsługuje wszystkie komunikaty zdefiniowane w~klasie. Dodatkowo jeśli np. obiekt typu \emph{Student} jest jednocześnie obiektem typu \emph{Człowiek}, to obsługuje wszystkie komunikaty zdefiniowane dla typu \emph{Człowiek}. Umożliwia to pisanie bardziej uniwersalnego kodu, który będzie obsługiwał wszystkie obiekty pasujące do typu \emph{Człowiek}~\cite{cSharp:progr}.
 \end{description}
@@ -61,6 +80,13 @@ Współcześnie, aby język programowania został uznany za obiektowy musi chara
 	\item[Dziedziczenie] Umożliwia definiowanie specjalizowanych obiektów na podstawie ich ogólniejszych odpowiedników. Podczas definiowania obiektów specjalizowanych nie jest wymagana redefinicja całej funkcjonalności obiektu bazowego, ale tylko ta, której brakuje w~obiekcie ogólniejszym, lub ta, której sposób działania chcemy zmienić.
 	
 \end{description}
+
+\subsection{.NET Framework 4.0}
+Wydany w roku 2010 w wersji 4.0 framework platformy stanowi podstawę implementacyjną stworzonego w ramach niniejszej pracy oprogramowania. Aplikacja stworzona została przy pomocy najnowszej wersji, czyli 4.0 w zintegrowanym środowisku programistycznym Visual Studio 2010 Professional. 
+
+W wersji 4.0 rozszerzono wiele funkcji dostępnych we wcześniejszych wersjach - m.in. wprowadzająć PLINQ, czyli równoległe wykonywanie zapytań LINQ (\english{Language-INtegrated Query}). W implementacji wykorzystano szereg wprowadzonych w tej wersji usprawnień - m.in. nazywane parametry, czy też parametry opcjonalne w metodach. 
+
+Ponieważ nie jest celem niniejszej pracy opisywanie poszczególnych wersji języka, czy też platformy, pominięte zostały szczegóły odnośnie poszczególnych wersji tejże platformy. Doskonałym źródłem informacji o zmianach w poszczególnych wersjach, a także przyczynach zachodzących zmian jest książka Jona Skeeta~\cite{cSharp:inDepthS}.
 
 \section{CUDA}
 
