@@ -36,6 +36,23 @@ namespace aCudaResearch.Algorithms
                                                              set => elementsFrequencies[elementsList.IndexOf(set[0])]);
             List<List<int>> candidates;
 
+            var bitmapTransposed = new Bitmap(transactionsList.Count, frequentSets.Count);
+            var newElementsList = new List<int>(frequentSets.Count);
+            var jj = 0;
+            foreach (var set in frequentSets)
+            {
+                newElementsList.Add(set[0]);
+
+                for (var i = 0; i < transactionsList.Count; i++)
+                {
+                    var pixel = bitmapWrapper.Bitmap.GetPixel(elementsList.IndexOf(set[0]), i);
+
+                    bitmapTransposed.SetPixel(i, jj, pixel);
+                }
+                jj++;
+            }
+            var newBitmapWrapper = BitmapWrapper.ConvertBitmap(bitmapTransposed);
+
             while ((candidates = GenerateCandidates(frequentSets)).Count > 0)
             {
                 // 1. tranlate into elements Id's
@@ -43,33 +60,33 @@ namespace aCudaResearch.Algorithms
                 {
                     for (var i = 0; i < candidate.Count; i++)
                     {
-                        candidate[i] = elementsList.IndexOf(candidate[i]);
+                        candidate[i] = newElementsList.IndexOf(candidate[i]);
                     }
                 }
 
                 // 2. execute CUDA counting
-                candidates = GetFrequentSets(candidates, executionSettings.MinSup, bitmapWrapper, elementsList);
+                candidates = GetFrequentSets(candidates, executionSettings.MinSup, newBitmapWrapper, transactionsList.Count);
 
                 // 3. translate back from elements Id's
                 foreach (var candidate in candidates)
                 {
-                    for (int i = 0; i < candidate.Count; i++)
+                    for (var i = 0; i < candidate.Count; i++)
                     {
-                        candidate[i] = elementsList[candidate[i]];
+                        candidate[i] = newElementsList[candidate[i]];
                     }
                 }
 
-                // leave only these sets which are frequent
-                //candidates =
-                //    candidates.Where(set => set.IsFrequent(elementsList, bitmapWrapper, transactionsList.Count, executionSettings.MinSup)).ToList();
-
                 if (candidates.Count > 0)
                 {
+                    var sw = new Stopwatch();
+                    sw.Start();
                     frequentSets = candidates;
                     foreach (var candidate in candidates)
                     {
                         frequentItemSets.Add(new FrequentItemSet<int>(candidate), candidate.GetSupport(data.Transactions));
                     }
+                    sw.Stop();
+                    Console.WriteLine("CAND: {0}", sw.ElapsedMilliseconds);
                 }
                 else
                 {
@@ -80,7 +97,7 @@ namespace aCudaResearch.Algorithms
 
             //here we should do something with the candidates
             var decisionRules = new List<DecisionRule<int>>();
-
+            
             foreach (var frequentSet in frequentSets)
             {
                 var subSets = EnumerableHelper.GetSubsets(frequentSet);
@@ -109,35 +126,37 @@ namespace aCudaResearch.Algorithms
                 }
             }
 
-            // cuda tests here!!!
-
             if (!printRules) return;
 
             var result = PrintRules(decisionRules, executionSettings.DataSourcePath, executionSettings.MinSup, executionSettings.MinConf, data.Transactions.Keys.Count, data.Elements);
             Console.WriteLine(result);
         }
 
-        private List<List<int>> GetFrequentSets(IList<List<int>> candidates, double minSup, BitmapWrapper bitmapWrapper, IList<int> elementsList)
+        private List<List<int>> GetFrequentSets(IList<List<int>> candidates, double minSup, BitmapWrapper bitmapWrapper, int numberOfTransactions)
         {
-            var output = CalculateElementsFrequencies<int>(candidates, bitmapWrapper);
+            var borderValue = minSup * numberOfTransactions;
+            var output = CalculateCandidatesFrequencies<int>(candidates, bitmapWrapper, Math.Ceiling(borderValue));
+            var result = new List<List<int>>();
 
-            return new List<List<int>>();
+            int i = 0;
+            foreach (var candidate in candidates)
+            {
+                if (output[i] >= borderValue)
+                {
+                    result.Add(candidate);
+                }
+                i++;
+            }
+
+            return result;
         }
 
 
-        private static int[] CalculateElementsFrequencies<T>(IList<List<int>> candidates, BitmapWrapper bitmapWrapper)
+        private static int[] CalculateCandidatesFrequencies<T>(IList<List<int>> candidates, BitmapWrapper bitmapWrapper, double borderValue)
         {
-            int frequencesSize = ProjectConstants.BlockSize * ProjectConstants.GridSize;
-            var elementsFrequencies = new int[candidates.Count];
-
             using (var cuda = new CUDA(0, true))
             {
-                var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                        "apriori_count1.cubin");
-
-                cuda.LoadModule(path);
-
-                var inputData = cuda.CopyHostToDevice(bitmapWrapper.RgbValues);
+                var elementsFrequencies = new int[candidates.Count];
 
                 var inputSets = new int[candidates.Count * candidates[0].Count];
                 var ind = 0;
@@ -149,28 +168,33 @@ namespace aCudaResearch.Algorithms
                         ind++;
                     }
                 }
+                
+                var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                                        Names.CudaAprioriCountModule);
+                cuda.LoadModule(path);
+                var inputData = cuda.CopyHostToDevice(bitmapWrapper.RgbValues);
+                var inputSetData = cuda.CopyHostToDevice(inputSets);
+                var frequenciesOnHost = cuda.Allocate(new int[candidates.Count]);
+                var sw = new Stopwatch();
+                sw.Start();
+                CallTheSetsFrequenciesCount(cuda, inputData, inputSetData, frequenciesOnHost, bitmapWrapper, candidates[0].Count, candidates.Count, borderValue);
+                sw.Stop();
 
-                var inputSetData = cuda.CopyHostToDevice(inputSets.ToArray());
-                var frequentMatrix = cuda.Allocate(new int[frequencesSize * candidates.Count]);
-                var frequentTable = cuda.Allocate(new int[candidates.Count]);
-
-                CallTheFrequencyMatrixCount(cuda, inputData, inputSetData, frequentMatrix, bitmapWrapper, candidates[0].Count, candidates.Count);
-                CallTheFrequencyTableCount(cuda, frequentMatrix, frequentTable, frequencesSize, candidates.Count);
-
-                var elementsFrequenciesMatrix = new int[frequencesSize * candidates.Count];
-                cuda.CopyDeviceToHost(frequentMatrix, elementsFrequenciesMatrix);
-                cuda.CopyDeviceToHost(frequentTable, elementsFrequencies);
+                Console.WriteLine("CalculateCandidatesFrequencies: {0} ms", sw.ElapsedMilliseconds);
+                cuda.CopyDeviceToHost(frequenciesOnHost, elementsFrequencies);
 
                 cuda.Free(inputData);
-                cuda.Free(frequentMatrix);
+                cuda.Free(inputSetData);
+                cuda.Free(frequenciesOnHost);
                 cuda.UnloadModule();
+
+                return elementsFrequencies;
             }
-            return elementsFrequencies;
         }
 
-        private static void CallTheFrequencyMatrixCount(CUDA cuda, CUdeviceptr deviceInput, CUdeviceptr deviceInputSet, CUdeviceptr deviceOutput, BitmapWrapper wrapper, int setSize, int sets)
+        private static void CallTheSetsFrequenciesCount(CUDA cuda, CUdeviceptr deviceInput, CUdeviceptr deviceInputSet, CUdeviceptr deviceOutput, BitmapWrapper wrapper, int setSize, int sets, double borderValue)
         {
-            new CudaFunctionCall(cuda, Names.CountSetsFrequencyMatrix)
+            new CudaFunctionCall(cuda, Names.CountSetsFrequencies)
                 .AddParameter(deviceInput)
                 .AddParameter(deviceInputSet)
                 .AddParameter(deviceOutput)
@@ -178,16 +202,7 @@ namespace aCudaResearch.Algorithms
                 .AddParameter((uint)wrapper.Height)
                 .AddParameter((uint)setSize)
                 .AddParameter((uint)sets)
-                .Execute(ProjectConstants.BlockSize, ProjectConstants.BlockSize, 1, ProjectConstants.GridSize, ProjectConstants.GridSize);
-        }
-
-        private static void CallTheFrequencyTableCount(CUDA cuda, CUdeviceptr deviceInput, CUdeviceptr deviceOutput, int width, int height)
-        {
-            new CudaFunctionCall(cuda, Names.CountSetsFrequencyTable)
-                .AddParameter(deviceInput)
-                .AddParameter(deviceOutput)
-                .AddParameter((uint)width)
-                .AddParameter((uint)height)
+                .AddParameter((uint)borderValue)
                 .Execute(ProjectConstants.BlockSize, ProjectConstants.BlockSize, 1, ProjectConstants.GridSize, ProjectConstants.GridSize);
         }
 
@@ -200,28 +215,6 @@ namespace aCudaResearch.Algorithms
             Console.WriteLine(stopwatch.ElapsedMilliseconds);
             var bitmapWrapper = BitmapWrapper.ConvertBitmap(bitmap);
             return bitmapWrapper;
-        }
-
-        private int[] CalculateElementsFrequencies(BitmapWrapper bitmapWrapper)
-        {
-            var elementsFrequencies = new int[bitmapWrapper.Width];
-            using (var cuda = new CUDA(0, true))
-            {
-                var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                        "apriori_count1.cubin");
-
-                cuda.LoadModule(path);
-
-                var inputData = cuda.CopyHostToDevice(bitmapWrapper.RgbValues);
-                var answer = cuda.Allocate(new int[bitmapWrapper.Width]);
-                CallTheFrequencyCount(cuda, inputData, answer, bitmapWrapper);
-                cuda.CopyDeviceToHost(answer, elementsFrequencies);
-
-                cuda.Free(inputData);
-                cuda.Free(answer);
-                cuda.UnloadModule();
-            }
-            return elementsFrequencies;
         }
 
         private Bitmap BuildTransactionsBitmap(MsInstance<int> data, IList<int> transactionsList, IList<int> elementsList)
@@ -238,6 +231,28 @@ namespace aCudaResearch.Algorithms
                 }
             }
             return bitmap;
+        }
+
+        private int[] CalculateElementsFrequencies(BitmapWrapper bitmapWrapper)
+        {
+            var elementsFrequencies = new int[bitmapWrapper.Width];
+            using (var cuda = new CUDA(0, true))
+            {
+                var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                                        Names.CudaAprioriCountModule);
+
+                cuda.LoadModule(path);
+
+                var inputData = cuda.CopyHostToDevice(bitmapWrapper.RgbValues);
+                var answer = cuda.Allocate(new int[bitmapWrapper.Width]);
+                CallTheFrequencyCount(cuda, inputData, answer, bitmapWrapper);
+                cuda.CopyDeviceToHost(answer, elementsFrequencies);
+
+                cuda.Free(inputData);
+                cuda.Free(answer);
+                cuda.UnloadModule();
+            }
+            return elementsFrequencies;
         }
 
         public List<List<int>> GenerateCandidates(List<List<int>> source)

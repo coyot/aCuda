@@ -75,7 +75,7 @@ namespace aCudaResearch.Helpers
 
         private static void CallTheFrequencyCount(CUDA cuda, CUdeviceptr deviceInput, CUdeviceptr deviceInputSet, CUdeviceptr deviceOutput, BitmapWrapper wrapper, int setSize)
         {
-            new CudaFunctionCall(cuda, Names.CountSetsFrequencyMatrix)
+            new CudaFunctionCall(cuda, Names.CountSetsFrequencies)
                 .AddParameter(deviceInput)
                 .AddParameter(deviceInputSet)
                 .AddParameter(deviceOutput)

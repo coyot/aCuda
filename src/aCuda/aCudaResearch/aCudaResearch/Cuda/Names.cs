@@ -7,8 +7,17 @@ namespace aCudaResearch.Cuda
 {
     public class Names
     {
+        #region CudaModules
+
+        public static string CudaAprioriCountModule = "apriori_count1.cubin";
+
+        #endregion
+        
+        #region CudaFunctions
+
         public static string CountFrequency = "count_frequency";
-        public static string CountSetsFrequencyMatrix = "count_frequency_matrix";
-        public static string CountSetsFrequencyTable = "count_frequency_table";
+        public static string CountSetsFrequencies = "count_sets_frequencies";
+        
+        #endregion
     }
 }

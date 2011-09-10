@@ -18,7 +18,9 @@ namespace aCudaResearch.Helpers
         /// <returns>True if the set is frequent, false otherwise</returns>
         public static bool IsFrequent<T>(this IList<T> list, Dictionary<T, T[]> transactions, double support)
         {
-            return list.GetSupport(transactions) >= (support * transactions.Count);
+            var localSupport = list.GetSupport(transactions);
+
+            return localSupport >= (support * transactions.Count);
         }
 
         /// <summary>
