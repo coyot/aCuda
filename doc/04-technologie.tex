@@ -1,6 +1,6 @@
 \chapter{Technologie}\label{chap:technologie}
 
-Niniejszy rozdział zawiera opis technologii użytych w~procesie realizacji projektu. Przedstawiono najważniejsze cechy każdej z~nich. Dokonano również podstawowego wprowadzenia do każdej z~wymienionych technologii, co jest potrzebne do pełnego przedstawienia sposobu ich wykorzystania.
+Niniejszy rozdział zawiera przegląd oraz krótki opis technologii użytych w~procesie realizacji projektu. Przedstawiono najważniejsze cechy każdej z~nich, pomijając szczegóły, wprowadzając jedynie zarys informacji na temat poszczególnych komponentów, na których budowana była aplikacja. Dokonano również podstawowego wprowadzenia do każdej z~wymienionych technologii, co jest potrzebne do pełnego przedstawienia sposobu ich wykorzystania.
 
 \section{Język C\# i platforma .NET}\label{sec:cs}
 Język C\# oraz .NET zostały pierwszy raz przedstawione podczas międzynarodowej konferencji dla programistów o nazwie \emph{Professional Developers Conderence} (\acronym{PDC}) w lipcu roku 2000~\cite{ms:initDotNet} - choć środowisko programistów słyszło o planach firmy Microsoft znacznie wcześniej, jednakże pod różnymi nazwami (m.in. COOL, COM3, Lightning). Pomimo sporego w owym czasie szumu wokół niedoskonałych systemów operacyjnych (np. Windows Me), czy też sporych opóźnień w dostarczaniu owych rozwiązań, firma zdecydowała się na stworzenie własnej platformy programistycznej~\cite{cSharp:inDepthF}.
@@ -8,7 +8,7 @@ Język C\# oraz .NET zostały pierwszy raz przedstawione podczas międzynarodowe
 Należy również podkreślić, że firma Microsoft nie była jedyną, która wspierała tworzenie języka - oprócz niej w sponsoring tego języka włączył się firmy Helwett-Packard oraz Intel. Język C\# jest, podobnie, jak język Java, otwartym językiem, jednakże w zupełnie innym tego słowa znaczeniu. Microsoft sprzyja ścieżce standaryzacyjnej języka, gdy Sun (firma posiadająca prawa do platformy Java) stopniowo udostępnia kod źródłowy Javy na zasadach \emph{wolnego oprogramowania} (\english{open source}) i dopuszczając, a nawet zachęcając do tworzenia innych \emph{środowisk uruchomieniowych} (\english{runtime environments}) Javy. Istnieją alternatywne implementacje CLI oraz C\# (najbardziej znanym jest Mono~\cite{cs:mono}), jednakże należy podkreślić, że nie obejmują one swoją implementacją wszystkiego, co kryje się pod nazwą Microsoft .NET Framework. Ostatecznie język C\# oraz .NET zostały udostępnione w roku 2002, razem z narzędziem programistycznym Vistual Studio .NET 2002.
 
 \subsection{Platforma .NET}
-Kiedy wprowadzono termin ''.NET'', został on wcielony w szereg różnych technologii wychodzących spod sztandarów firmy Micorosft. Na przykład Windows Live ID był nazywany .NET Passport, pomimo tego, że nie istniało żadne bezpoźrednie połączenie pomiędzy tą technologią, a tym co jest obecnie znane, jako .NET. Na całe szczeście z czasem zaprzestano używanie .NET, który w chwili obecnej wiąże się jedynie ze światem programowania.
+Kiedy wprowadzono termin ''.NET'', został on wcielony w szereg różnych technologii wychodzących spod sztandarów firmy Micorosft. Na przykład Windows Live ID był nazywany .NET Passport, pomimo tego, że nie istniało żadne bezpoźrednie połączenie pomiędzy tą technologią, a tym co jest obecnie znane, jako .NET. Na całe szczeście z czasem zaprzestano używania nazwy .NET w innych usługach i produktach firmy z Redmond. W chwili obecnej nazwa ''.NET'' wiąże się jedynie ze światem programowania.
 
 Należy podkreślić, że .NET zawiera wspólną specyfikację języka (\acronym{CLS}, \english{Common Language Specification}), która udostępnia zestaw podstawowych reguł, niezbędnch do integracji języków na jednej platformie. CLS określa minimalne wymagania, jakie musi spełniać język z rodziny .NET. Kompilatory zgodne z CLS tworzą obiekty, które mogą ze sobą współpracować.
 
@@ -38,12 +38,12 @@ Programy pisane na platformie .NET nie są kompilowane do plików wykonywalnych,
 
 Kompilacja kodu w języku C\# do IL odbywa się w momencie budowania projektu. W wyniku czego kod IL jest zapisywany na dysku w postaci plików binarnych. W momencie uruchomienia programu zachodzi ponowna kompilacja - tym razem kodu IL. Jest to tak zwana kompilacja \acronym{JIT} (\english{Just In Time}), w wyniku której powstaje kod maszynowy, wykonywany przez procesor maszyny, na której program został uruchomiony.
 
-Kompilatory JIT, standardowo, są uruchamiana \emph{na żądanie} (\english{on demand}) - tzn. w momencie wywołania metody, kompilator JIT analizuje kod IL i tworzy bardzo wydajny (dzięki szeregu optymalizacji) kod maszynowy. Gdy aplikacja jest uruchomiona, kompilacja zachodzi jedynie wtedy, kiedy jest to potrzebne, a po kompilacji JIT kod znajduje się w pamięci podręcznej, przez co możliwe jest jego szybkie wykorzystywanie w późniejszych etapach przetwarzania. Wynika z tego, że aplikacja działa tym szybciej, im dłużej jest uruchomiona, ponieważ możliwe jest wykorzystanie większej ilości skompilowanego kodu.
+Kompilatory JIT, standardowo, są uruchamiana \emph{na żądanie} (\english{on demand}) - tzn. w momencie wywołania metody, kompilator JIT analizuje kod IL i tworzy bardzo wydajny (dzięki licznym optymalizacjom dokonywanym na tym etapie) kod maszynowy. Gdy aplikacja jest uruchomiona, kompilacja zachodzi jedynie wtedy, kiedy jest to potrzebne, a po kompilacji JIT kod znajduje się w pamięci podręcznej, przez co możliwe jest jego szybkie wykorzystywanie w późniejszych etapach przetwarzania. Wynika z tego, że aplikacja działa tym szybciej, im dłużej jest uruchomiona, ponieważ możliwe jest wykorzystanie większej ilości skompilowanego kodu.
 
 Specyfikacja CLS wymusza podobieństwo kodu IL w przypadku każdego języka z rodziny .NET. Wynika z tego bezpośrednio, że obiekty utworzone w jednym języku mogą być wykorzystywane w programach napisanych w innych językach (z rodziny .NET oczywisćie). Oznacza to np. fakt, że możliwe jest przygotowanie klasy bazowej w języku VB.NET oraz utworzenie od niej klas pochodnych w programie napisanej w języku C\#.
 
 \subsection{Język programowania C\#}
-Język C\# jest niezwykle wydajnym narzędziem do implementacji współczesnych technik programistyznych. Jest on językiem obsługującym strukturalne, oparte na komponentach i obiektowe programowanie, czego należy oczekiwać od współczesnego języka, zbudowanego na doświadczeniach z C++ oraz z językiem Java. 
+Język C\# jest niezwykle wydajnym narzędziem do implementacji współczesnych technik programistyznych. Jest on językiem obsługującym strukturalne, oparte na komponentach i obiektowe programowanie, czego należy oczekiwać od współczesnego języka, zbudowanego na doświadczeniach z C++ oraz Java. 
 
 Programiści mówiący o nowej wersji .NET, mają zazwyczaj na myśli ważne wydania fremework'a. W większości przypadków wydanie nowej wersji platrofmy jest połączone z wydaniem Visual Studio, czyli zintegrowanego środowiska programistycznego firmy Microsoft. W tabeli~\ref{dotNet:dates} zebrane zostały informacje o poszczególnych wersjach, które były wydawane wraz z jakimi komponentami oraz kiedy.
 
@@ -84,20 +84,54 @@ Współcześnie, aby język programowania został uznany za obiektowy musi chara
 \subsection{.NET Framework 4.0}
 Wydany w roku 2010 w wersji 4.0 framework platformy stanowi podstawę implementacyjną stworzonego w ramach niniejszej pracy oprogramowania. Aplikacja stworzona została przy pomocy najnowszej wersji, czyli 4.0 w zintegrowanym środowisku programistycznym Visual Studio 2010 Professional. 
 
-W wersji 4.0 rozszerzono wiele funkcji dostępnych we wcześniejszych wersjach - m.in. wprowadzająć PLINQ, czyli równoległe wykonywanie zapytań LINQ (\english{Language-INtegrated Query}). W implementacji wykorzystano szereg wprowadzonych w tej wersji usprawnień - m.in. nazywane parametry, czy też parametry opcjonalne w metodach. 
+W wersji 4.0 rozszerzono wiele funkcji dostępnych we wcześniejszych wersjach - m.in. wprowadzająć PLINQ, czyli równoległe wykonywanie zapytań LINQ (\english{Language-INtegrated Query}), które zostało wykorzystane w jednym z zaimplementowanych w ramach niniejszej pracy algorytmie. Poza tym w implementacji wykorzystano szereg wprowadzonych w 4. wersji usprawnień - m.in. nazywane parametry, czy też parametry opcjonalne w metodach. 
 
 Ponieważ nie jest celem niniejszej pracy opisywanie poszczególnych wersji języka, czy też platformy, pominięte zostały szczegóły odnośnie poszczególnych wersji tejże platformy. Doskonałym źródłem informacji o zmianach w poszczególnych wersjach, a także przyczynach zachodzących zmian jest książka Jona Skeeta~\cite{cSharp:inDepthS}.
 
 \section{CUDA}
+W realizacji projektu wykorzystana została uniwersalna architektura procesorów wielordzeniowych, która szerzej została omówiona w rozdziale~\ref{chap:03}. Użyto NVIDIA CUDA w wersji 3.0, dostępnej do pobrania pod adresem \url{http://developer.nvidia.com/cuda-toolkit-30-downloads} (zweryfikowana dostępność w dniu \today). Językiem wybranym do implementacji metod optymalizujących algorytm został CUDA C, czyli rozszerzenie języka C.
 
 \subsection{CUDA na platformie .NET}
+Jak opisano w części~\ref{sec:cs} językiem, który wykorzystano do napisania aplikacji testowej był C\# uruchamiany na platformie .NET. W nawiązaniu do rozdziału~\ref{chap:03}, w którym napisano, że NVIDIA wypuściła rozszerzenie języka C (tzn. CUDA C), w którym pojawiły się instrukcje bezpośrednio związane z uniwersalną architektruą wielowątkową CUDA.
+
+Istnieje możliwość użyciać mechanizmów współpracy kodu zarządzanego i natywnego, jednakże istnieją metody znacznie prostrzego wykorzystania możliwośći GPU do obliczeń. Można wykorzystać specjalną bibliotekę, stworzoną do umożliwienia programistom skorzystania z CUDA C wewnątrz programów zarządzanych.
+
+Aby skorzystać z karty graficznej wewnątrz programu przygotowanego na platformę .NET użyta została biblioteka o nazwie CUDA.NET~\cite{cuda:net}. Sposób wykorzystania CUDA wewnątrz aplikacji na platformę .NET przedstawione są poniżej.
+
+\begin{enumerate}
+	\item Aplikacja oraz związana z nią logika biznesowa (np. przygotowanie i wyświetlanie danych) pisana jest w języku platformy .NET - w wypadku programu powiązanego z niniejszą pracą był to C\# w wersji $4.0$.
+	\item Funkcje obliczeniowe przygotowywane są w języku CUDA C - jako pliki z rozszerzeniem \emph{.cu}. Jest to zgodnie z konwencją pisania programów na platformę CUDA~\cite{Cuda:PGuide}.
+	\item Pliki z punktu poprzedniego powinny być skompilowane przy użyciu kompilatora przygotowanego przez firmę NVIDIA - w wyniku tej operacji powstaną pliki o rozszerzeniu \emph{.cubin}. Poniżej zaprezentowane zostało polecenie dla kompilatora wykorzystywane w budowaniu aplikacji, która stanowi podstawę niniejszej pracy.
+		\begin{quote}
+			\begin{verbatim}
+				> nvcc *.cu --cubin
+			\end{verbatim}
+		\end{quote}
+	\item W aplikacji głównej programu należy dodać referencje do biblioteki CUDA.NET, a następnie dopisać kod pośredniczący, w którym przygotowane zostaną dane, uruchomione zostaną funkcje obliczeniowe na karcie graficznej, a następnie odczytane zostaną wyniki tych obliczeń.
+\end{enumerate}
+
+Opisaną powyżej architekturę w sposób schematyczny zaprezentowano na rysunku~\ref{rys:arch_cuda_net}.
+
+\begin{figure}[h]
+\centering
+\includegraphics{figures/04/arch_cuda_net.png}
+\caption{Schematyczne przedstawienie architektury aplikacji wykorzystującej technologię CUDA przy pomocy biblioteki CUDA.NET}\label{rys:arch_cuda_net}
+\end{figure}
 
 \section{Środowisko programistyczne}
 
 \subsection{Zarządzanie zasobami projektu}
+git
 
 \subsection{Budowanie projektu}
+psake
 
 \section{Testowanie}
 
+testy jednostkowe podstawowych funkcji systemu
+
 \subsection{Usprawnienie procesu testowania}
+
+\subsubsection{Code Contracts}
+
+\subsubsection{Pex}

@@ -238,6 +238,9 @@ Typeset using \LaTeX\ in Computer Modern.
 \setheaderspaces{*}{2\onelineskip}{*}
 \OnehalfSpacing
 
+\linespread{1.5}
+
+
 \changecaptionwidth
 \captionwidth{.9\linewidth}
 \captionnamefont{\footnotesize\scshape}
