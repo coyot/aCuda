@@ -119,19 +119,56 @@ Opisaną powyżej architekturę w sposób schematyczny zaprezentowano na rysunku
 \end{figure}
 
 \section{Środowisko programistyczne}
+W celu ułatwienia pracy podczas przygotowywania aplikacji wykorzystanych został szereg narzędzi ułatwiających prace programiście, a także programistom (w przypadku, gdyby nad projektem pracowała więcej niż jedna osoba). Poniżej krótko opisane zostaną poszczególne narzędzia.
 
-\subsection{Zarządzanie zasobami projektu}
-git
+\subsection{Visual Studio 2010}
+W pracy nad projektem głównym narzędziem wykorzystywanym do implementacji aplikacji było zintegrowane środowisko programistyczne (\english{Integrated Development Enviroment}, \acronym{IDE}) firmy Microsoft w wersji 2010. Przez IDE rozumie się aplikację (lub ich zespół, czyli środowisko) służącą do tworzenia, modyfikacji, testowania oraz konswerwacji oprogramowania. Programy takie charakteryzują się tym, że udostępniają złożoną, wieloraką funkcjonalność obejmującą edycję kodu źródłowego, kompilowanie kodu źródłowego, tworzenie zasobów programu (tzn. formatek / ekranów / okien dialogowych, menu, raportów, elementów graficznych takich jak ikony, obrazy itp.), tworzenie baz danych, komponentów i innych. Wiele tych funkcji zależy od firmy tworzącej dany program, a także celu wykorzystania danego narzedzia.
+
+Visual Studio~\cite{ms:visualStudio} jest wyżywane do tworzenia różnego rodzaju oprogramowania na platformie .NET, na różnego rodzaju platformy: Microsoft Windows, Windows Mobile, Windows CE, Microsoft Silverlight.
+
+Wykorzystywaną wersą było Microsoft Visual Studio 2010 Ultimate, czyli najwyższa dostępna wersja narzędzia dostępna dla studentów w ramach programu MSDNAA. Samo narzędzie zostało rozszerzone kilkoma dodatkami, o których przeczytać można w kolejnych punktach.
+
+\subsection{System kontroli wersji}
+W celu zarządzania kodem wykorzystany został rozproszony system kontroli wersji o nazwie \emph{GIT}. Stworzył go Linus Torvalds, jako narzędzie wspomagające rozwój jądra systemu operacyjnego Linux. Git jest opublikowany na licencji GNU GPL v2, przez co stanowi wolne oprogramowanie z ogólno dostępnym kodem źródłowym. Pierwsza wersja narzędzia Git została wydana 7 kwietnia 2005 roku, kiedy to zastąpiła używany wcześniej w rozwoju Linuksa system kontroli wersji BitKeeper, który w owym czasie zaprzestał darmowe wspieranie oplikacji tworzonych na zasadach wolnego oprogramowania.
+
+Każdy katalog Gita jest pełnoprawnym repozytorium z kompletną historią oraz pełną bazą rewizji wstecznych, niezależnym od dostępu do sieci, czy też centralnego serwera. Dzięki takiemu rozwiązaniu programista jest niezależny od jakichkolwiek awarii, czy też centralnego serwera. 
+
+W tworzeniu aplikacji wykorzystano lustrzany serwer gita utworzony na serwerze GitHub~\cite{cs:github}, będącym uzupełnieniem oraz rezerwą w wypadku awarii głównego repozytorium, zlokalizowanego na komputerze developera, a jednocześnie autora niniejszej pracy.
 
 \subsection{Budowanie projektu}
-psake
+Ponieważ w tworzeniu aplikacji wykorzystanych zostało kilka różnych technologii (o czym można było przeczytać w poprzednich rozdziałach) zdecydowano, że należy utworzyć jeden sposób do budowania aplikacji oraz zależności pomiedzy poszczególnymi modułami programu. Wykorzystanie samego Visual Studio pozostawało niewystarczające ze względu na wykorzystywaną technologię CUDA.NET, w ramach której należało kompilować pliki .cu, czyli źródła funkcji wykonywanych na karcie graficznej.
+
+Z tychże powodów zdecydowano się wykorzystać psake~\cite{cs:psake}, czyli narzędzie do automatycznego budowania projektu napisane w PowerShell~\cite{ms:powershell}. Poprzez wykorzystywanie w skryptach funkcji oraz stylu wykorzystywanego w PowerShell ułatwia przygotowanie odpowiednich skryptów programiście przeznaczonych do wykorzystania w budowie projektu.
 
 \section{Testowanie}
-
-testy jednostkowe podstawowych funkcji systemu
+W ramach projektu wykorzystane zostały \emph{testy jednostkowe} (\emph{unit testing}), które miały zagwarantować poprawność podstawowych części składowych systemu.
 
 \subsection{Usprawnienie procesu testowania}
 
 \subsubsection{Code Contracts}
+Code Contracts~\cite{ms:codecontracts} są jednym z najnowszych rozszerzeń platformy .NET przygotowane przez Microsoft Research, czyli jednostkę badań i rozwoju dla produktów firmy Microsoft. Code Contracts dostarczają metody wyrażenia założeń wobec metod (oraz innych elementów) w programach na platformie .NET. Kontrakty posiadają formy warunków wejściowych (\english{preconditions}), wyjściowych (\english{postconditions}) oraz ciągłych (\english{object invariants}). Zachowują się one (kontrakty), jak dodatkowa dokumentacja dla wewnętrznego oraz zewnętrznego API aplikacji - tj. dostarczają dodatkowych informacji o metodach wewnątrz projektu. Kontrakty są wykorzystywane do udoskonalenia procesu testowania poprzez weryfikację na poziomie uruchomieniowym (\english{runtime checking}), umożliwiają statyczną weryfikację kontraktu, a także poprzez generowanie dokumentacji kodu, która posiada dodatkowe informacje o metodach - dokumentacja nie bazuje jedynie na informacjach dostarczonych i napisanych przez autora projektu, a także poszczególnych kontraktach na i wewnątrz metod.
 
-\subsubsection{Pex}
+Biblioteka Code Contracts wprowadzają do każdego z języków platformy .NET korzyści wynikające z podejścia \emph{projektowanie przez kontrakt} (\english{design-by-contract}). Poniżej wymienione są korzyści wynikające bezpośrednio z wykorzystania Code Contracts.
+
+\begin{itemize}
+	\item \textbf{Udoskonalone testowanie}
+		\begin{itemize}
+			\item Każdy z kontraktów działa na zasadzie wyroczni (\english{oracle}), która powoduje przejście lub nie danego testu.
+			\item Automatyczne narzędzia testowania (takie jak Pex, opisany w rozdziale~\ref{04:pex}) mogą wykorzystać wiedzę dostarczoną przez kontrakty do wygenerowania bardziej dokładnych testów jednostkowych, poprzez odfiltrowanie argumentów wejściowych, które nie spełniają warunków wejścia.
+		\end{itemize}
+	\item \textbf{Statyczna weryfikacja}
+		Microsoft przygotował zestaw narzędzi do statycznej weryfikacji kodu, dostarczając informacji o możliwych niedoskonałościach oprogramowania. Obecnie narzędzie może wykorzystać kontrakty do dostarczenia większej ilości i bardziej dokładnych informacji na temat błędów w programie.
+	\item \textbf{Dokumentacja API}
+		Dokumentacja API projaktu często jest niepełna, bądź niewystarczająca. Te same kontrakty, które wykorzystywane są do testowania podczas uruchomienia, a także do statycznej weryfikacji mogą być również wykorzystane do wygenerowania lepszej dokumentacji projektu, np. poprzez dostarczenie informacji o tym, które parametry wejściowe nie mogą mieć wartości \emph{null}.
+\end{itemize}
+
+Wykorzystanie bibliioteki pozwala praktycznie każdemu językowi z platformy .NET skorzystać z możliwości, jakie niosą ze sobą kontrakty wewnątrz kodu aplikacji. Nie ma potrzeby pisania parsera, czy też kompilatora (lub dodatków do niego) języka. Co więcej, odpowiednie kompilatory języków w naturalny sposób dokonują weryfikacji poprawności poszczególnych kontraktów (sprawdzanie typów oraz nazw), a także produkują skompilowane formy kontraktów w języku MSIL. Tworzenie kontraktów w Visual Studio pozwala programiście skorzystać dodatkowo z możliwości \emph{podpowiedzi} (\english{intelisense}) dostarczanych przez serwisy języka. Poprzednie podejścia poprzez zastosowanie atrybutów .NET przegrywają z tym podejściem, ponieważ nie mogły w wystarczający sposób być wykorzystane w bardziej skompikowanych kontraktach, a także nie mogły one być wykorzystane w trakcie weryfikacji podczas kompilacji.
+
+Kontrakty są wyrażone poprzez wywołania statycznych metod na początku metody. Narzędzia projektu biorą odpowiedzialność za interpretację zadeklarowanych kontraktów w odpowiednich miejscach programu. Biblioteka Code Contracts jest zlokalizowana w przestrzeni nazw \emph{System.Diagnostics.Contracts} platformy w wersji $4.0$.
+
+\subsubsection{Pex\label{04:pex}}
+Pex jest narzędziem rozszerzającym możliwości Visual Studio 2010 w kwestii testów jednostkowych na aplikacjach platformy .NET. Pex tworzy zestaw \emph{testów białej skrzynki} (\english{white box testing}), zwanych również testami strukturalnymi lub szklanej skrzynki. Testy takie polegają na poddaniu programu testowaniu poprzez podawanie na wejściu takich danych, by program przeszedł przez każdą ścieżkę wykonania programu. Zasady przejścia definiowane są przez kryteria pokrycia wszystkich pętli oraz wszystkich warunków w programie (metodzie programu). Testy białej skrzynki nie są w stanie wykazać braku implementacji finkcji, którą powinien posiadać docelowy produkt. Testy te dokonują sprawdzenia operacji wykonywanych wewnątrz zaimplementowanych metod. 
+
+Co ważne Pex wykorzystuje informacje dostarczane przez Code Contracts, co pozwala temu narzędziu wygenerowanie bardziej dokładnych testów dla poszczególnych metod. Testy generowane są automatycznie, jednocześnie zapewniają one wysoki stopień pokrycia kodu testami. Istnieje również możliwość wygenerowania małych zestawów danych prosto z edytora Visual Studio i zachowania ich, jako małe zestawy testów z wysokim stopniem pokrycia (dla danej metody, czy też klasy) .
+
+Pex dostarczany jest w zestawie z Moles. Biblioteka ta umożliwia zastąpienie każdej metody w programie dowolnym delegatem. Dzięki temu możliwe jest wyizolowanie kodu z zewnętrznych zależności, w celu przetestowania działania kodu zgodnie z intencją programisty. Moles automatycznie generuje odpowiednie delegaty dla każdej zależności wobec zewnętrznej biblioteki.
