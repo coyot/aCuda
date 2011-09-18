@@ -27,7 +27,7 @@ namespace aCudaResearch.Algorithms
 
                 // leave only these sets which are frequent
                 candidates =
-                    candidates.Where(set => set.IsFrequent(data.Transactions, executionSettings.MinSup)).AsParallel().ToList();
+                    candidates.Where(set => set.IsFrequentParallel(data.Transactions, executionSettings.MinSup)).AsParallel().ToList();
 
                 if (candidates.Count > 0)
                 {

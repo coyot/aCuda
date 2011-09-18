@@ -86,7 +86,7 @@ namespace aCudaResearch.Algorithms
                         frequentItemSets.Add(new FrequentItemSet<int>(candidate), candidate.GetSupport(data.Transactions));
                     }
                     sw.Stop();
-                    Console.WriteLine("CAND: {0}", sw.ElapsedMilliseconds);
+                    //Console.WriteLine("CAND: {0}", sw.ElapsedMilliseconds);
                 }
                 else
                 {
@@ -180,7 +180,7 @@ namespace aCudaResearch.Algorithms
                 CallTheSetsFrequenciesCount(cuda, inputData, inputSetData, frequenciesOnHost, bitmapWrapper, candidates[0].Count, candidates.Count, borderValue);
                 sw.Stop();
 
-                Console.WriteLine("CalculateCandidatesFrequencies: {0} ms", sw.ElapsedMilliseconds);
+                //Console.WriteLine("CalculateCandidatesFrequencies: {0} ms", sw.ElapsedMilliseconds);
                 cuda.CopyDeviceToHost(frequenciesOnHost, elementsFrequencies);
 
                 cuda.Free(inputData);

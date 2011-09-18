@@ -6,7 +6,9 @@
   <EndNumber>100</EndNumber>
   <DataSourcePath>source</DataSourcePath>
   <Algorithms>
+    <Algorithm>Apriori</Algorithm>
     <Algorithm>FpGrowth</Algorithm>
-    <Algorithm>FpGrowth</Algorithm>
+    <Algorithm>ParallelApriori</Algorithm>
+    <Algorithm>CudaApriori</Algorithm>
   </Algorithms>
 </ExecutionSettings>
