@@ -81,6 +81,21 @@ Współcześnie, aby język programowania został uznany za obiektowy musi chara
 	
 \end{description}
 
+\subsection{Zapytania do obiektów czyli LINQ\label{sec:linq}}
+Language INtegrated Query (\acronym{LINQ}) stanowi część technologii frameworka .NET, zaprojektowany i opracowany przez Andersa Hejlsberga, który jest znany z zaprojektowania języka Delphi oraz C\#. Technologia LINQ stworzona została w celu uproszczenia wykonywania zapytań na obiektach, a jego składnia przypomina SQL, przez co jest prostym narzędziem możliwym do wykorzystania przez programistów.
+
+W świecie języków kompilowanych LINQ wydaje się być elementem nie pasującym do standardów, szczególnie przykładowe zapytanie poniżej przypomina bardziej SQL niż język programowania C\#. 
+
+\begin{lstlisting}
+var adultNames = from person in people
+							where person.Age >= 18
+							select person.Name;
+\end{lstlisting}
+
+Jednym z powodów, dla których oba języki wyglądają inaczej jest fakt, że LINQ jest \emph{deklaratywny}, a nie \emph{imperatywny} - zapytanie LINQ pyta o pewne właściwości obiektów, zamiast przedstawiać dokładne kroki do osiągnięcia celu. Takie podejście bliskie jest funkcjonalnemu podejściu do rozwiązywania problemów. Co ważne LINQ nie jest przeznaczone jedynie do zapytań wydawanych do baz danych - może ono być bowiem wykorzystywane w operacjach przeprowadzanych w pamięci operacyjnej, na obiektach programu. Dzięki temu właśnie LINQ zdobyło sobie rzesze wiernych użytkowników, którzy na codzień korzystają z dobrodziejstw tego nowoczesnego narzędzia programistycznego.
+
+LINQ został wprowadzony do języka C\# w wersji 3. Celem pracy nie jest opis tej technologii, ale ponieważ stanowiła ona jedną z częściej wykorzystanych została krótko wprowadzona. Po więcej szczegółów należy sięgnąć po~\cite{cSharp:inDepthS}, bądź poświeconą tylko tej technologii książkę~\cite{cSharp:linq}.
+
 \subsection{.NET Framework 4.0}
 Wydany w roku 2010 w wersji 4.0 framework platformy stanowi podstawę implementacyjną stworzonego w ramach niniejszej pracy oprogramowania. Aplikacja stworzona została przy pomocy najnowszej wersji, czyli 4.0 w zintegrowanym środowisku programistycznym Visual Studio 2010 Professional. 
 
@@ -112,7 +127,7 @@ Aby skorzystać z karty graficznej wewnątrz programu przygotowanego na platform
 
 Opisaną powyżej architekturę w sposób schematyczny zaprezentowano na rysunku~\ref{rys:arch_cuda_net}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \includegraphics{figures/04/arch_cuda_net.png}
 \caption{Schematyczne przedstawienie architektury aplikacji wykorzystującej technologię CUDA przy pomocy biblioteki CUDA.NET}\label{rys:arch_cuda_net}
@@ -172,6 +187,6 @@ Ko ntrakty są wyrażone poprzez wywołania statycznych metod na początku metod
 \subsubsection{Pex i Moles\label{04:pex}}
 Pex jest narzędziem rozszerzającym możliwości Visual Studio 2010 w kwestii testów jednostkowych na aplikacjach platformy .NET. Pex tworzy zestaw \emph{testów białej skrzynki} (\english{white box testing}), zwanych również testami strukturalnymi lub szklanej skrzynki. Testy takie polegają na poddaniu programu testowaniu poprzez podawanie na wejściu takich danych, by program przeszedł przez każdą ścieżkę wykonania programu. Zasady przejścia definiowane są przez kryteria pokrycia wszystkich pętli oraz wszystkich warunków w programie (metodzie programu). Testy białej skrzynki nie są w stanie wykazać braku implementacji finkcji, którą powinien posiadać docelowy produkt. Testy te dokonują sprawdzenia operacji wykonywanych wewnątrz zaimplementowanych metod. 
 
-Co ważne Pex wykorzystuje informacje dostarczane przez Code Contracts, co pozwala temu narzędziu wygenerowanie bardziej dokładnych testów dla poszczególnych metod. Testy generowane są automatycznie, jednocześnie zapewniają one wysoki stopień pokrycia kodu testami. Istnieje również możliwość wygenerowania małych zestawów danych prosto z edytora Visual Studio i zachowania ich, jako małe zestawy testów z wysokim stopniem pokrycia (dla danej metody, czy też klasy) .
+Co ważne Pex wykorzystuje informacje dostarczane przez Code Contracts, co pozwala temu narzędziu wygenerowanie bardziej dokładnych testów dla poszczególnych metod. Testy generowane są automatycznie, jednocześnie zapewniają one wysoki stopień pokrycia kodu testami. Istnieje również możliwość wygenerowania małych zestawów danych prosto z edytora Visual Studio i zachowania ich, jako małe zestawy testów z wysokim stopniem pokrycia (dla danej metody, czy też klasy).
 
 Pex dostarczany jest w zestawie z Moles. Biblioteka ta umożliwia zastąpienie każdej metody w programie dowolnym delegatem. Dzięki temu możliwe jest wyizolowanie kodu z zewnętrznych zależności, w celu przetestowania działania kodu zgodnie z intencją programisty. Moles automatycznie generuje odpowiednie delegaty dla każdej zależności wobec zewnętrznej biblioteki.

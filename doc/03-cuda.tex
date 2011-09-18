@@ -5,7 +5,7 @@ Ostatnim, lecz nie najmniej ważnym elementem tego rozdziału jest opis uniwersa
 
 Na rysunku~\ref{rys:gpu_cpu} przedstawiony został przyrost w przepustowościach pamięci - odpowiednio dla GPU oraz CPU na przestrzeni lat. Łatwo zauważyć, że w ciągu 7 lat procesor graficzny zyskał około 10-krotną przewagę nad CPU. Dlatego też co raz większe jest zainteresowanie wykorzystaniem kart graficznych w dziedzinach innych niż tylko renderowanie grafiki.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering\includegraphics[width=0.9\textwidth]{figures/03/gpu_cpu.png}
 \caption{Przepustowość pamięci na CPU oraz GPU~\cite{Cuda:PGuide}}\label{rys:gpu_cpu}
 \end{figure}
@@ -38,14 +38,14 @@ W rozdziale~\ref{03-procesor} przedstawiony został rozwój procesora w dwóch p
 
 Mniej więcej w tym samym czasie, w świecie profesjonalnych komputerów, firma o nazwie \emph{Silicon Graphics} popularyzowała w latach 80-tych użycie grafiki trójwymiarowej w wielu dziedzinach, m.in. aplikacje rządowe oraz obronne, aplikacje wspierające naukę oraz wizualizację wyników przeprowadzanych badań naukowych, a także w tworzeniu trójwymiarowych efektów filmowych, czyli rzeczy do tej pory niedostępnych na rynku. W roku 1992 Silicon Graphics stworzyło interfejs programistyczny do swojego sprzętu poprzez wydanie biblioteki IRIS GL, która następnie wyewoluowała do OpenGL (\english{Open Graphics Library}), czyli specyfikacji uniwersalnego API do generowania grafiki. Firma ta wypuszczając tę bibliotekę chciała, by była ona ustandaryzowaną, niezależną od platformy biblioteką do tworzenia aplikacji trójwymiarowych. Zupełnie, jak w pryzpadku licznych rdzeni na procesorach (patrz rozdział~\ref{03-procesor}) było tylko kwestią czasu, aż aplikacje 3D znajdą się w domach użytkowników na ich prywatnych komputerach.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering\includegraphics[width=0.9\textwidth]{figures/03/doom.png}
 \caption{Zrzut ekranu z gry DOOM - klasycznej gry z gatunku FPS}\label{rys:doom}
 \end{figure}
 
 Dwa znaczące powody w połowie lat 90-tych spowodowały, że pojawiła się nagła potrzeba stworzenia procesora graficznego potrafiącego tworzyć trójwymiarowe efekty (\acronym{3D}, \english{three-dimensional}). Pierwszym było pojawienie się wciągających gier, w których gracz ogląda świat gry z perspektywy pierwszej osoby, czyli oczami bohatera (\acronym{FPP}, \english{First Person Perspective}), takich jak Doom (patrz rysunek~\ref{rys:doom}), Duke Nukem 3D oraz Quake. Przyczyniło się to do rozpoczęcia tworzenia bardziej realistycznych środowisk trójwymiarowych, w których możliwe byłoby tworzenie gier komputerowych. Pomimo tego, że grafika 3D mogła być wykorzystana w praktycznie wszystkich grach komputerowych, to wyjątkowa popularność gier z gatunku FPS (\english{First Person Shooter}) spowodowała, że większy nacisk położono na prywatne jednostki komputerowe. W tym samym czasie firmy takie jak NVIDIA, ATI Technologies oraz 3dfx Interactive zaczęły produkować akceleratory graficzne, które były w stanie sprostać ciągle rosnącym wymaganiom klientów. Te strategiczne decyzje spowodowały, że grafika trójwymiarowa na dobre zadomowiła się na komputerach stacjonarnych i w nadchodzących latach to ona miała wieść prym wśród technologii komputerowych.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering\includegraphics[width=0.7\textwidth]{figures/03/geforce-256.jpg}
 \caption{Karta graficzna NVIDIA GeForce 256}\label{rys:gf256}
 \end{figure}
@@ -84,14 +84,14 @@ Wszystkie te usprawnienia wprowadzone w architekturze CUDA celem rozszerzenia mo
 \subsection{Od wyświetlania grafiki do obliczeń ogólnego przeznaczenia}
 Jak przedstawiono na rysunkach~\ref{rys:gpu_cpu} oraz~\ref{rys:gpu_cpu2} procesory graficzne rozwijały się w kierunku przetwarzania równoległego - głównie ze względu wymagań stawianych przez konsumentów na realistyczne grafiki 3D realizowane w czasie rzeczywistym. Z tego też powodu GPU stały się wyspecjalizowanymi jednostkami o wysokim stopniu zrównoleglenia zadań, wielordzeniowymi oraz przetwarzającymi informacje w wielu wątkach. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering\includegraphics[width=0.9\textwidth]{figures/03/gpu_cpu2.png}
 \caption{Operacje zmiennopozycyjne na sekundę na GPU oraz CPU~\cite{Cuda:PGuide}}\label{rys:gpu_cpu2}
 \end{figure}
 
 Powodem tak dużej rozbieżności w możliwościach przetwarzania równoległego (zauważalne na rysunku~\ref{rys:gpu_cpu2}) pomiędzy CPU a GPU jest fakt wysokiej specjalizacji na intensywne obliczenia w sposób równoległy (czyli to, co jest głównym składnikiem renderowania grafiki) - dlatego też w jednostkach kart grafiki więcej tranzystorów przeznaczonych jest do przetwarzania danych zamiast na cache danych oraz przepływ sterowania - schematycznie zilustrowane to zostało na rysunku~\ref{rys:gpu_cpu_trans}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering\includegraphics[width=1.0\textwidth]{figures/03/gpu_cpu_trans.png}
 \caption{Schematyczne przedstawienie budowy CPU oraz GPU~\cite{Cuda:PGuide}}\label{rys:gpu_cpu_trans}
 \end{figure}

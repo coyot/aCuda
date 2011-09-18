@@ -1,0 +1,120 @@
+\chapter{Algorytm równoległy\label{chap:alg_rownolegly}}
+
+Niniejszy rozdział można traktować, jako uzupełnienie rozdziału~\ref{chap:teoria}, w którym to dokonano opisu podstaw teoretycznych wraz z dwoma wiodącymi algorytmami do odkrywania reguł asocjacyjnch. W ramach nieniejszej pracy opracowany został algorytm równoległy, opisany w sekcji~\ref{sec:apriori} tego rozdziału.
+
+Wcześniej zaś przedstawione zostanie zastosowanie algorytmu Apriori (opisanego w części~\ref{apriori:section} pracy), w którym wykorzystane zostały funkcje dostarczone przez najnowsze wydanie frameworka .NET. 
+
+W rozdziale tym wykorzystywane są oznaczenia wprowadzone w rozdziale~\ref{chap:teoria}.
+
+\section{Algorytm ParallelApriori\label{sec:papriori}}
+Pierwszym algorytmem wykorzystującym możliwości procesorów równoległych jest ParallelApriori - stworzony na potrzeby niniejszej pracy. 
+
+Jak wspomniano już wcześniej, zagadnienie odkrywania reguł asocjacyjnych można podzielić na dwa etapy~\cite{Problem:Statement}:
+\begin{enumerate}
+	\item Odkrywanie zbiorów częstych, których wartość wsparcia jest wyższa od wartości $minsup$.
+	\item Generowanie reguł asocjacyjnych na podstawie znalezionych zbiorów częstych.
+
+	Na tym etapie możliwe jest tworzenie reguł, w których w zbiorze \emph{poprzedników} ($X$ z oznaczeń z definicji~\ref{regula:def}) jest wiele elementów oraz jeden w \emph{następniku} (zbiór $Y$ z definicji~\ref{regula:def})~\cite{Problem:Statement} lub dopuszczana jest możliwość wielu elementów również w następniku~\cite{Apriori:Main}. Niniejsza praca analizuje algorytmy generujące reguł, w któych oba zbiory mogą być zbiorami wieloelementowymi.
+\end{enumerate}
+
+\subsection{Generowanie zbiorów częstych}\label{papriori:gen}
+Podobnie jak klasyczny algorytm Apriori~\cite{Apriori:Main}, ParallelApriori dokonuje analizy bazy danych $DB$, by w kolejnych iteracjach generowac rodziny coraz to liczniejszych zbiorów, będących zbiorami częstymi dla zadanej wartości $minsup$. Algorytm zaczyna od znalezienia wszystkich zbiorów jednoelementowych, które są zbiorami częstymi. Następnie w każdym kolejnym kroku generowane są zbiory częste na podstawie zbiorów wygenerowanych w kroku poprzednim. Proces ten jest kontynuowany do momentu aż nie zostaną znalezione żadne zbiory częste.
+
+Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odkrytych w kroku poprzednim - co ważne generowanie ich odbywa się bez wielokrotnego przeglądania bazy danych transakcji. Każdy zbiór częsty zawierający $k$ elementów może być wygenerowany na podstawie połączenia dwóch zbiorów posiadających $k-1$ elementów, a na koniec kasując te zbiory, których jakikolwiek podzbiór nie jest częsty~\cite{Apriori:Main}.
+
+Procedura \proc{Apriori Frequent Set Generaion} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm generowania zbiorów częstych.
+
+\begin{codebox}
+	\Procname{$\proc{Apriori Frequent Set Generaion}$}\label{apriori:listing}
+	\li $\id{L_1} \gets \lbrace 1$-zbiory częste $\rbrace$
+		\li \For $(k = 2; \id{L_{k-1}} \neq \emptyset; k++)$
+		\li \Do
+			 $\id{C_k} \gets pAprioriGen(\id{L_{k-1}})$
+			\li \For \textbf{each} trasakcja $t \in \id{DB}$ \textbf{as parallel}
+			\li \Do
+					$C_t \gets subset(C_k, t)$
+					\li \For \textbf{each} kandydat $c \in \id{C_t}$ \textbf{as parallel}
+					\li \Do c.count++
+					\End
+				\End
+			\li $L_k \gets \lbrace c \in C_k | c.count \geq minsup \rbrace$	
+		\End
+	\li Answer $\gets \bigcup_k L_k $
+\end{codebox}
+
+\subsubsection{Procedura pAprioriGen}
+
+Procedura \id{pAprioriGen} reprezentuje proces twórzenia zbiorów $k-$ elementowych kandydatów na podstawie zbiorów wejściowych $(k-1)$-elementowych. 
+
+Jak łatwo zauważyć wynikiem działania \proc{Parallel Join Step} są zbiory $k$-elementowe, które powstały na podstawie zbioru zbiorów wejściowych $L_{k-1}$, a ich zawartość różni się tylko jednym, ostatnim elementem. Ważnym faktem jest to, iż elementy w zbiorach są uporządkowane leksykograficzne, co znacząco ułatwia implementację tej procedury.
+
+\begin{codebox}
+	\Procname{$\proc{Parallel Join Step}$}
+	\li \textbf{insert into} $C_k$
+	\li \textbf{select} p.item$_1$, p.item$_2$, \dots, p.item$_{k-1}$, q.item$_{k-1}$ \textbf{as parallel}
+	\li \textbf{from} $L_{k-1}$ p, $L_{k-1}$ q
+	\li \textbf{where} p.item$_1 = $ q.item$_1$, \dots, p.item$_{k-2}$ = q.item$_{k-2}$, p.item$_{k-1}$ $<$ q.item$_{k-1}$
+\end{codebox}
+
+Warto zauważyć, że \proc{Parallel Join Step} jest ekwiwalentem rozszerzania zbioru $L_{k-1}$ każdym elementem zbioru elementów $I$, a następnie kasowania tych $(k-1)$-zbiorów otrzymanych przez usuwanie $(k-1)$ elementu, które nie są w $L_{k-1}$. 
+
+Widać, że procedura \proc{Parallel Join Step} jest rozszerzeniem procedury \proc{Join Step} z części~\ref{sec:apriori} niniejszej pracy. Rozszerzona została ona o modyfikator \textbf{as parallel}, który opisany zostanie w kroku następnym.
+
+W przypadku tego algorytmu zdecydowano się nie wprowadzać procedury \proc{Prune Step} obecnej w klasycznej implementacji algorytmu Apriori. Decyzja była podjęta na podstawie intuicji, że generowanie podzbiorów pewnego zbioru i porównywanie z innym zbiorem jest bardziej kosztowne niż sprawdzenie wartości $sup$ dla danego zbioru $k$-elementowego, będącego jednym z elementów wyniku działania procedury \id{pAprioriGen}.
+
+\subsubsection{Kwantyfikator as parallel czyli Parallel LINQ}\label{sec:asparallel}
+We wcześniejszych opisach procedur znajdowania zbiorów częstych wprowadzone został kwantyfikator \textbf{as parallel}, który jest głównym elementem opisywanego algorytmu ParallelApriori. 
+
+Jak wspomniano w części~\ref{sec:linq} w implementacji algorytmu Apriori technologia LINQ była jedną z częściej wykorzystywanych na obiektach. W roku 2006 Joe Duffy zapowiedział na swoim blogu wprowadzenie nowej technologii, rozszerzającej możliwości LINQ~\cite{cs:helloplinq}. PLINQ (lub też Parallel LINQ) zostało włączone w skład .NET 4, pozwalając budować programy równoległe w bardziej abstrakcyjny sposób. 
+
+Głównym założeniem PLINQ jest fakt, że biorąc wyrażenie LINQ, które wykonywane jest w stosunkowo długim czasie, można zapewnić szybsze jego wykonanie poprzez użycie wielu \emph{wątków} (\english{threads}), które wykorzystają możliwości wielu rdzeni na komputerze - z jak najmniejszą liczbą zmian w kodzie, jak to jest tylko możliwe. Jak w przypadku innych kwestii związanych z programowaniem równoległym - nie jest to aż tak proste podejście, jednakże nawet zwykła zmiana wyrażeń prowadzi zazwyczaj do przyspieszenia działania aplikacji.
+
+Punktem startu dla przeobrażenia wyrażenia LINQ do jego wersji równoległej jest metoda 
+
+\begin{verbatim}
+AsParallel()
+\end{verbatim}
+
+Jej zastosowanie przekształca wyrażenie, które zostaje podzielone, a następnie będzie wykonywane w środowisku równoległym. Stąd też zastosowanie słowa kluczowego \textbf{as parallel} oznacza, że wyrażenie implementowane w przypadku klasycznego algorytmu Apriori (patrz część~\ref{apriori:section}) w LINQ zostało przekształcone w miarę możliwości do nowego, wprowadzonego w ostatniej wersji frameworka PLINQ.
+
+\subsubsection{Generowanie reguł asocjacyjnych}
+Zgodnie z zasadą działania algorytmu Apriori po zakończeniu pierwszego etapu algorytm ParallelApriori przystępuje do etapu drugiego, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy, generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru - zupełnie jak ma to miejsce w implementacji algorytmu opisanej w~\ref{sec:genrules}.
+
+Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconf$. Warto zauważyć, że dla każdego zbioru częstego generowane są wszystkie możliwe niepuste podzbiory - zapewnia to, że odkryte zostaną wszystkie możliwe reguły dla zadanego zestawu danych.
+
+Istnieje możliwość poprawienia tego podejścia - podejście to zostało opisane we wcześniejszych rozdziałach. Nie zostało wzięte pod uwagę w implementacji ParallelApriori, by zachować podstawowe cechy algorytmu Apriori - by eksperymenty były możliwie wiarygodne.
+
+Procedura~\proc{Parallel Generate Frequent Itemsets} prezentuje generowanie reguł asocjacyjnych na podstawie odkrytych $k$-zbiorów częstych $l_k$ będących elementami zbioru $L_k$ ($l_k \in L_k$).
+
+\begin{codebox}
+	\Procname{$\proc{Parallel Generate Frequent Itemsets}$}
+		\li \For \textbf{each} zbiór częsty $l_k$, $k \geq 2$  \textbf{as parallel}
+		\li \Do
+			\textbf{call} pGenrules($l_k$, $l_k$)
+			\End
+		\End
+\end{codebox}
+
+W powyższym algorytmie wykorzystana została funkcja \proc{pGenrules}, która na podstawie dwóch zbiorów generuje reguły asocjacyjne. Zapis pseudokodu tej funkcji przedstawiony jest poniżej.
+
+\begin{codebox}
+	\Procname{$\proc{pGenrules}$($l_k$: $k$-zbiór częsty, $a_m$: $m$-zbiór częsty)}
+		\li $\id{A} \gets \lbrace (m-1)$-zbiór $a_{m-1} | a_{m-1} \subset a_m \rbrace$
+		\li \For $a_{m-1} \in A$ \textbf{as parallel}
+			\li \Do
+			$\id{conf} \gets \frac{support(l_k)}{support(a_{m-1})}$
+			\li \If $\id{conf} \geq \id{minconf}$
+				\li \Then
+						\textbf{output} reguła $a_{m-1} \Rightarrow (l_k - a_{m-1})$ \\ ufność = $conf$ oraz wsparcie= $support(l_k)$
+						\li \If $m-1 > 1$ 
+							\li \Then
+							\textbf{call} pGenrules($l_k$, $a_{m-1}$) \\ generowanie reguł podzbiorów zbioru $a_{m-1}$
+						\End
+				\End
+			\End
+		\End
+\end{codebox}
+
+Zupełnie, jak to miało miejsce w przypadku opisu generowania zbiorów częstych dla zadanego zbioru danych, można zauważyć stosowanie słowa kluczowego \textbf{as parallel}, którego znaczenie opisane zostało w części~\ref{sec:asparallel}.
+
+\section{Algorytm CudaApriori\label{sec:capriori}}

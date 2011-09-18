@@ -1,5 +1,4 @@
-
-\chapter{Podstawy teoretyczne}
+\chapter{Podstawy teoretyczne\label{chap:teoria}}
 
 W rozdziale tym przedstawiony zostanie przegląd literatury, który stanowi podstawy wiedzy na temat eksploracji danych, a w szczególności problemu odkrywania reguł asocjacyjnych w dużych zbiorach danych. Zebrana wiedza posłużyła autorowi do opracowania algorytmu wykorzystującego możliwości współczesnych kart graficznych.
 
@@ -140,7 +139,7 @@ Procedura \proc{Apriori Frequent Set Generaion} przedstawia pseudokod realizują
 	\li Answer $\gets \bigcup_k L_k $
 \end{codebox}
 
-\paragraph{Procedura aprioriGen}
+\paragraph{Procedura aprioriGen\label{sec:apriori}}
 Procedura \id{aprioriGen} reprezentuje proces twórzenia zbiorów $k-$ elementowych kandydatów na podstawie zbiorów wejściowych $(k-1)$-elementowych. Procedura ta jest podzielona na dwa etapy: łączenia oraz przycinania. 
 
 Jak łatwo zauważyć wynikiem działania \proc{Join Step} są zbiory $k$-elementowe, które powstały na podstawie zbiorów wejściowych $L_{k-1}$, a ich zawartość różni się tylko jednym elementem - ostatnim. Ważnym faktem jest to, iż elementy w zbiorach są uporządkowane leksykograficzne, co wykorzystywane jest w tej procedurze.
@@ -153,7 +152,7 @@ Jak łatwo zauważyć wynikiem działania \proc{Join Step} są zbiory $k$-elemen
 	\li \textbf{where} p.item$_1 = $ q.item$_1$, \dots, p.item$_{k-2}$ = q.item$_{k-2}$, p.item$_{k-1}$ $<$ q.item$_{k-1}$
 \end{codebox}
 
-Warto zauważyć, że \proc{Join Step} jest ekwiwalentem rozszerania zbioru $L_{k-1}$ każdym elementem zbioru elementów $I$, a następnie kasowania tych $(k-1)$-zbiorów otrzymanych przez usuwanie $(k-1)$ elementu, które nie są w $L_{k-1}$. 
+Warto zauważyć, że \proc{Join Step} jest ekwiwalentem rozszerzania zbioru $L_{k-1}$ każdym elementem zbioru elementów $I$, a następnie kasowania tych $(k-1)$-zbiorów otrzymanych przez usuwanie $(k-1)$ elementu, które nie są w $L_{k-1}$. 
 
 Warunek p.item$_{k-1}$ $<$ q.item$_{k-1}$ zapewnia, że nie będą generowane duplikaty. Dlatego też po etapie łączenia zachodzi zależność $C_k \supseteq L_k$.
 
@@ -180,17 +179,17 @@ Niech zbiór $L_3$ będzie równy $\lbrace \lbrace 1, 2, 3 \rbrace, \lbrace 1,2,
 
 Opisane działanie zostało przedstawione schematycznie na rysunku~\ref{rys:example_candidates}, na którym zaznaczono poszczególne etapy wraz z zaznaczeniem części wspólnych poszczególnych zbiorów wejściowych (patrz procedura $\proc{Join Step}$).
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering\includegraphics{figures/02/candidates_generation.png}
 \caption{Zilustrowanie działania procedury aprioriGen}\label{rys:example_candidates}
 \end{figure}
 
-\subsubsection{Generowanie reguł asocjacyjnych}
+\subsubsection{Generowanie reguł asocjacyjnych}\label{sec:genrules}
 Po zakończeniu pierwszego etapu algorytm przystępuje do drugiego, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy, generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru. Mniej ogólny sposób generowania reguł został przedstawiony w pracy~\cite{Problem:Statement}, jednakże podjęto decyzję, że jest to sposób zbyt mało użyteczny w środowisku produkcyjnym.
 
 Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconf$. Warto zauważyć, że dla każdego zbioru częstego generowane są wszystkie możliwe niepuste podzbiory - zapewnia to, że odkryte zostaną wszystkie możliwe reguły.
 
-Istnieje możliwość poprawienia tego podejścia poprzez generowanie podzbiorów dużego zbioru w sposób rekurencyjnego wywołania \emph{najpierw w głąb} (\english{depth-first fashion}). Na przykład, dla zbioru $\lbrace A, B, C, D \rbrace$, najpierw rozważany jest podzbiór $\lbrace A, B, C \rbrace$, potem $\lbrace A, B \rbrace$ itd. Wtedy, jeśli podzbiór $a$ zbioru $l$ nie jest źródłem reguły asocjacyjnj, podzbiór $a$ nie musi być rozważany w generowaniu reguł ze zbioru $l$. Dla przykładu, jeśli reguła $\lbrace A, B, C \rbrace \Rightarrow \lbrace D \rbrace$ nie posiada wystarczającego współczynnika $conf$, wówczas nie ma potrzeby sprawdzać reguły $\lbrace A, B \rbrace \Rightarrow \lbrace C, D \rbrace$. Nie jest pominięta żadna możliwa reguła, ponieważ wartość $sup$ dowolnego $\tilde{a} \in a$ nie może być większe niż wartość $sup$ dla zbioru $a$. Dlatego też, wartość $conf$ dla reguły $\tilde{a} \Rightarrow (l - \tilde{a})$ nie może być większa niż poziom ufności $a \Rightarrow (l-a)$. Stąd, jeżeli $a$ nie zwrócił reguły zawierającej wszystkich elementów z $l$ w $a$, jako poprzednika, nie dokona tego również $\tilde{a}$~\cite{Main:Apriori}.
+Istnieje możliwość poprawienia tego podejścia poprzez generowanie podzbiorów dużego zbioru w sposób rekurencyjnego wywołania \emph{najpierw w głąb} (\english{depth-first fashion}). Na przykład, dla zbioru $\lbrace A, B, C, D \rbrace$, najpierw rozważany jest podzbiór $\lbrace A, B, C \rbrace$, potem $\lbrace A, B \rbrace$ itd. Wtedy, jeśli podzbiór $a$ zbioru $l$ nie jest źródłem reguły asocjacyjnj, podzbiór $a$ nie musi być rozważany w generowaniu reguł ze zbioru $l$. Dla przykładu, jeśli reguła $\lbrace A, B, C \rbrace \Rightarrow \lbrace D \rbrace$ nie posiada wystarczającego współczynnika $conf$, wówczas nie ma potrzeby sprawdzać reguły $\lbrace A, B \rbrace \Rightarrow \lbrace C, D \rbrace$. Nie jest pominięta żadna możliwa reguła, ponieważ wartość $sup$ dowolnego $\tilde{a} \in a$ nie może być większe niż wartość $sup$ dla zbioru $a$. Dlatego też, wartość $conf$ dla reguły $\tilde{a} \Rightarrow (l - \tilde{a})$ nie może być większa niż poziom ufności $a \Rightarrow (l-a)$. Stąd, jeżeli $a$ nie zwrócił reguły zawierającej wszystkich elementów z $l$ w $a$, jako poprzednika, nie dokona tego również $\tilde{a}$~\cite{Apriori:Main}.
 
 Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocjacyjnych na podstawie odkrytych $k$-zbiorów częstych $l_k$ będących elementami zbioru $L_k$ ($l_k \in L_k$).
 
@@ -286,7 +285,7 @@ FP-drzewo (\english{frequent-pattern tree}) jest to ukorzeniony, etykietowany w 
 
 Rysunek~\ref{rys:fptree} przedstawia przykładowe FP-drzewo wraz z tablicą nagłówkową reprezentujący dane z przykładu wprowadzonego i analizowanego wcześniej.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering\includegraphics{figures/02/fptree.png}
 \caption{Ilustracja przykładowego FP-drzewa dla zbioru danych z tablicy~\ref{example:fp_data}}\label{rys:fptree}
 \end{figure}
@@ -371,7 +370,7 @@ Dla elementu $p$ regułą częstą jest $p: 3$, która posiada dwie ścieżki w 
 
 Dla wierzchołka $m$ jego bezpośrednim wzorcem częstym jest $(m:3)$, posiada on również dwie ścieżki: $\langle f: 4, c: 3, a: 3, m: 2 \rangle$ oraz $\langle f: 4, c: 3, a: 3, b: 1, m: 1 \rangle$. W obu tych ścieżkach można zauważyć, że $m$ występuje razem z $p$, jednakże $p$ w tym miejscu nie musi być brane pod uwagę, ponieważ wszystkie wzorce częste dla tego elementu zostały znalezione wcześniej (opisano to akapit wcześniej). Wykonując działania podobnie, jak w poprzednim akapicie wyznaczona zostanie warunkowa baza wzorców o postaci $\lbrace (fca: 2), (fcab: 1) \rbrace$. Skonstruowane na tej podstawie FP-drzewo, czyli warunkowe FP-drzewo elementu $m$ ($\langle f: 3, c: 3, a: 3 \rangle$) posiada jedną ścieżkę częstą, co można zaobserwować na rysunku~\ref{rys:mining_fptree}. Następnie przeprowadzona jest rekurencyjna eksploracja tego warunkowego drzewa poprzez wywołanie $mine(\langle f: 3, c: 3, a: 3 \rangle | m)$.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering\includegraphics{figures/02/mining_fptree.png}
 \caption{Eksploracja warunkowego FP-drzewa dla elementu $m$ (FP-tree $| m$)~\cite{Main:FPgrowth}}\label{rys:mining_fptree}
 \end{figure}
