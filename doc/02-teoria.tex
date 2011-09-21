@@ -32,7 +32,7 @@ sup(X)=\frac{| \lbrace id: (id,Y)\in DB \wedge X\subseteq Y \rbrace |}{|DB|}
 
 Łatwo zauważyć, że jeśli poziom ten jest niski, to oznacza to, że elementy zbioru $X$ w transakcjach rzadko występują razem.
 
-Dla przykładowego zbioru $X \subseteq I=\lbrace \textrm{milk} \rbrace$ wartość $sup(X)$ została obliczona w przykładzie~\ref{sample:sup}, ponieważ zbiór $X$ jest podzbiorem dwóch transakcji - $1 = \lbrace$ bread, milk, butter, beer $\rbrace$ oraz $4 = \lbrace$ butter, milk, juice $\rbrace$.
+Dla przykładowego zbioru $X=\lbrace \textrm{milk} \rbrace$ wartość $sup(X)$ została obliczona w przykładzie~\ref{sample:sup}, ponieważ zbiór $X$ jest podzbiorem dwóch transakcji - $t_1 = \lbrace$ bread, milk, butter, beer $\rbrace$ oraz $t_4 = \lbrace$ butter, milk, juice $\rbrace$.
 
 \begin{equation}\label{sample:sup}
 \begin{split}
@@ -80,7 +80,7 @@ Zbiorem częstym $X \subseteq I$ nazywamy taki zbiór, który spełnia zależno�
 Generowanie reguł asocjacyjnych zazwyczaj sprowadza się do dwóch, niezależnych kroków:
 \begin{enumerate}
 	\item Minimalne wsparcie jest używane do odnalezienia wszystkich zbiorów częstych w bazie danych $DB$.
-	\item Znalezione zbiory często oraz minimalny poziom ufności są używane do wygenerownia reguł asocjacyjnych.
+	\item Znalezione zbiory częste oraz minimalny poziom ufności są używane do wygenerownia reguł asocjacyjnych.
 \end{enumerate}
 
 W naiwnym podejściu znalezienie wszystkich zbiorów częstych w bazie danych $DB$ jest zadaniem wymagającym przeszukania wszystkich możliwych kombinacji bez powtórzeń ze zbioru $I$. Zbiór $X$ nazwywamy $k$-zbiorem, jeśli $|X|=k$, tzn. zbior $X$ ma $k$ elementów. Zbiór możliwych zbiorów elementów ma liczność równą $2^n - 1$ (wszystkie zbiory, poza zbiorem pustym, który nie jest w tym wypadku zbiorem sensownym w znaczeniu poddania go analizie), czyli zbiór ten jest $(2^n - 1)$-zbiorem.
@@ -119,10 +119,10 @@ Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odk
 
 Tabela~\ref{skroty:znaczanie} zawiera spis oznaczeń używanych w opisie algorytmu. 
 
-Procedura \proc{Apriori Frequent Set Generaion} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm generowania zbiorów częstych.
+Procedura \proc{Apriori Frequent Set Generation} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm generowania zbiorów częstych.
 
 \begin{codebox}
-	\Procname{$\proc{Apriori Frequent Set Generaion}$}\label{apriori:listing}
+	\Procname{$\proc{Apriori Frequent Set Generation}$}\label{apriori:listing}
 	\li $\id{L_1} \gets \lbrace 1$-zbiory częste $\rbrace$
 		\li \For $(k = 2; \id{L_{k-1}} \neq \emptyset; k++)$
 		\li \Do
@@ -212,10 +212,10 @@ W powyższym algorytmie wykorzystana została funkcja \proc{Genrules}, która na
 			$\id{conf} \gets \frac{support(l_k)}{support(a_{m-1})}$
 			\li \If $\id{conf} \geq \id{minconf}$
 				\li \Then
-						\textbf{output} reguła $a_{m-1} \Rightarrow (l_k - a_{m-1})$ \\ ufność = $conf$ oraz wsparcie= $support(l_k)$
+						\textbf{output} reguła $a_{m-1} \Rightarrow (l_k - a_{m-1})$ \CommentSymbol ufność = $conf$ oraz wsparcie= $support(l_k)$
 						\li \If $m-1 > 1$ 
 							\li \Then
-							\textbf{call} genrules($l_k$, $a_{m-1}$) \\ generowanie reguł podzbiorów zbioru $a_{m-1}$
+							\textbf{call} genrules($l_k$, $a_{m-1}$) \CommentSymbol generowanie reguł podzbiorów zbioru $a_{m-1}$
 						\End
 				\End
 			\End
@@ -252,7 +252,7 @@ Algorytm FP-growth można podzielić na trzy podstawowe kroki.
 Niech zbiór transakcji $DB$ będzie zdefiniowany przez tablicę~\ref{example:fp_data}. Dla przykładu przyjęto, że $minsup = 3$.
 
 \begin{enumerate}
-	\item Ponieważ w budowie FP-drzewa (patrz definicja~\ref{fptree:def}) będą uczestniczyc jedynie elementy będące elementami częstymi, to pierwszym etapem algorytmu jest jednokrotne przejrzenie zawartości $DB$ oraz zidentyfikowanie zbioru elementów częstych (z wartością $f_count$ dla każdego elementu, przechowujący liczbę jego wystąpień).
+	\item Ponieważ w budowie FP-drzewa (patrz definicja~\ref{fptree:def}) będą uczestniczyc jedynie elementy będące elementami częstymi, to pierwszym etapem algorytmu jest jednokrotne przejrzenie zawartości $DB$ oraz zidentyfikowanie zbioru elementów częstych (z wartością $f_{count}$ dla każdego elementu, przechowujący liczbę jego wystąpień).
 	\item Jeśli zbiory elementów częstych, dla każdej z transakcji, mogą być przechowywane w relatywnie małej strukturze - warto jest zachować wynik skanowania, by uniknąć w kolejnych etapach kolejnych, niepotrzebnych i wyraźnie obniżających wydajność algorytmu, skanów bazy danych.
 	\item Jeśli kilka transakcji posiada te same zbiory elementów częstych, możliwe jest przechowywanie tych zbiorów jako jednego, z licznikiem w ilu transakcjach on występuje ($count$). Czy dwa zbiory są identyczne można w łatwy sposób zweryfikować, jeśli w każdym ze zbiorów są posortowane zgodnie z przyjętym dla wszystkich porządkiem.
 	\item Możliwe jest również częściowe współzapamiętywanie zbiorów, jeśli prefiksy (czyli części zbiorów posortowanych) są identyczne dla dwóch transakcji. Te same części mogą być scalone do jednego prefiksu, jeśli wartość $count$ jest właściwie obliczona. Jeśli elementy częste są posortowane w porządku malejącej liczby wystąpień, istnieje większe prawdopodobieństwo znalezienia większej liczby wspólnych prefiksów.
@@ -260,7 +260,7 @@ Niech zbiór transakcji $DB$ będzie zdefiniowany przez tablicę~\ref{example:fp
 
 Dla danych zawartych w tabeli~\ref{example:fp_data} przedstawione zostanie teraz działanie algorytmu.
 
-Na początek, skan bazy danych $DB$ tworzy \emph{listę elementów częstych}: $\langle f: 4, c: 4, a: 3,$ $ b: 3, m: 3, p: 3\rangle$ (gdzie para $a:0\dots n$ reprezentuje odpowienio - element $a$ oraz liczbę jego wystąpień), w której elementy posortowane są zgodnie z malejącą liczbą wystąpień. Sposób sortowania jest istotny, ponieważ proces budowy drzewa będzie właśnie oparty na tym porządku. Dla wygody analizy oraz łatwiejszego zrozumiania, pierwszą kolumnę z prawej w tablicy~\ref{example:fp_data} tworzą elementy częste z danej transakcji, posortowane właśnie w ten sposób.
+Na początek, skan bazy danych $DB$ tworzy \emph{listę elementów częstych}: $\langle f: 4, c: 4, a: 3,$ $ b: 3, m: 3, p: 3\rangle$ (gdzie para $a:0\dots n$ reprezentuje odpowienio - element $a$ oraz liczbę jego wystąpień), w której elementy posortowane są zgodnie z malejącą liczbą wystąpień. Sposób sortowania jest istotny, ponieważ proces budowy drzewa będzie właśnie oparty na tym porządku. Dla wygody analizy oraz łatwiejszego zrozumienia, pierwszą kolumnę z prawej w tablicy~\ref{example:fp_data} tworzą elementy częste z danej transakcji, posortowane właśnie w ten sposób.
 
 Co więcej, korzeń drzewa jest tworzony i oznaczony jako \emph{null}, czyli wartość pusta. FP-drzewo jest tworzone poprzez skanowanie raz jeszcze bazy danych $DB$ i działania opisane przez kolejne kroki poniżej.
 
@@ -366,7 +366,7 @@ W rozdziale pt.~\emph{\nameref{sec:example_fptree}} zaprezentowano sposób budow
 
 Przykład należy rozpocząć od spostrzeżenia, że wszystkie reguły asocjacyjne, zawierające element częsty $a_i$ mogą być zebrane poprzez wyjście ze wskaźnika z tablicy nagłówkowej FP-drzewa, a następnie podążając zgodnie z kolejnymi wskaźnikami na wystąpienia danego elementu w drzewie. W przykładzie analiza zostanie przeprowadzona od końca - tj. podąrzając od elementu najmniej licznego spośród elementów częstych.
 
-Dla elementu $p$ regułą częstą jest $p: 3$, która posiada dwie ścieżki w drzewie: $\langle f: 4, c: 3,$ $a: 3, m: 2, p: 2\rangle$ oraz $\langle c: 1, b: 1, p: 1\rangle$. Pierwsza ścieżka oznacza, że wartość ''$( f, c, a, m, p )$'' występuje w bazie danych $DB$ dwukrotnie. Warto zauważyć, że pierwsza ścieżka oznacza również, że ciąg ''$( f, c, a )$'' występuje w bazie dwukrotnie, a ''$(f)$'' nawet czterokrotnie. Jednakże występują one jednocześnie z $p$ jedynie dwukrotnie. Dlatego też, do analizy wartości występujących razem z $p$ tylko ścieżka prefiksowana $\langle f: 2, c: 2, a: 2, m: 2\rangle$ (lub zapisane krócej: $\langle fcam: 2\rangle$) jest brana pod uwagę. Podobnie w przypadku drugiej ścieżki - wynika z niej, że ciąg ''$(c, b, p)$'' występuje tylko raz w transakcjach w bazie danych $DB$, lub też prefiksowana ścieżka dla $p$ ma postać $\langle cb: 1 \rangle$. Te dwie ścieżki prefiksowane elementu $p$ ( czyli $\lbrace ( fcam: 2 ), (cb: 1) \rbrace$) tworzą bazę wzorca elementu $p$ (\english{subpattern-base}), która jest nazywana \emph{warunkową bazę wzorców} z $p$ (\english{conditional pattern base}) - to znaczy bazę wzorca pod warunkiem występowania elementu $p$~\cite{Main:FPgrowth}. Konstrukcja FP-drzewa na tej warunkowej bazie wzorców (które nazywane jest \emph{warunkowym FP-drzewem} elementu $p$ \english{conditional FP-tree}) prowadzi tylko do jednej gałęzi - $(c:3)$. Stąd też tylko jeden wzorzeć jest dziedziczony - $(cp:4)$. (Warto zauważyć, że wzorzec jest zbiorem elementów, który jest reprezentowany przez ciąg.) Poszukiwanie częstych wzorców związanych z elementem $p$ kończy działanie.
+Dla elementu $p$ wzorcem częstym jest $p: 3$, która posiada dwie ścieżki w drzewie: $\langle f: 4, c: 3,$ $a: 3, m: 2, p: 2\rangle$ oraz $\langle c: 1, b: 1, p: 1\rangle$. Pierwsza ścieżka oznacza, że wartość ''$( f, c, a, m, p )$'' występuje w bazie danych $DB$ dwukrotnie. Warto zauważyć, że pierwsza ścieżka oznacza również, że ciąg ''$( f, c, a )$'' występuje w bazie dwukrotnie, a ''$(f)$'' nawet czterokrotnie. Jednakże występują one jednocześnie z $p$ jedynie dwukrotnie. Dlatego też, do analizy wartości występujących razem z $p$ tylko ścieżka prefiksowana $\langle f: 2, c: 2, a: 2, m: 2\rangle$ (lub zapisane krócej: $\langle fcam: 2\rangle$) jest brana pod uwagę. Podobnie w przypadku drugiej ścieżki - wynika z niej, że ciąg ''$(c, b, p)$'' występuje tylko raz w transakcjach w bazie danych $DB$, lub też prefiksowana ścieżka dla $p$ ma postać $\langle cb: 1 \rangle$. Te dwie ścieżki prefiksowane elementu $p$ ( czyli $\lbrace ( fcam: 2 ), (cb: 1) \rbrace$) tworzą bazę wzorca elementu $p$ (\english{subpattern-base}), która jest nazywana \emph{warunkową bazę wzorców} z $p$ (\english{conditional pattern base}) - to znaczy bazę wzorca pod warunkiem występowania elementu $p$~\cite{Main:FPgrowth}. Konstrukcja FP-drzewa na tej warunkowej bazie wzorców (które nazywane jest \emph{warunkowym FP-drzewem} elementu $p$ \english{conditional FP-tree}) prowadzi tylko do jednej gałęzi - $(c:3)$. Stąd też tylko jeden wzorzeć jest dziedziczony - $(cp:4)$. (Warto zauważyć, że wzorzec jest zbiorem elementów, który jest reprezentowany przez ciąg.) Poszukiwanie częstych wzorców związanych z elementem $p$ kończy działanie.
 
 Dla wierzchołka $m$ jego bezpośrednim wzorcem częstym jest $(m:3)$, posiada on również dwie ścieżki: $\langle f: 4, c: 3, a: 3, m: 2 \rangle$ oraz $\langle f: 4, c: 3, a: 3, b: 1, m: 1 \rangle$. W obu tych ścieżkach można zauważyć, że $m$ występuje razem z $p$, jednakże $p$ w tym miejscu nie musi być brane pod uwagę, ponieważ wszystkie wzorce częste dla tego elementu zostały znalezione wcześniej (opisano to akapit wcześniej). Wykonując działania podobnie, jak w poprzednim akapicie wyznaczona zostanie warunkowa baza wzorców o postaci $\lbrace (fca: 2), (fcab: 1) \rbrace$. Skonstruowane na tej podstawie FP-drzewo, czyli warunkowe FP-drzewo elementu $m$ ($\langle f: 3, c: 3, a: 3 \rangle$) posiada jedną ścieżkę częstą, co można zaobserwować na rysunku~\ref{rys:mining_fptree}. Następnie przeprowadzona jest rekurencyjna eksploracja tego warunkowego drzewa poprzez wywołanie $mine(\langle f: 3, c: 3, a: 3 \rangle | m)$.
 

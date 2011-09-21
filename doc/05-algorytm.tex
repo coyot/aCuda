@@ -1,6 +1,6 @@
 \chapter{Algorytm równoległy\label{chap:alg_rownolegly}}
 
-Niniejszy rozdział można traktować, jako uzupełnienie rozdziału~\ref{chap:teoria}, w którym to dokonano opisu podstaw teoretycznych wraz z dwoma wiodącymi algorytmami do odkrywania reguł asocjacyjnch. W ramach nieniejszej pracy opracowany został algorytm równoległy, opisany w sekcji~\ref{sec:apriori} tego rozdziału.
+Niniejszy rozdział można traktować, jako uzupełnienie rozdziału~\ref{chap:teoria}, w którym to dokonano opisu podstaw teoretycznych wraz z dwoma wiodącymi algorytmami do odkrywania reguł asocjacyjnch. W ramach niniejszej pracy opracowany został algorytm równoległy, oparty na algorytmie opisanym w sekcji~\ref{sec:apriori}.
 
 Wcześniej zaś przedstawione zostanie zastosowanie algorytmu Apriori (opisanego w części~\ref{apriori:section} pracy), w którym wykorzystane zostały funkcje dostarczone przez najnowsze wydanie frameworka .NET. 
 
@@ -22,10 +22,10 @@ Podobnie jak klasyczny algorytm Apriori~\cite{Apriori:Main}, ParallelApriori dok
 
 Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odkrytych w kroku poprzednim - co ważne generowanie ich odbywa się bez wielokrotnego przeglądania bazy danych transakcji. Każdy zbiór częsty zawierający $k$ elementów może być wygenerowany na podstawie połączenia dwóch zbiorów posiadających $k-1$ elementów, a na koniec kasując te zbiory, których jakikolwiek podzbiór nie jest częsty~\cite{Apriori:Main}.
 
-Procedura \proc{Apriori Frequent Set Generaion} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm generowania zbiorów częstych.
+Procedura \proc{Apriori Frequent Set Generation} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm generowania zbiorów częstych.
 
 \begin{codebox}
-	\Procname{$\proc{Apriori Frequent Set Generaion}$}\label{apriori:listing}
+	\Procname{$\proc{Apriori Frequent Set Generation}$}\label{apriori:listing}
 	\li $\id{L_1} \gets \lbrace 1$-zbiory częste $\rbrace$
 		\li \For $(k = 2; \id{L_{k-1}} \neq \emptyset; k++)$
 		\li \Do
@@ -44,7 +44,7 @@ Procedura \proc{Apriori Frequent Set Generaion} przedstawia pseudokod realizują
 
 \subsubsection{Procedura pAprioriGen}
 
-Procedura \id{pAprioriGen} reprezentuje proces twórzenia zbiorów $k-$ elementowych kandydatów na podstawie zbiorów wejściowych $(k-1)$-elementowych. 
+Procedura \id{pAprioriGen} reprezentuje proces tworzenia zbiorów $k-$ elementowych kandydatów na podstawie zbiorów wejściowych $(k-1)$-elementowych. 
 
 Jak łatwo zauważyć wynikiem działania \proc{Parallel Join Step} są zbiory $k$-elementowe, które powstały na podstawie zbioru zbiorów wejściowych $L_{k-1}$, a ich zawartość różni się tylko jednym, ostatnim elementem. Ważnym faktem jest to, iż elementy w zbiorach są uporządkowane leksykograficzne, co znacząco ułatwia implementację tej procedury.
 
@@ -58,31 +58,14 @@ Jak łatwo zauważyć wynikiem działania \proc{Parallel Join Step} są zbiory $
 
 Warto zauważyć, że \proc{Parallel Join Step} jest ekwiwalentem rozszerzania zbioru $L_{k-1}$ każdym elementem zbioru elementów $I$, a następnie kasowania tych $(k-1)$-zbiorów otrzymanych przez usuwanie $(k-1)$ elementu, które nie są w $L_{k-1}$. 
 
-Widać, że procedura \proc{Parallel Join Step} jest rozszerzeniem procedury \proc{Join Step} z części~\ref{sec:apriori} niniejszej pracy. Rozszerzona została ona o modyfikator \textbf{as parallel}, który opisany zostanie w kroku następnym.
+Widać, że procedura \proc{Parallel Join Step} jest rozszerzeniem procedury \proc{Join Step} z części~\ref{sec:apriori} niniejszej pracy. Rozszerzona została ona o modyfikator \textbf{as parallel}, który opisany został w części~\ref{sec:asparallel} pracy.
 
 W przypadku tego algorytmu zdecydowano się nie wprowadzać procedury \proc{Prune Step} obecnej w klasycznej implementacji algorytmu Apriori. Decyzja była podjęta na podstawie intuicji, że generowanie podzbiorów pewnego zbioru i porównywanie z innym zbiorem jest bardziej kosztowne niż sprawdzenie wartości $sup$ dla danego zbioru $k$-elementowego, będącego jednym z elementów wyniku działania procedury \id{pAprioriGen}.
 
-\subsubsection{Kwantyfikator as parallel czyli Parallel LINQ}\label{sec:asparallel}
-We wcześniejszych opisach procedur znajdowania zbiorów częstych wprowadzone został kwantyfikator \textbf{as parallel}, który jest głównym elementem opisywanego algorytmu ParallelApriori. 
-
-Jak wspomniano w części~\ref{sec:linq} w implementacji algorytmu Apriori technologia LINQ była jedną z częściej wykorzystywanych na obiektach. W roku 2006 Joe Duffy zapowiedział na swoim blogu wprowadzenie nowej technologii, rozszerzającej możliwości LINQ~\cite{cs:helloplinq}. PLINQ (lub też Parallel LINQ) zostało włączone w skład .NET 4, pozwalając budować programy równoległe w bardziej abstrakcyjny sposób. 
-
-Głównym założeniem PLINQ jest fakt, że biorąc wyrażenie LINQ, które wykonywane jest w stosunkowo długim czasie, można zapewnić szybsze jego wykonanie poprzez użycie wielu \emph{wątków} (\english{threads}), które wykorzystają możliwości wielu rdzeni na komputerze - z jak najmniejszą liczbą zmian w kodzie, jak to jest tylko możliwe. Jak w przypadku innych kwestii związanych z programowaniem równoległym - nie jest to aż tak proste podejście, jednakże nawet zwykła zmiana wyrażeń prowadzi zazwyczaj do przyspieszenia działania aplikacji.
-
-Punktem startu dla przeobrażenia wyrażenia LINQ do jego wersji równoległej jest metoda 
-
-\begin{verbatim}
-AsParallel()
-\end{verbatim}
-
-Jej zastosowanie przekształca wyrażenie, które zostaje podzielone, a następnie będzie wykonywane w środowisku równoległym. Stąd też zastosowanie słowa kluczowego \textbf{as parallel} oznacza, że wyrażenie implementowane w przypadku klasycznego algorytmu Apriori (patrz część~\ref{apriori:section}) w LINQ zostało przekształcone w miarę możliwości do nowego, wprowadzonego w ostatniej wersji frameworka PLINQ.
-
-\subsubsection{Generowanie reguł asocjacyjnych}
+\subsection{Generowanie reguł asocjacyjnych}
 Zgodnie z zasadą działania algorytmu Apriori po zakończeniu pierwszego etapu algorytm ParallelApriori przystępuje do etapu drugiego, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy, generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru - zupełnie jak ma to miejsce w implementacji algorytmu opisanej w~\ref{sec:genrules}.
 
 Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconf$. Warto zauważyć, że dla każdego zbioru częstego generowane są wszystkie możliwe niepuste podzbiory - zapewnia to, że odkryte zostaną wszystkie możliwe reguły dla zadanego zestawu danych.
-
-Istnieje możliwość poprawienia tego podejścia - podejście to zostało opisane we wcześniejszych rozdziałach. Nie zostało wzięte pod uwagę w implementacji ParallelApriori, by zachować podstawowe cechy algorytmu Apriori - by eksperymenty były możliwie wiarygodne.
 
 Procedura~\proc{Parallel Generate Frequent Itemsets} prezentuje generowanie reguł asocjacyjnych na podstawie odkrytych $k$-zbiorów częstych $l_k$ będących elementami zbioru $L_k$ ($l_k \in L_k$).
 
@@ -105,10 +88,10 @@ W powyższym algorytmie wykorzystana została funkcja \proc{pGenrules}, która n
 			$\id{conf} \gets \frac{support(l_k)}{support(a_{m-1})}$
 			\li \If $\id{conf} \geq \id{minconf}$
 				\li \Then
-						\textbf{output} reguła $a_{m-1} \Rightarrow (l_k - a_{m-1})$ \\ ufność = $conf$ oraz wsparcie= $support(l_k)$
+						\textbf{output} reguła $a_{m-1} \Rightarrow (l_k - a_{m-1})$ \CommentSymbol ufność = $conf$ oraz wsparcie= $support(l_k)$
 						\li \If $m-1 > 1$ 
 							\li \Then
-							\textbf{call} pGenrules($l_k$, $a_{m-1}$) \\ generowanie reguł podzbiorów zbioru $a_{m-1}$
+							\textbf{call} pGenrules($l_k$, $a_{m-1}$) \CommentSymbol generowanie reguł podzbiorów zbioru $a_{m-1}$
 						\End
 				\End
 			\End
@@ -118,3 +101,59 @@ W powyższym algorytmie wykorzystana została funkcja \proc{pGenrules}, która n
 Zupełnie, jak to miało miejsce w przypadku opisu generowania zbiorów częstych dla zadanego zbioru danych, można zauważyć stosowanie słowa kluczowego \textbf{as parallel}, którego znaczenie opisane zostało w części~\ref{sec:asparallel}.
 
 \section{Algorytm CudaApriori\label{sec:capriori}}
+
+Opracowany algorytm wykorzystujący możliwości kart graficznych został oparty na algorytmie Apriori, celem udowodnienia, że następuje zysk czasowy dzięki wykorzystaniu mocy obliczeniowej wspólczesnych jednostek graficznych.
+
+Jak wspomniano już wcześniej (zarówno w~\ref{apriori:section} oraz~\ref{sec:papriori}), zagadnienie odkrywania reguł asocjacyjnych można podzielić na dwa etapy~\cite{Problem:Statement}:
+\begin{enumerate}
+	\item Odkrywanie zbiorów częstych, których wartość wsparcia jest wyższa od wartości $minsup$.
+	\item Generowanie reguł asocjacyjnych na podstawie znalezionych zbiorów częstych.
+\end{enumerate}
+
+Ponieważ metody te będą w części wykonywane na karcie graficznej. Z tego też powodu należy przygotować specjalne struktury danych, w których przechowywane będą dane o transakcjach oraz elementach w nich występujących.
+
+\subsection{Przygotowanie danych wejściowych do algorytmu}
+
+Należy podkreślć, że w trakcie obliczeń na karcie graficznej używane są inne struktury danych, ponieważ inne jest podejście do problematyki, a także inne jest przeznczenie tego procesora. Jedną z podstawowych struktur jest bitmapa - w ogólności jest to plik wykorzystujący rastrowy sposób prezentacji dwuwymiarowej grafiki komputerowej, który polega na przypisaniu danemu pikslowi w tablicy (dwuwymiarowej) określonego koloru w danym trybie koloru. W specyficznych wypadkach bitmapa może być plikiem, w którym kolor zostanie zastąpiony wartością binarną. 
+
+Dodatkowo, dzięki takiemu przygotowaniu danych łatwiejsze jest dzielenie danych na mniejsze fragmenty, które mogą być analizowane, przekształcane i przekazywane dalej poprzez wątki na karcie graficznej.
+
+W celu wykonywania obliczeń na karcie graficznej zdecydowano się przekształcić dane wejściowe na bitmapę wartości binarnych. W rozdziale~\ref{chap:teoria} wprowadzony został przykład bazy danych $DB$ - zawarty w tablicy~\ref{example:data}. Dla tych danych opracowana bitmapa ma postać prezentowaną przez rysunek~\ref{rys:example_bitmap}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics{figures/05/example_bitmap.png}
+\caption{Bitmapa przygotowana dla danych z tablicy~\ref{example:data}}\label{rys:example_bitmap}
+\end{figure}
+
+Procedura $\proc{Build bitmap}$ tworzy bitmapę na podstawie zestawu transakcji z bazy danych.
+
+\begin{codebox}
+	\Procname{$\proc{Build bitmap}$}
+		\li \For \textbf{each} element $e \in I$ 
+		\li \Do
+			\li \For \textbf{each} transakcja $T \in DB$
+					\li \Do 
+						\If $e \in T$
+						\li \Then
+							\textbf{set pixel} $(e_{id}, T_{id}) \gets true$\label{li:set_bitmap}\CommentSymbol element występuje w transakcji
+						\End
+					\End
+		\End
+\end{codebox}
+
+Jak łatwo zauważyć w procedurze $\proc{Build bitmap}$ dokonywany jest jednokrotny skan wszystkich transakcji, a także wszystkich transakcji - na tej podstawie budowana jest "pionowa" bitmapa - w tym wypadku "pionowa" znaczy, że każdy wiersz reprezentuje jedną transakcję z bazy, natomiast każda kolumna reprezentuje element ze zbioru elementów $I$.
+
+W tym miejscu wymaganym jest także zastosowanie \emph{mostu} (\english{bridge}) pomiędzy obliczeniami na CUDA oraz przetwarzaniem logiki biznesowej w C\# - należało przyjąć język identyfikacji poszczególnych elementów. Źródła danych stosują z reguły identyfikatory - dlatego też zdecydowano się za ich pomocą identyfikować poszczególne elementy. W przypadku gdy źródło danych nie wspierałoby identyfikatorów liczbowych, możliwe jest wprowadzenie takowych na etapie wczytywania danych - co powinno być odpowiednio obsłużone przez importery daanych wejściowych.
+
+Przykładowy fragment bitmapy zbudowanej dla danych, na których oparte zostały eksperymenty został zaprezentowany na rysunku~\ref{rys:data_1}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics{figures/05/data_1.png}
+\caption{Fragment bitmapy z transakcjami}\label{rys:data_1}
+\end{figure}
+
+\subsection{Generowanie zbiorów częstych}\label{capriori:gen}
+
+\subsection{Generowanie reguł asocjacyjnych}
