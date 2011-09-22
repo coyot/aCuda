@@ -14,8 +14,7 @@ namespace aCudaResearch
     {
         private double _minSup;
         private double _minConf;
-        private int _startNumber;
-        private int _endNumber;
+        private int _transactionsNumber;
 
         public ExecutionSettings()
         {
@@ -55,40 +54,21 @@ namespace aCudaResearch
         }
 
         /// <summary>
-        /// Initial number of transactions which will be taken into execution.
+        /// Number of transactions which will be taken into execution.
         /// </summary>
-        public int StartNumber
+        public int TransactionsNumber
         {
             get
             {
                 Contract.Ensures(Contract.Result<int>() >= 0);
 
-                return _startNumber;
+                return _transactionsNumber;
             }
 
             set
             {
                 Contract.Requires(value >= 0);
-                _startNumber = value;
-            }
-        }
-
-        /// <summary>
-        /// Max number of transactions which will be taken into execution.
-        /// </summary>
-        public int EndNumber
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<int>() >= 0);
-
-                return _endNumber;
-            }
-
-            set
-            {
-                Contract.Requires(value >= 0);
-                _endNumber = value;
+                _transactionsNumber = value;
             }
         }
 
@@ -120,8 +100,7 @@ namespace aCudaResearch
             builder.Append("Data Source: ").Append(DataSourcePath);
             builder.Append("\nMinSup: ").Append(MinSup);
             builder.Append("\nMinConf: ").Append(MinConf);
-            builder.Append("\n\tStart Number: ").Append(StartNumber);
-            builder.Append("\n\tEnd Number: ").Append(EndNumber);
+            builder.Append("\n\tTransactions Number: ").Append(TransactionsNumber);
             builder.Append("\n\tData Source Type: ").Append(DataSourceType);
             builder.Append("\nAlgorithms: ");
 

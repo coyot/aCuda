@@ -36,7 +36,12 @@ namespace aCudaResearch.Algorithms
                     frequentSets = candidates;
                     foreach (var candidate in candidates)
                     {
-                        frequentItemSets.Add(new FrequentItemSet<int>(candidate), candidate.GetSupport(data.Transactions));
+                        var fItemSet = new FrequentItemSet<int>(candidate);
+
+                        if (!frequentItemSets.ContainsKey(fItemSet))
+                        {
+                            frequentItemSets.Add(fItemSet, candidate.GetSupport(data.Transactions));
+                        }
                     }
                 }
                 else
@@ -89,9 +94,9 @@ namespace aCudaResearch.Algorithms
             var candidates = new List<List<int>>();
             for (var i = 0; i < source.Count; i++)
             {
-                for (var j = i+1; j < source.Count; j++)
+                for (var j = i + 1; j < source.Count; j++)
                 {
-                    if(source[i].Take(source[i].Count-1).AreEqual(source[j].Take(source[j].Count-1)))
+                    if (source[i].Take(source[i].Count - 1).AreEqual(source[j].Take(source[j].Count - 1)))
                     {
                         candidates.Add((List<int>)source[i].Merge(source[j]));
                     }
@@ -100,6 +105,6 @@ namespace aCudaResearch.Algorithms
 
 
             return candidates;
-        } 
+        }
     }
 }

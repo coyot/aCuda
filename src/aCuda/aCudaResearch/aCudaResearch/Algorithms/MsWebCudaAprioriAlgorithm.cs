@@ -36,6 +36,8 @@ namespace aCudaResearch.Algorithms
                                                              set => elementsFrequencies[elementsList.IndexOf(set[0])]);
             List<List<int>> candidates;
 
+            if (frequentSets.Count == 0) return;
+
             var bitmapTransposed = new Bitmap(transactionsList.Count, frequentSets.Count);
             var newElementsList = new List<int>(frequentSets.Count);
             var jj = 0;
@@ -262,9 +264,9 @@ namespace aCudaResearch.Algorithms
             {
                 for (var j = i + 1; j < source.Count; j++)
                 {
-                    if (source[i].Take(source[i].Count - 1).AreEqual(source[j].Take(source[j].Count - 1)))
+                    if (source[i].Take(source[i].Count - 1).AreEqualParallel(source[j].Take(source[j].Count - 1)))
                     {
-                        candidates.Add((List<int>)source[i].Merge(source[j]));
+                        candidates.Add(source[i].Merge(source[j]).AsParallel().ToList());
                     }
                 }
             }
