@@ -1,4 +1,4 @@
-\chapter{Algorytm równoległy\label{chap:alg_rownolegly}}
+\chapter{Algorytm równoległy\label{chap:algorytm}}
 
 Niniejszy rozdział można traktować, jako uzupełnienie rozdziału~\ref{chap:teoria}, w którym to dokonano opisu podstaw teoretycznych wraz z dwoma wiodącymi algorytmami do odkrywania reguł asocjacyjnch. W ramach niniejszej pracy opracowany został algorytm równoległy, oparty na algorytmie opisanym w sekcji~\ref{sec:apriori}.
 
@@ -144,7 +144,7 @@ Procedura $\proc{Build bitmap}$ tworzy bitmapę na podstawie zestawu transakcji 
 
 Jak łatwo zauważyć w procedurze $\proc{Build bitmap}$ dokonywany jest jednokrotny skan wszystkich transakcji, a także wszystkich transakcji - na tej podstawie budowana jest "pionowa" bitmapa - w tym wypadku "pionowa" znaczy, że każdy wiersz reprezentuje jedną transakcję z bazy, natomiast każda kolumna reprezentuje element ze zbioru elementów $I$.
 
-W tym miejscu wymaganym jest także zastosowanie \emph{mostu} (\english{bridge}) pomiędzy obliczeniami na CUDA oraz przetwarzaniem logiki biznesowej w C\# - należało przyjąć język identyfikacji poszczególnych elementów. Źródła danych stosują z reguły identyfikatory - dlatego też zdecydowano się za ich pomocą identyfikować poszczególne elementy. W przypadku gdy źródło danych nie wspierałoby identyfikatorów liczbowych, możliwe jest wprowadzenie takowych na etapie wczytywania danych - co powinno być odpowiednio obsłużone przez importery daanych wejściowych.
+W tym miejscu wymaganym jest także zastosowanie \emph{mostu} (\english{bridge}) pomiędzy obliczeniami na CUDA oraz przetwarzaniem logiki biznesowej w C\# - należało przyjąć język identyfikcji poszczególnych elementów. Źródła danych stosują z reguły identyfikatory - dlatego też zdecydowano się za ich pomocą identyfikować poszczególne elementy. W przypadku gdy źródło danych nie wspierałoby identyfikatorów liczbowych, możliwe jest wprowadzenie takowych na etapie wczytywania danych - co powinno być odpowiednio obsłużone przez importery daanych wejściowych.
 
 Przykładowy fragment bitmapy zbudowanej dla danych, na których oparte zostały eksperymenty został zaprezentowany na rysunku~\ref{rys:data_1}.
 
@@ -154,6 +154,89 @@ Przykładowy fragment bitmapy zbudowanej dla danych, na których oparte zostały
 \caption{Fragment bitmapy z transakcjami}\label{rys:data_1}
 \end{figure}
 
+\subsection{Ograniczenie bazy danych}\label{sec:ograniczenie}
+
+Jak łatwo zauważyć na rysunku~\ref{rys:data_1}, gdzie czarnym kolorem zaznaczone są wystąpienia elementu w danej transakcji (biały to ich brak), bitmapa ta jest dość "rzadka", tj. zdecydowanie mniej jest miejsc czarnych niż białych. Oznacza to, że już na tym etapie możliwe jest odrzucenie pewnych elementów, które na pewno nie spełniają wymagań w stosunku do $minsup$.
+
+
+\begin{codebox}
+	\Procname{$\proc{Limit bitmap}$}
+		\li \For \textbf{each} kolumna $\id{c} \in bitmap$ \textbf{parallel}
+		\li \Do
+			\li $\id{sup_c} \gets$ $\frac{\id{wystapienia}}{\id{transakcje}}$
+				\li \If $sup_c < minsup$
+					\li \Then
+						\textbf{delete} kolumna $\id{c}$
+					\End
+		\End
+\end{codebox}
+
+Procedura $\proc{Limit bitmap}$ dokonuje analizy bitmapy zliczając wystąpienia danego elementu w transakcjach. Następnie oblicza wartość $sup_c$, czyli wsparcie dla danego elmentu. Jeśli jego wsparcie jest mniejsze niż minimalne wsparcie $minsup$, to dana kolumna jest usuwana z bitmapy - ponieważ element nie będzie brany pod uwagę w dalszej analizie. Dzięki tej procedurze ograniczona zostaje bitmapa, dzięki czemu możliwa jest szybsza komunikacja pomiędzy CPU a GPU.
+
 \subsection{Generowanie zbiorów częstych}\label{capriori:gen}
 
+Łatwo zauważyć, że ograniczona w punkcie~\ref{sec:ograniczenie} bitmapa składa się wyłącznie z jednoelementowych zbiorów częstych. Na tej podstawie można generować zbiory o krotnościach większych niż $1$. W każdym kolejnym kroku generowane są zbiory częste na podstawie zbiorów wygenerowanych w kroku poprzednim, a proces ten jest kontynuowany do momentu aż nie zostaną znalezione żadne zbiory częste.
+
+Procedura \proc{Cuda Frequent Set Generation} przedstawia pseudokod realizujący opisywany w tym rozdziale algorytm generowania zbiorów częstych.
+
+\begin{codebox}
+	\Procname{$\proc{Cuda Frequent Set Generation}$}\label{apriori:listing}
+	\li $\id{L_1} \gets \lbrace 1$-zbiory częste - czyli elementy z ograniczonej bitmapy $\rbrace$
+		\li \For $(k = 2; \id{L_{k-1}} \neq \emptyset; k++)$
+		\li \Do
+			 $\id{C_k} \gets aprioriGen(\id{L_{k-1}})$
+			\li \For \textbf{each} kandydat $c \in \id{C_k}$ \textbf{parallel}
+			\li \Do
+					\li \For \textbf{each} transakcja $t \in \id{DB}$
+					\li \If $c \subseteq t$
+					\li \Then
+						\Do c.count++
+						\End
+					\End
+				\End
+			\li $L_k \gets \lbrace c \in C_k | c.count \geq minsup \rbrace$	
+		\End
+	\li Answer $\gets \bigcup_k L_k $
+\end{codebox}
+
+Należy podkreślić, że w celu bardziej wydajnej implentacji procedury $\proc{Cuda Frequent Set Generation}$ dokonana została transpozycja macierzy (bitmapy) wystąpień elementów w transakcjach - $bitmapa^T$ powstała z $bitmapy$ poprzez zamianę jej wierszy na kolumny i kolumn na wiersze. 
+
+W wyniku tej operacji możliwe było wydajne zaimplementowanie wspomnianej procedury bez konieczności zapewniania semaforów przy dostępie do pamięci.
+
+
+\paragraph{Procedura cudaAprioriGen\label{sec:cudaAprioriGen}}
+Procedura $\id{cudaAprioriGen}$ reprezentuje proces twórzenia zbiorów $k-$ elementowych zbiorów kandydatów na podstawie zbiorów wejściowych $(k-1)$-elementowych.
+
+Jak łatwo zauważyć wynikiem działania $\proc{Cuda Join Step}$ są zbiory $k$-elementowe, które powstały na podstawie zbiorów wejściowych $L_{k-1}$ o licznościach równych $k-1$, a ich zawartość różni się tylko jednym elementem - ostatnim. Ważnym faktem jest to, iż elementy w zbiorach są uporządkowane leksykograficzne, co wykorzystywane jest w implementacji tej procedury.
+
+\begin{codebox}
+	\Procname{$\proc{Cuda Join Step}$}
+	\li \textbf{insert into} $C_k$
+	\li \textbf{select} p.item$_1$, p.item$_2$, \dots, p.item$_{k-1}$, q.item$_{k-1}$ \textbf{parallel}
+	\li \textbf{from} $L_{k-1}$ p, $L_{k-1}$ q
+	\li \textbf{where} p.item$_1 = $ q.item$_1$, \dots, p.item$_{k-2}$ = q.item$_{k-2}$, p.item$_{k-1}$ $<$ q.item$_{k-1}$
+\end{codebox}
+
+Warto zauważyć, że $\proc{Cuda Join Step}$ jest ekwiwalentem rozszerzania zbioru $L_{k-1}$ każdym elementem zbioru elementów $I$, a następnie kasowania tych $(k)$-zbiorów otrzymanych przez dodanie $(k)$-tego elementu, który nie był w $L_{k-1}$. 
+
+Warunek p.item$_{k-1}$ $<$ q.item$_{k-1}$ zapewnia, że nie będą generowane duplikaty. Dlatego też po etapie łączenia zachodzi zależność $C_k \supseteq L_k$.
+
+Podobnie, jak w przypadku algorytmu równoległego implementowanego na CPU opisanego w części~\ref{sec:papriori}, algorytm CudaApriori nie implementuje etapu obcinania zbiorów, bazując na obserwacji, że zbiorów tych będzie stosunkowo niewiele, a koszt pamięciowy tej operacji byłby zbyt duży.
+
 \subsection{Generowanie reguł asocjacyjnych}
+Po zakończeniu pierwszego etapu algorytm przystępuje do drugiego, czyli do budowania reguł asocjacyjnych na podstawie odkrytych zbiorów częstych. Podobnie, jak w~\cite{Apriori:Main} algorytm będący przedmiotem analizy niniejszej pracy, generuje wszystkie możliwe reguły asocjacyjne dla zadanego zbioru.
+
+Aby wygenerować reguły, dla każdego zbioru częstego $l$ znajdowane są niepuste podzbiory - podzbiór taki oznaczony jest jako $a$. Dla takich oznaczeń wygenerowna zostanie reguła $a \Rightarrow (l-a)$, jeżeli spełniona jest nierówność $\frac{support(l)}{support(a)} \geq minconf$.
+
+Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocjacyjnych na podstawie odkrytych $k$-zbiorów częstych $l_k$ będących elementami zbioru $L_k$ ($l_k \in L_k$).
+
+\begin{codebox}
+	\Procname{$\proc{Generate Frequent Itemsets}$}
+		\li \For \textbf{each} zbiór częsty $l_k$, $k \geq 2$ \textbf{parallel}
+		\li \Do
+			\textbf{call} genrules($l_k$, $l_k$)
+			\End
+		\End
+\end{codebox}
+
+Widać, że w implementacji algorytmu użyta została metoda $\proc{Genrules}$, która powstała w ramach algorytmu Apriori, opisanego w części~\ref{sec:genrules} niniejszej pracy. Postanowiono, że zrównoleglenie obliczeń wykonane zostanie na wyższym poziomie - tj. na poziomie poszczególnych zbiorów częstych, co znacząco przyspiesza operacje pamięci potrzebne na skopiowanie danych dla każdego zbioru zajęło by zbyt dużo czasu. Dlatego też pominięto opis wspomnianej procedury.

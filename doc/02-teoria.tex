@@ -139,7 +139,7 @@ Procedura \proc{Apriori Frequent Set Generation} przedstawia pseudokod realizuj�
 	\li Answer $\gets \bigcup_k L_k $
 \end{codebox}
 
-\paragraph{Procedura aprioriGen\label{sec:apriori}}
+\paragraph{Procedura aprioriGen\label{sec:apriori_gen}}
 Procedura \id{aprioriGen} reprezentuje proces twórzenia zbiorów $k-$ elementowych kandydatów na podstawie zbiorów wejściowych $(k-1)$-elementowych. Procedura ta jest podzielona na dwa etapy: łączenia oraz przycinania. 
 
 Jak łatwo zauważyć wynikiem działania \proc{Join Step} są zbiory $k$-elementowe, które powstały na podstawie zbiorów wejściowych $L_{k-1}$, a ich zawartość różni się tylko jednym elementem - ostatnim. Ważnym faktem jest to, iż elementy w zbiorach są uporządkowane leksykograficzne, co wykorzystywane jest w tej procedurze.
@@ -152,7 +152,7 @@ Jak łatwo zauważyć wynikiem działania \proc{Join Step} są zbiory $k$-elemen
 	\li \textbf{where} p.item$_1 = $ q.item$_1$, \dots, p.item$_{k-2}$ = q.item$_{k-2}$, p.item$_{k-1}$ $<$ q.item$_{k-1}$
 \end{codebox}
 
-Warto zauważyć, że \proc{Join Step} jest ekwiwalentem rozszerzania zbioru $L_{k-1}$ każdym elementem zbioru elementów $I$, a następnie kasowania tych $(k-1)$-zbiorów otrzymanych przez usuwanie $(k-1)$ elementu, które nie są w $L_{k-1}$. 
+Warto zauważyć, że \proc{Join Step} jest ekwiwalentem rozszerzania zbioru $L_{k-1}$ (p) każdym elementem zbioru elementów $I$, a następnie kasowania tych $(k)$-zbiorów otrzymanych przez dodanie $(k)$-tego elementu, który nie był w $L_{k-1}$ (q). 
 
 Warunek p.item$_{k-1}$ $<$ q.item$_{k-1}$ zapewnia, że nie będą generowane duplikaty. Dlatego też po etapie łączenia zachodzi zależność $C_k \supseteq L_k$.
 
@@ -202,7 +202,7 @@ Procedura~\proc{Generate Frequent Itemsets} prezentuje generowanie reguł asocja
 		\End
 \end{codebox}
 
-W powyższym algorytmie wykorzystana została funkcja \proc{Genrules}, która na podstawie dwóch zbiorów generuje reguły asocjacyjne. Zapis pseudokodu tej funkcji przedstawiony jest poniżej.
+W powyższym algorytmie wykorzystana została funkcja $\proc{Genrules}$, która na podstawie dwóch zbiorów generuje reguły asocjacyjne. Zapis pseudokodu tej funkcji przedstawiony jest poniżej.
 
 \begin{codebox}
 	\Procname{$\proc{Genrules}$($l_k$: $k$-zbiór częsty, $a_m$: $m$-zbiór częsty)}

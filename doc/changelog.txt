@@ -1,0 +1,10 @@
+ []
+  - we wstępie dopisano opis rozdziałów (zakładam, że już struktura pracy sie nie zmieni)
+  - poprawki zgodnie z Pana sugestiami:
+  		- plinq w technologiach, 
+  		- wykres na początku technologii, 
+  		- literówki, 
+  		- zagmatwanie w języku polskim, 
+  		- problem z komentarzem w pseudokodzie)
+  - rozdział z opisem algorytmu cudaApriori + struktury danych 
+  - 
