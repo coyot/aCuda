@@ -1,5 +1,6 @@
 @echo off
 
+
 pdflatex thesis-master.tex 
 bibtex   thesis-master
 pdflatex thesis-master.tex 
