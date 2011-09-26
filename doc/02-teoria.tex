@@ -10,13 +10,13 @@ Niech $I = \lbrace i_1,i_2,...,i_m \rbrace$ będzie \emph{zbiorem elementów} o 
 
 \begin{table}
 	\centering
-	\begin{tabular}{|c|l|} \hline
+	\begin{tabular}{c|l}
 	$\mathbf{I}$ & $\lbrace$ beer, bread, butter, diapers, jam, juice, milk, water $\rbrace$ \\ \hline
 	\textbf{Transakcje} & $1$: $\lbrace$ bread, milk, butter, beer $\rbrace$ \\
 	 & $2$:  $\lbrace$ bread, butter, water, jam, beer $\rbrace$ \\ 
 	 & $3$:  $\lbrace$ beer, diapers, bread, butter, jam $\rbrace$ \\ 
 	 & $4$:  $\lbrace$ butter, milk, juice $\rbrace$ \\
-	 & $5$:  $\lbrace$ diapers, beer, juice, water $\rbrace$ \\ \hline
+	 & $5$:  $\lbrace$ diapers, beer, juice, water $\rbrace$ \\
 	\end{tabular}
 	\caption{Przykładowe dane\label{example:data}}
 \end{table}
@@ -110,9 +110,9 @@ Algorytm generuje zbiory kandydatów jedynie na podstawie zbiorów częstych odk
 
 \begin{table}
 	\centering
-	\begin{tabular}{|c|p{7.7cm}|} \hline
+	\begin{tabular}{c|p{7.7cm}}
 	$L_k$ & Zbiór zawierający $k$-zbiory. Każdy zbiór zawarty w $L_k$ zawiera dwa pola: i) zbiór oraz ii) wartość $support$. \\ \hline
-	$C_k$ & Zbiór $k$-zbiorów kandydatów (potencjalnych zbiorów częstych). Każdy zbiór zawarty w $C_k$ zawiera dwa pola: i) zbiór oraz ii) wartość $support$. \\ \hline
+	$C_k$ & Zbiór $k$-zbiorów kandydatów (potencjalnych zbiorów częstych). Każdy zbiór zawarty w $C_k$ zawiera dwa pola: i) zbiór oraz ii) wartość $support$. \\ 
 	\end{tabular}
 	\caption{Oznaczenie w opisach algorytmów\label{skroty:znaczanie}}
 \end{table}
@@ -237,13 +237,13 @@ Algorytm FP-growth można podzielić na trzy podstawowe kroki.
 
 \begin{table}
 	\centering
-	\begin{tabular}{|c|c|c|} \hline
+	\begin{tabular}{c|c|c}
 	\textbf{TID} &  \textbf{Lista elementów} & \textbf{Posortowana lista elementów częstych} \\ \hline
 	$100$ & f, a, c, d, g, i, m, p & f, c, a m, p \\ 
 	$200$ & a, b, c, f, l, m, o & f, c, a, b, m \\ 
 	$300$ & b, f, h, j, o & f, b \\
 	$400$ & b, c, k, s, p & c, b, p \\
-	$500$ & a, f, c, e, l, p, m, n & f, c, a, m, p \\ \hline
+	$500$ & a, f, c, e, l, p, m, n & f, c, a, m, p \\ 
 	\end{tabular}
 	\caption{Przykładowy zbiór transakcji\label{example:fp_data}}
 \end{table}
@@ -385,14 +385,14 @@ Element $a$ tworzy jeden element częsty $(a:3)$ oraz bazę wzorca $\lbrace (fc:
 
 \begin{table}
 	\centering
-	\begin{tabular}{|c|c|c|} \hline
+	\begin{tabular}{c|c|c}
 	\textbf{Element} &  \textbf{Warunkowa baza wzorców} & \textbf{Warunkowe FP-drzewo} \\ \hline
 	$p$ & $\lbrace ( fcam: 2 ), (cb: 1) \rbrace$ & $\lbrace (c:3) \rbrace | p$ \\ 
 	$m$ & $\lbrace ( fca: 2 ), (fcab: 1) \rbrace$ & $\lbrace (f:3, c:3, a:3) \rbrace | m$ \\ 
 	$b$ & $\lbrace ( fca: 2 ), (f: 1), (c: 1) \rbrace$ & $\emptyset$ \\ 
 	$a$ & $\lbrace ( fc: 3 ) \rbrace$ & $\lbrace (f:3, c:3) \rbrace | a$ \\ 
 	$c$ & $\lbrace ( f: 3 ) \rbrace$ & $\lbrace (f:3) \rbrace | c$ \\ 
-	$f$ & $\emptyset$ & $\emptyset$ \\ \hline
+	$f$ & $\emptyset$ & $\emptyset$ \\ 
 	\end{tabular}
 	\caption{Wyniki eksploracji FP-drzewa dla przykładu opartego na danych w tablicy~\ref{example:fp_data}\label{example:sum_patterns}}
 \end{table}
