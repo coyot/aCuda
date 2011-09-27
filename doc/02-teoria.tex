@@ -222,7 +222,7 @@ W powyższym algorytmie wykorzystana została funkcja $\proc{Genrules}$, która 
 		\End
 \end{codebox}
 
-\subsection{Algorytm FP-growth}
+\subsection{Algorytm FP-growth\label{sec:fpgrowth}}
 
 Podstawową wadą algorytmu Apriori jest wysoki koszt przetważania dużych zbiorów danych. Przykładowo, dla $10^4$ 1-zbiorów częstych, algorytm Apriori wygeneruje około $10^7$ 2-zbiorów kandydatów, które następnie poddane zostaną weryfikacji, czy są zbiorami częstymi. Poza tym algorytm ten wymaga wielokrotnego odczytywania zawartości bazy danych - w każdym kroku algorytmu należy odczytać całą bazę danych w celu obliczenia wsparcia zbiorów kandydujących.
 

@@ -332,6 +332,14 @@ Zaobserwować można również spadek wydajności algorytmu CudaApriori, spowodo
 	\caption{Czasy wykonania algorytmu CudaApriori w zależności od parametrów wejściowych [ms]\label{tab:capriori}}
 \end{table}
 
+Rysunek~\ref{rys:capriori} prezentuje zebrane wyniki wykonania algorytmu CudaApriori w zależności od parametrów wejściowych. Tablica~\ref{tab:capriori} zawiera czasy, które były podstawą wykonania wykresu. Wyniki dla poszczególnych parametrów został omówione wcześniej. 
+
+Z wykresu można wyciągnąć bardzo interesujące wnioski. Wyraźnie widać, że wykresy są liniowe z różnym współczynnikiem nachylenia prostej do osi X - podział taki można zrobić na dwie grupy wykresów. Z jednej strony mamy wykresy dla parametrów minsup=$0.2$, minconf=$0.4$ oraz minsup=$0.2$, minconf=$0.1$, które to są pochylone pod mniejszym kontem niż wykresy minsup=$0.05$, minconf=$0.4$ i minsup=$0.05$, minconf=$0.1$. 
+
+Powyższa obserwacja prowadzi do wniosku, że wartość parametru $minsup$ wpływa wprostproporcjonalnie na czas obliczeń algorytmu. W rodziale~\ref{chap:algorytm} opisano algorytm CudaApriori, w którym przedstawiono wpływ $minsup$ na algorytm. Wynika z tego jasno, że im wyższa wartość tego parametru, tym mniej zbiorów jest generowanych w $L_1$, a także w kolejnym kroku mniejsza jest liczebność zbiorów $L_k$. Dlatego też im wyższa jest wartość $minsup$, tym krótszy jest czas obliczeń, ponieważ mniejsza jest liczba zbiorów poddawana procedurze generowania kandydatów i tak dalej. Różnice pomiędzy wykonaniami z tymi samymi wartościami $minconf$ ($minconf$ odpowiednio $0.4$ i $0.1$) $85\%$ i $86\%$.
+
+Poza zależnością wynikającą z parametru $minsup$ pozostaje jeszcze kwestia różnic spowodowanych parametrem $minconf$. Dzieląc wykonane testy na dwie grupy (odpowiednio dla $minsup=0.2$ oraz $minsup=0.05$) uwidacznia się krótszy czas wykonywania obliczeń dla niższej wartości $minconf$. Różnice pomiędzy algorytmami wynoszą $5\%$ oraz około $5,5\%$. 
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=1.1\textwidth]{figures/06/capriori_bat.png}
@@ -355,4 +363,15 @@ Zaobserwować można również spadek wydajności algorytmu CudaApriori, spowodo
 	\end{tabular}
 	\caption{Czasy wykonania algorytmu CudaApriori na baterii laptopa w zależności od parametrów wejściowych [ms]\label{tab:capriori_bat}}
 \end{table}
+
+Podobnie, jak wypadku testów wyniki dla uruchomień na baterii wyznaczają podobne trendy - widoczne na wykresie na rysunku~\ref{rys:capriori_bat}.
+
+Różnice dla wyników eksperymentów z tym samym $minconf$ wynoszą $100$ i $82\%$. Widać, że różnica w porównaniu z uruchomieniem na pełnej wydajności zwiększyła się. Widać, że dla większej liczby operacji (wynikającej bezpośrednio z większej liczby zbiorów częstych) większa też jest logika biznesowa, która wykonywana była na CPU. Z tego właśnie wynika fakt większych (choć nieznacznie) różnic pomiędzy algorytmami. 
+
+Dla stałego parametru $minsup$ różnice $13\%$ i $3\%$. Jak widać różnice pozostały na podobnym poziomie. Widać, że dla $minsup=0.2$ wzrosła różnica w porównaniu do testów na pełnej mocy procesora.
+
 \section{Podsumowanie eksperymentów i wnioski}
+
+Warto zauważyć, że algorytm CudaApriori okazał się znacząco szybszy od pozostałych algorytmów z tej klasy (tzw. \emph{apriori-like}) zaimplementowane na potrzeby niniejszej pracy. Porównanie z FPGrowth wykazało jego nadal niską wydajność w porównaniu z innymi algorytmami o mniejszej złożoności. 
+
+Zaprezentowana i opisana została wydajność algorytmu w szeregu testów, szczegółowo opisanych w poszczególnych sekcjach niniejszego rozdziału. Przedstawiono również analizę wydajności algorytmu CudaApriori w zależności od parametrów wejściowych do algorytmu. Wynika z tego, że podczas uruchamiania testów na systemach, w których potrzebna jest szybka odpowiedź bardzo ważnym elementem analizy jest umiejętne dobranie parametrów algorytmu.
